@@ -1,22 +1,22 @@
 # Dai Di
-compile.bat and run.bat batch files
+**compile.bat and run.bat batch files**
 The compile.bat file compiles all your Java source files and automatically stores them in the classes directory. The run.bat runs your application.
 
-src
+**src**
 This directory contains all your Java source files.
 
-classes
+**classes**
 This directory should be left empty during submission. After compile.bat runs, the class files will be stored here automatically.
 
-images
+**images**
 This directory contains any image files used by your application. It will be empty if you build a console application.
 
-lib (if using any external libraries)
+**lib (if using any external libraries)**
 This directory contains any jar files that you use for your application.
 
 Good luck and have fun! :)
 
-References
+**References**
 Images of all the cards: https://www.waste.org/~oxymoron/files/cards/
 
 A list of commonly used classes in Card games (Card, Deck, Hand, Rank, Suit). https://github.com/BigRedS/java/tree/master/CardGame/src
