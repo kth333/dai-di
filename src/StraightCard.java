@@ -32,8 +32,7 @@ public class StraightCard extends Hand{
             }
         }
 
-        hand.sortByRank();
-        // sort again
+        hand.sortByRank(); // sort again
 
         for(int i = 0; i< hand.size() - 1; i++){
             Card currentCard = hand.getCard(i);
