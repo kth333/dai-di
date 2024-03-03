@@ -1,4 +1,7 @@
 # Dai Di
+
+![ezgif-3-ce7880666f](https://github.com/kth333/dai-di/assets/143651427/2bb25165-a6eb-4f26-8ed1-adbd92322bed)
+
 **compile.bat and run.bat batch files**
 
 The compile.bat file compiles all your Java source files and automatically stores them in the classes directory. The run.bat runs your application.
