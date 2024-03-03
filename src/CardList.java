@@ -10,9 +10,11 @@ public class CardList {
     public CardList(){
         this.cards = new ArrayList<>();
     }
+
     public void addCard(Card card){
         cards.add(card);
     }
+    
     public Card getCard(int i) {
         return cards.get(i);
     }

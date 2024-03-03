@@ -10,6 +10,12 @@ public class StraightCard extends Hand{
         super(player,cards);
         this.type = "StraightCard";
     }
+
+    @Override
+    public String getType() { // needs to override abstract method getType
+        return "Straight";
+    }
+
     //this method is used to check for later in the game
     public boolean isStraightCard(){
         return this.type.equals("StraightCard");
@@ -45,6 +51,7 @@ public class StraightCard extends Hand{
         return true;
         
     }
+}
 }
 //https://www.educative.io/answers/what-is-the-ordinal-method-in-enum-in-java
 //how ordinal is used.

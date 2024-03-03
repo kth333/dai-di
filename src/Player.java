@@ -34,18 +34,16 @@ public class Player {
         hand.sort();
     }
 
-    public CardList play(int cardIndex){
+    public CardList play(Integer cardIndex){
         if(cardIndex == null){
             return null;
         }
         CardList playedCards = new CardList();
-        for(int index : cardIndex){
-            if(index>=0 && index < hand.size()){
-                Card card = hand.getCard(index);
-                playedCards.addCard(card);
-            }
+        if(cardIndex >= 0 && cardIndex < hand.size()){
+            Card card = hand.getCard(cardIndex);
+            playedCards.addCard(card);
+            hand.removeCard(card);
         }
-        hand.removeCards(playedCards);
         return playedCards;
     }
     
