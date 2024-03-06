@@ -24,7 +24,7 @@ public abstract class Hand extends CardList {
 
     }
     //get the highest card of the hand
-    public card getHighestCard(){
+    public Card getHighestCard(){
         this.sort();
         return this.getCard(0);
     }
