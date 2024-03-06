@@ -10,11 +10,9 @@ public class CardList {
     public CardList(){
         this.cards = new ArrayList<>();
     }
-
     public void addCard(Card card){
         cards.add(card);
     }
-    
     public Card getCard(int i) {
         return cards.get(i);
     }
@@ -31,12 +29,8 @@ public class CardList {
         return cards.contains(card);
     }
 
-    public void setCard(int index, Card card) {
-        if (index >= 0 && index < cards.size()) {
-            cards.set(index, card);
-        } else {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+    public Card setCard(int i, Card card) {
+        return cards.set(i, card);
     }
 
     public boolean isEmpty() {
