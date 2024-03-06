@@ -1,4 +1,4 @@
-# CS102 Project
+# Dai Di Project
 <p align="center">
     <img src="https://i.kym-cdn.com/photos/images/newsfeed/000/931/227/eac.gif" alt="gif" />
 </p>
