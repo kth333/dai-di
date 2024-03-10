@@ -33,4 +33,4 @@ public class FullHouseCard extends Hand {
         }
         return foundTriple && foundPair; //both must be true if the hand has a triple and a pair
     }
-}
+} 
