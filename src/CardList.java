@@ -55,6 +55,15 @@ public class CardList {
             }
         });
     }
+
+    public void sortBySuit(){
+        Collections.sort(cards, new Comparator<Card>(){
+            public int compare(Card c1, Card c2){
+                return c1.getSuit().ordinal() - c2.getSuit().ordinal();
+            }
+        });
+    }
+    
     public int size() {
         return cards.size();
     }
