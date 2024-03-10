@@ -140,11 +140,13 @@ public class Player {
             return null;
         }
         CardList playedCards = new CardList();
-        if (cardIndex >= 0 && cardIndex < hand.size()) {
-            Card card = hand.getCard(cardIndex);
-            playedCards.addCard(card);
-            hand.removeCard(card);
+        for (int index : cardIndex) {
+            if (index >= 0 && index < hand.size()) {
+                Card card = hand.getCard(index);
+                playedCards.addCard(card);
+            }
         }
+        hand.removeCards(playedCards);
         return playedCards;
     }
 
