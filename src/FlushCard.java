@@ -4,10 +4,10 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class FlushCard extends Hand{
+public class FlushCard extends PlayedCards {
     private String type;
 
-    public FlushCard(Player player, CardList card){
+    public FlushCard(Player player, Hand card){
         super(player,card);
         this.type = "FlushCard";
     }
@@ -15,7 +15,7 @@ public class FlushCard extends Hand{
         return this.type.equals("FlushCard");
     }
 
-    public static boolean isValid(CardList hand){
+    public static boolean isValid(Hand hand){
         if(hand.size() != 5){
             return false;
         }

@@ -2,23 +2,39 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.*;
 
 public class Game {
 
     private static final int NUM_PLAYERS = 4;
-    private static Scanner scanner = new Scanner(System.in);
+    private static final int startCardsPerPlayer = 13;
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        // Give the user a warm welcome :)
         System.out.println("Welcome to Dai Di!");
+
+        // Prompt the user to enter their name
+        System.out.print("Enter your name: ");
+        String playerName = scanner.nextLine();
+
+        // Create the human player with the entered name
+        Player humanPlayer = new Player(playerName);
+
+        // Create three bot players with unique random names
+        List<String> usedNames = new ArrayList<>();
+        Player bot1 = new Player(humanPlayer.getName(), usedNames);
+        Player bot2 = new Player(humanPlayer.getName(), usedNames);
+        Player bot3 = new Player(humanPlayer.getName(), usedNames);
+
         while (true) {
             displayMenu();
             try {
                 int choice = scanner.nextInt();
                 switch (choice) {
                     case 1:
-                        startGame();
+                        startGame(humanPlayer, bot1, bot2, bot3);
                         return; // Exit the loop and terminate the program
                     case 2:
                         Instructions.displayInstructions();
@@ -42,96 +58,145 @@ public class Game {
         System.out.println("2. Read instructions");
         System.out.println("3. Quit game");
         System.out.print("Choose an option: ");
-    } 
+    }
 
-    private static void startGame() {
+    private static void startGame(Player humanPlayer, Player bot1, Player bot2, Player bot3) {
         // Create and shuffle deck
-        ArrayList<String> deck = buildDeck();
-        Collections.shuffle(deck);
+        Deck deck = new Deck();
+        deck.shuffle();
+        System.out.println("Players: " + humanPlayer.getName() + ", " + bot1.getName() + ", " + bot2.getName() + ", " + bot3.getName());
 
         // Distribute cards to players
-        List<List<String>> playersHands = new ArrayList<>();
-        int cardsPerPlayer = deck.size() / NUM_PLAYERS;
-        for (int i = 0; i < NUM_PLAYERS; i++) {
-            List<String> hand = new ArrayList<>();
-            for (int j = i * cardsPerPlayer; j < (i + 1) * cardsPerPlayer; j++) {
-                hand.add(deck.get(j % deck.size()));
-            }
-            playersHands.add(hand);
-        }
+        List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
+        Map<Player, List<Card>> playersHands = deck.distributeCards(players, startCardsPerPlayer);
 
-        System.out.println("Your Hand: " + player.getHand());
+        List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
+        displayPlayerOrder(playerOrder); // shit takes forever to run
 
         // Determine the player with the 3 of diamonds to start the round
-        int startingPlayer = findStartingPlayer(playersHands);
-        System.out.println("Player " + (startingPlayer + 1) + " starts the round!");
+        Player startingPlayer = findStartingPlayer(playersHands);
+        System.out.println(startingPlayer.getName() + " starts the round!");
+    }
 
-        // Game loop
-        int currentPlayer = startingPlayer;
-        while (!allPlayersEmpty(playersHands)) {
-            playTurn(currentPlayer, playersHands);
-            currentPlayer = (currentPlayer + 1) % NUM_PLAYERS;
-        }
+        // Player winner = null;
+        // // Game loop
+        // Player currentPlayer = startingPlayer;
+        // while (winner == null) {
+        //     if (currentPlayer.equals(humanPlayer)) {
+        //         // Human player's turn
+        //         // playTurn(humanPlayer, playersHands);
+        //         System.out.println("Your turn!");
+        //     } else {
+        //         // Bot player's turn
+        //         // playTurn(botPlayer, playersHands);
+        //         System.out.println("bots turn");
+        //     }
+        //     winner = findWinner(playersHands);
+        // }
 
         // Determine winner
-        int winner = findWinner(playersHands);
-        System.out.println("Player " + (winner + 1) + " wins!");
-    }
+    //     System.out.println(winner.getName() + " wins!");
+    // }
 
-    public static ArrayList<String> buildDeck() {
-        ArrayList<String> deck = new ArrayList<>();
-        String[] values = { "a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-        String[] types = { "c", "d", "h", "s" };
-
-        for (int i = 0; i < types.length; i++) {
-            for (int j = 0; j < values.length; j++) {
-                deck.add(values[j] + types[i]);
+    private static Player findStartingPlayer(Map<Player, List<Card>> playersHands) {
+        for (Player player : playersHands.keySet()) {
+            List<Card> hand = playersHands.get(player);
+            if (hand != null) { // Check if the hand is not null
+                for (Card card : hand) {
+                    if (card.getSuit() == Card.Suit.DIAMONDS && card.getRank() == Card.Rank.THREE) {
+                        return player;
+                    }
+                }
             }
         }
-        return deck;
+        return null; // 3 of Diamonds not found
     }
+    
+    public static List<Player> playerOrder(List<Player> playerList, int numPlayers){
+        List<Player> playerOrder = new ArrayList<>();
 
-    // Function to find the player with the 3 of diamonds to start the round
-    private static int findStartingPlayer(List<List<String>> playersHands) {
-        for (int i = 0; i < NUM_PLAYERS; i++) {
-            if (playersHands.get(i).contains("3d")) {
-                return i;
+        //populate playerOrder list positions
+        for (int i=0; i < numPlayers; i++){
+            playerOrder.add(null);
+        }
+
+        //Set player Order
+        for (int i = 0; i < numPlayers; i++) {
+            //Get first player
+            Player player = playerList.get(i);
+            //Check if has startCard
+            if (player.has(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
+                //If have startCard assign as first player
+                //Assumes that all 52 cards are dealt out properly
+                playerOrder.set(0, player);
+            } else {
+                //If not set their turn order as one of the other positions
+                boolean turnOrderSet=false;
+                //Set a do loop until turn order is successfully set
+                do {
+                    //nextInt(1,numPlayers) will generate random number inclusive 1 and exclusive numPlayers
+                    int position = ThreadLocalRandom.current().nextInt(1, numPlayers);
+                    //Set the player in the position if it is empty
+                    if (playerOrder.get(position)==null) {
+                        playerOrder.set(position,player);
+                        turnOrderSet=true;
+                    }
+                } while (!turnOrderSet);
             }
         }
-        return -1; // 3 of Diamonds not found
+        return playerOrder;
     }
 
-    // Function to check if all players have empty hands
-    private static boolean allPlayersEmpty(List<List<String>> playersHands) {
-        for (List<String> hand : playersHands) {
-            if (!hand.isEmpty()) {
-                return false;
+    public static void displayPlayerOrder(List<Player> playerOrder){
+        for (int i=0; i < playerOrder.size(); i++){
+            Player player = playerOrder.get(i);
+            String playerName = null;
+            if (player instanceof Player){
+                playerName = player.getName();
+            } else {
+                playerName = "Missing";
+            }
+            System.out.println("Player "+ i +" is "+ playerName);
+        }
+    }
+
+
+    // private static void playTurn(Player player, Map<Player, List<Card>> playersHands) {
+    //     System.out.println("Player " + player.getName() + "'s turn:");
+    //     List<Card> hand = playersHands.get(player.getPlayerNumber());
+    //     if (!hand.isEmpty()) {
+    //         // Prompt the user to select cards to play
+    //         List<Integer> selectedCardIndices = selectCards(player, hand);
+    //         PlayedCards playedCards = player.play(selectedCardIndices);
+    //         if (playedCards != null) {
+    //             System.out.println("Player " + player.getName() + " plays: " + playedCards);
+    //             playersHands.get(player.getPlayerNumber()).removeAll(playedCards.getCards());
+    //         } else {
+    //             System.out.println("Player " + player.getName() + " has no cards left!");
+    //         }
+    //     } else {
+    //         System.out.println("Player " + player.getName() + " has no cards left!");
+    //     }
+    // }
+
+    private static List<Integer> selectCards(Player player, List<Card> hand) {
+        // Placeholder method for selecting cards to play
+        // Here you can implement the logic to prompt the user to select cards
+        // For now, let's select the first card
+        List<Integer> selectedIndices = new ArrayList<>();
+        selectedIndices.add(0);
+        return selectedIndices;
+    }
+
+    private static Player findWinner(Map<Player, List<Card>> playersHands) {
+        for (Map.Entry<Player, List<Card>> entry : playersHands.entrySet()) {
+            if (entry.getValue().isEmpty()) {
+                return entry.getKey();
             }
         }
-        return true;
+        return null; // No winner found
     }
-
-    // Function to play a turn for a player
-    private static void playTurn(int player, List<List<String>> playersHands) {
-        System.out.println("Player " + (player + 1) + "'s turn:");
-        List<String> hand = playersHands.get(player);
-        if (!hand.isEmpty()) {
-            String card = hand.remove(0);
-            System.out.println("Player " + (player + 1) + " plays: " + card);
-        } else {
-            System.out.println("Player " + (player + 1) + " has no cards left!");
-        }
-    }
-
-    // Function to find the winner (player with empty hand)
-    private static int findWinner(List<List<String>> playersHands) {
-        for (int i = 0; i < NUM_PLAYERS; i++) {
-            if (playersHands.get(i).isEmpty()) {
-                return i;
-            }
-        }
-        return -1; // No winner found
-    }
+    
 
     private static void quitGame() {
         System.out.println("Bye Bye!");

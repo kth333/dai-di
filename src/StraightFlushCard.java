@@ -3,7 +3,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class StraightFlushCard extends Hand {
+public class StraightFlushCard extends PlayedCards {
     private string type;
 
     public StraightFlushCard(Player player, CardList card){

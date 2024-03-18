@@ -32,10 +32,6 @@ public class Card implements Comparable <Card> {
         return rank;
     }
 
-    public void setRank(Rank newRank) {
-        this.rank = newRank;
-    }
-
     public String toString(){
         return rank + " of " + suit;
     }
@@ -51,6 +47,7 @@ public class Card implements Comparable <Card> {
         Card card = (Card) obj;// cast obj to card
         return suit == card.suit && rank == card.rank;
     }
+    
     @Override
     public int hashCode(){
         return Objects.hash(suit,rank);
