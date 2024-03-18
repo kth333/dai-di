@@ -124,3 +124,66 @@ public class Testing {
 //         return null; // 3 of Diamonds not found
 //     }
 // }
+
+private static void humanTurn(Player currentPlayer, Map<Player, List<Card>> playersHands, PlayedCards previousCards) {
+    List<Card> hand = playersHands.get(currentPlayer);
+
+    while (true) {
+        System.out.print("Select cards to play (enter indices separated by spaces) or type p to pass: ");
+        String input = scanner.nextLine();
+
+        if (input.toLowerCase().equals("p")) {
+            System.out.println(currentPlayer.getName() + " passed their turn.");
+            previousCards = null; // Reset previous cards if the player passes
+            return; // Exit the method if the player chooses to pass
+        }
+
+        String[] indices = input.split("\\s+");
+        List<Integer> selectedIndices = new ArrayList<>();
+        for (String index : indices) {
+            try {
+                selectedIndices.add(Integer.parseInt(index));
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter indices separated by spaces.");
+                break; // Continue to prompt the player for valid input
+            }
+        }
+
+        currentPlayer.play(selectedIndices, hand, previousCards);
+}
+}
+
+
+public void play(List<Integer> selectedIndices, List<Card> hand, PlayedCards previousCards) {
+    // Validate selected indices
+    boolean validSelection = true;
+    List<Card> selectedCards = new ArrayList<>();
+    for (int index : selectedIndices) {
+        if (index < 0 || index >= hand.size()) {
+            System.out.println("Invalid index! Please select indices within the range of your hand.");
+            validSelection = false;
+            break; // Continue to prompt the player for valid input
+        }
+        selectedCards.add(hand.get(index));
+    }
+
+    if (!validSelection) {
+        return; // Continue to prompt the player for valid input
+    }
+
+    // Create an instance of PlayedCards to store the selected cards
+    PlayedCards playedCards = new PlayedCards(this, selectedCards);
+
+    // Check if the selected cards win against the previous cards
+    if (previousCards != null && !playedCards.winsAgainst(previousCards)) {
+        System.out.println("Invalid selection! The selected cards do not win against the previous cards.");
+        return; // Continue to prompt the player for valid input
+    }
+
+    // Display the played cards
+    System.out.println(this.getName() + " played: " + playedCards.getCards());
+
+    // Remove the played cards from the player's hand
+    hand.removeAll(playedCards.getCards());
+    previousCards = playedCards;
+}
