@@ -12,7 +12,7 @@ public class StraightCard extends Hand{
     }
 
     @Override
-    public String getType() { // needs to override abstract method getType
+    public String getType() { //override abstract method getType
         return "Straight";
     }
 
@@ -32,9 +32,9 @@ public class StraightCard extends Hand{
             for (int i = 1; i < hand.size(); i++) {
                 Card currentCard = hand.getCard(i);
                 if (currentCard.getRank().ordinal() >= 9) { // check if rank 9 or above exist
-                    Rank newRank = currentCard.getRank().adjustRank(-13);
+                    Rank newRank = currentCard.getRank() - 13;
                     currentCard.setRank(newRank);
-                    hand.setCard(i, currentCard); // Update the card in the hand list with the new rank
+                    // hand.setCard(i, currentCard); // Update the card in the hand list with the new rank
             }
         }
 

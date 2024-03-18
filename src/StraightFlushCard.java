@@ -13,7 +13,7 @@ public class StraightFlushCard extends Hand {
     public boolean isQuadCard(){
         return.type.equals("StraightFlushCard");
     }
-    public static boolean isValid(CardList handand){
+    public static boolean isValid(CardList hand){
         if(hand.size() != 5){
             return false;
         }
