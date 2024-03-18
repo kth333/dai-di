@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class FullHouseCard extends Hand {
+public class FullHouseCard extends PlayedCards {
     private String type;
 
     public FullHouseCard(Player player, CardList card){
@@ -33,4 +33,4 @@ public class FullHouseCard extends Hand {
         }
         return foundTriple && foundPair; //both must be true if the hand has a triple and a pair
     }
-}
+} 

@@ -1,68 +1,78 @@
 import java.util.ArrayList;
-public abstract class Hand extends CardList {
-    private Player player;
-    private int numOfCards;
+import java.util.Collections;
+import java.util.List;
 
-    //store the type of hand against this hand 
-    public ArrayList<String> againstArrayList;
+public class Hand {
+    private List<Card> hand;
+    private List<Card> cardsToRemove;
 
-    public Hand(Player player, CardList cards){
-        this.player = player;
-        this.againstArrayList = new ArrayList<String>();
-        //any hand against a pass will win
-        this.againstArrayList.add("Pass");
+    public Hand(){
+        this.hand = new ArrayList<>();
+    }
 
-        if(cards != null){
-            this.numOfCards = cards.size();
-            for(int i = 0; i < cards.size();i++){
-                this.addCard(cards.getCard(i));
+    public void addCard(Card card){
+        hand.add(card);
+    }
+    
+    public Card getCard(int i) {
+        return hand.get(i);
+    }
+
+    // Removes cards that have been played from the hand
+    public void removeCards(PlayedCards playedCards) {
+        List<Card> cardsToRemove = playedCards.getCards();
+        hand.removeAll(cardsToRemove);
+    }
+
+    // Clears the hand
+    public void clear() { 
+        hand.clear();
+    }
+
+    public boolean contains(Card card) {
+        return hand.contains(card);
+    }
+
+    public void setCard(int index, Card card) {
+        if (index >= 0 && index < hand.size()) {
+            hand.set(index, card);
+        } else {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    public boolean isEmpty() {
+        return hand.isEmpty();
+    }
+   
+    public void sortByRank() {
+        Collections.sort(hand, new RankComparator());
+    }
+
+    public void sortBySuit() {
+        Collections.sort(hand, new SuitComparator());
+    }
+    
+    public int getSize() {
+        return hand.size();
+    }
+
+    public void print() {
+        for (Card card : hand) {
+            System.out.println(card.toString());
+        }
+    }
+
+    @Override
+    public String toString() {
+        String result = "Hand: [";
+        for (int i = 0; i < hand.size(); i++) {
+            result += hand.get(i);
+            if (i < hand.size() - 1) {
+                result += ", ";
             }
-        }else{
-            //if handis empty then the card will be null
-            this.numOfCards = 0;
         }
-
+        result += "]";
+        return result;
     }
-    //get the highest card of the hand
-    public Card getHighestCard(){
-        this.sort();
-        return this.getCard(0);
-    }
-
-    //get player for this hand
-    public Player getPlayer(){
-        return this.player;
-    }
-    public int getNumOfCards(){
-        return this.numOfCards;
-    }
-
-    public boolean isValid(CardList hand){
-        // valid hand must be at least 1 card e
-        return this.getNumOfCards() > 0;
-    }
-
-
-    public boolean beats(Hand hand){
-        if(hand == null){
-            return true;
-        }
-        //check the number of cards as only the same number of cards can go against each other
-        if(this.getNumOfCards() != hand.getNumOfCards()){
-            return false;
-        }else if(this.getType() == hand.getType()){
-            //check if the hand against are of the same type then continue comparison
-            if(this.getHighestCard().compareTo(hand.getHighestCard()) > 0){
-                return true;
-            }else{
-                return false;
-            }
-        }else if (this.againstArrayList.contains(hand.getType())){
-            return true;
-        }
-        return false;
-    }
-    //so that other classes can use make this abstract
-    public abstract String getType();
-     
 }

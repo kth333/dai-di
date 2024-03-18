@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class QuadCard extends Hand {
+public class QuadCard extends PlayedCards {
     private string type;
 
     public QuadCard(Player player, CardList card){

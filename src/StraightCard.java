@@ -3,16 +3,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class StraightCard extends Hand{
+public class StraightCard extends PlayedCards{
     public String type;
 
-    public StraightCard(Player player, CardList cards){
+    public StraightCard(Player player, Hand cards){
         super(player,cards);
         this.type = "StraightCard";
     }
 
     @Override
-    public String getType() { // needs to override abstract method getType
+    public String getType() { //override abstract method getType
         return "Straight";
     }
 
@@ -21,24 +21,24 @@ public class StraightCard extends Hand{
         return this.type.equals("StraightCard");
     }
 
-    public boolean isValid(CardList hand){
+    public boolean isValid(Hand hand){
         if(hand.size() != 5){
             return false;
         }
         hand.sortByRank();
 
 
-        if (hand.getCard(0).getRank().ordinal() == 0) { // check if lowest rank is 0
-            for (int i = 1; i < hand.size(); i++) {
-                Card currentCard = hand.getCard(i);
-                if (currentCard.getRank().ordinal() >= 9) { // check if rank 9 or above exist
-                    Rank newRank = currentCard.getRank().adjustRank(-13);
-                    currentCard.setRank(newRank);
-                    hand.setCard(i, currentCard); // Update the card in the hand list with the new rank
-            }
-        }
+        // if (hand.getCard(0).getRank().ordinal() == 0) { // check if lowest rank is 0
+        //     for (int i = 1; i < hand.size(); i++) {
+        //         Card currentCard = hand.getCard(i);
+        //         if (currentCard.getRank().ordinal() >= 9) { // check if rank 9 or above exist
+        //             Rank newRank = currentCard.getRank() - 13;
+        //             currentCard.setRank(newRank);
+        //             // hand.setCard(i, currentCard); // Update the card in the hand list with the new rank
+        //     }
+        // }
 
-        hand.sortByRank(); // sort again
+        // hand.sortByRank(); // sort again
 
         for(int i = 0; i< hand.size() - 1; i++){
             Card currentCard = hand.getCard(i);
