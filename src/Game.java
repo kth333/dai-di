@@ -70,7 +70,7 @@ public class Game {
 
         // Distribute cards to players
         List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
-        deck.distributeCards(players, startCardsPerPlayer);
+        deck.distributeCards(players, CARDS_PER_PLAYER);
         // Map<Player, List<Card>> playersHands = deck.distributeCards(players, startCardsPerPlayer);
 
         // List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
