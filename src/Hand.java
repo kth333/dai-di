@@ -1,52 +1,52 @@
 import java.util.*;
 
 public class Hand {
-    private Map<Player, List<Card>> hands;
+    private List<Card> hand;
 
     public Hand() {
-        this.hands = new HashMap<>();
+        this.hand = new ArrayList<Card>();
     }
 
     // Add a card to the hand of a specific player
-    public void addCard(Player player, Card card) {
-        List<Card> playerHand = hands.getOrDefault(player, new ArrayList<>());
-        playerHand.add(card);
-        hands.put(player, playerHand);
+    public void addCard(Card card) {
+        if (card!=null){
+            hand.add(card);
+        }
     }
 
     // Removes cards that have been played from the hand of a specific player
-    public void removeCards(Player player, PlayedCards playedCards) {
-        List<Card> playerHand = hands.get(player);
-        if (playerHand != null) {
-            playerHand.removeAll(playedCards.getCards());
+    public void removeCards(PlayedCards playedCards) {
+        if (playedCards != null) {
+            hand.removeAll(playedCards.getCards());
         }
     }
 
     // Clears the hand of a specific player
-    public void clear(Player player) {
-        hands.remove(player);
+    public void clear() {
+        hand.clear();
     }
 
     // Returns the hand of a specific player
-    public List<Card> getHand(Player player) {
-        return hands.getOrDefault(player, new ArrayList<>());
+    public List<Card> getCardsInHand() {
+        return hand;
     }
 
     // Checks if the hand of a specific player is empty
-    public boolean isEmpty(Player player) {
-        List<Card> playerHand = hands.get(player);
-        return playerHand == null || playerHand.isEmpty();
+    public boolean isEmpty() {
+        return hand.isEmpty();
     }
 
-    // Returns the size of the hand of a specific player
-    public int getSize(Player player) {
-        List<Card> playerHand = hands.get(player);
-        return playerHand != null ? playerHand.size() : 0;
+    // Returns the size of the hand of the player
+    public int getSize() {
+        return hand.size();
     }
 
     // Returns a copy of the hand of a specific player to avoid modification from outside
-    public List<Card> getCards(Player player) {
-        List<Card> playerHand = hands.get(player);
-        return playerHand != null ? new ArrayList<>(playerHand) : new ArrayList<>();
+    public List<Card> getCards() {
+        List<Card> handCopy=new ArrayList<Card>();
+        for (int i=0;i<hand.size();i++){
+            handCopy.add(hand.get(i));
+        }
+        return handCopy;
     }
 }
