@@ -19,7 +19,7 @@ public class PlayedCards {
 
     // Add a card to the played cards
     public void addCard(Card card) {
-        cards.add(card);
+        this.cards.add(card);
     }
 
     // Get the highest card of the hand
@@ -28,7 +28,6 @@ public class PlayedCards {
         return this.cards.get(0);
     }
 
-    // Get player for this hand
     public Player getPlayer() {
         return this.player;
     }
@@ -41,7 +40,7 @@ public class PlayedCards {
         return this.cards;
     }
 
-    public boolean isValid() {
+    public boolean isValidSize() {
         int size = this.cards.size();
         return size == 1 || size == 2 || size == 3 || size == 5;
     }
@@ -51,36 +50,33 @@ public class PlayedCards {
         if (other == null) {
             return true;
         }
-    
+
         int thisSize = this.getNumOfCards();
         int otherSize = other.getNumOfCards();
-    
+
         // Compare the number of cards in each set
         if (thisSize != otherSize) {
-            return false; // If the number of cards is different, they cannot win against each other (invalid)
+            return false; // If the number of cards is different, they cannot win against each other
+                          // (invalid)
         } else {
-            // Check if both hands have five cards
             if (thisSize == 5) {
                 // Get the combination rankings for both hands
                 HandValidator.CombinationRanking thisRanking = HandValidator.getCombinationRanking(this);
                 HandValidator.CombinationRanking otherRanking = HandValidator.getCombinationRanking(other);
-    
+
                 // Compare the combination rankings
                 int rankingComparison = thisRanking.compareTo(otherRanking);
                 if (rankingComparison > 0) {
                     return true;
                 } else if (rankingComparison == 0) {
                     // If the rankings are equal, compare the highest cards
-                    Card thisHighestCard = this.getHighestCard();
-                    Card otherHighestCard = other.getHighestCard();
-    
-                    // Compare the ranks of the highest cards
-                    int rankComparison = thisHighestCard.compareTo(otherHighestCard);
+                    int rankComparison = this.getHighestCard().compareTo(other.getHighestCard());
                     if (rankComparison > 0) {
                         return true;
                     } else if (rankComparison == 0) {
                         // If ranks are equal, compare the suits
-                        int suitComparison = thisHighestCard.getSuit().compareTo(otherHighestCard.getSuit());
+                        int suitComparison = this.getHighestCard().getSuit()
+                                .compareTo(other.getHighestCard().getSuit());
                         if (suitComparison > 0) {
                             return true;
                         }
@@ -88,14 +84,12 @@ public class PlayedCards {
                 }
             } else {
                 // If the number of cards is not five, compare based on the highest card
-                Card thisHighestCard = this.getHighestCard();
-                Card otherHighestCard = other.getHighestCard();
-                int rankComparison = thisHighestCard.compareTo(otherHighestCard);
+                int rankComparison = this.getHighestCard().compareTo(other.getHighestCard());
                 if (rankComparison > 0) {
                     return true;
                 } else if (rankComparison == 0) {
                     // If ranks are equal, compare the suits
-                    int suitComparison = thisHighestCard.getSuit().compareTo(otherHighestCard.getSuit());
+                    int suitComparison = this.getHighestCard().getSuit().compareTo(other.getHighestCard().getSuit());
                     if (suitComparison > 0) {
                         return true;
                     }
@@ -146,14 +140,18 @@ public class PlayedCards {
 
     @Override
     public String toString() {
-        String result = "[";
+        if (cards.isEmpty()) {
+            return "[]"; // Return empty brackets if the list is empty
+        }
+
+        StringBuilder result = new StringBuilder("[");
         for (int i = 0; i < cards.size(); i++) {
-            result += cards.get(i);
+            result.append(cards.get(i));
             if (i < cards.size() - 1) {
-                result += ", ";
+                result.append(", ");
             }
         }
-        result += "]";
-        return result;
+        result.append("]");
+        return result.toString();
     }
 }

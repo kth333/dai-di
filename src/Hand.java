@@ -49,4 +49,17 @@ public class Hand {
         }
         return handCopy;
     }
+
+    @Override
+    public String toString() {
+        String result = "[";
+        for (int i = 0; i < hand.size(); i++) {
+            result += i + ". " + hand.get(i);
+            if (i < hand.size() - 1) {
+                result += ", ";
+            }
+        }
+        result += "]";
+        return result;
+    }
 }
