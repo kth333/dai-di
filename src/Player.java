@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Player {
     private String name;
@@ -154,9 +153,11 @@ public class Player {
                 boolean turnOrderSet = false;
                 // Set a do loop until turn order is successfully set
                 do {
-                    // nextInt(1,numPlayers) will generate random number inclusive 1 and exclusive
-                    // numPlayers
-                    int position = ThreadLocalRandom.current().nextInt(1, numPlayers);
+                    // nextInt(max-min) will generate random number from 0 to max-2
+                    // max - min sets max-2 to be highest random int generated
+                    // +1 will ensure that it will never be 0
+                    int max=numPlayers;
+                    int position=random.nextInt((max - 1)) + 1;
                     // Set the player in the position if it is empty
                     if (playerOrder[position] == null) {
                         playerOrder[position] = player;

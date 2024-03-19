@@ -4,7 +4,7 @@ public class Hand {
     private List<Card> hand;
 
     public Hand() {
-        this.hand = new ArrayList();
+        this.hand = new ArrayList<Card>();
     }
 
     // Add a card to the hand of a specific player
@@ -43,7 +43,7 @@ public class Hand {
 
     // Returns a copy of the hand of a specific player to avoid modification from outside
     public List<Card> getCards() {
-        List<Card> handCopy=new ArrayList<>();
+        List<Card> handCopy=new ArrayList<Card>();
         for (int i=0;i<hand.size();i++){
             handCopy.add(hand.get(i));
         }
