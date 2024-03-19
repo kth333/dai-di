@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Game {
 
     private static final int NUM_PLAYERS = 4;
-    private static final int startCardsPerPlayer = 13;
+    private static final int CARDS_PER_PLAYER = 13;
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -70,7 +70,7 @@ public class Game {
 
         // Distribute cards to players
         List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
-        Map<Player, List<Card>> playersHands = deck.distributeCards(players, startCardsPerPlayer);
+        Map<Player, List<Card>> playersHands = deck.distributeCards(players, CARDS_PER_PLAYER);
 
         // List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
         // displayPlayerOrder(playerOrder); // shit takes forever to run
