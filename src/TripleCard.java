@@ -1,6 +1,4 @@
-
-
-public class TripleCard extends Hand{
+public class TripleCard extends PlayedCards {
     private String type;
 
     public TripleCard(Player player, CardList card){

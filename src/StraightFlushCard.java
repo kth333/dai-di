@@ -3,7 +3,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class StraightFlushCard extends Hand {
+public class StraightFlushCard extends PlayedCards {
     private string type;
 
     public StraightFlushCard(Player player, CardList card){
@@ -13,7 +13,7 @@ public class StraightFlushCard extends Hand {
     public boolean isQuadCard(){
         return.type.equals("StraightFlushCard");
     }
-    public static boolean isValid(CardList handand){
+    public static boolean isValid(CardList hand){
         if(hand.size() != 5){
             return false;
         }

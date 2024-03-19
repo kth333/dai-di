@@ -1,68 +1,52 @@
-import java.util.ArrayList;
-public abstract class Hand extends CardList {
-    private Player player;
-    private int numOfCards;
+import java.util.*;
 
-    //store the type of hand against this hand
-    public ArrayList<String> againstArrayList;
+public class Hand {
+    private Map<Player, List<Card>> hands;
 
-    public Hand(Player player, CardList cards){
-        this.player = player;
-        this.againstArrayList = new ArrayList<String>();
-        //any hand against a pass will win
-        this.againstArrayList.add("Pass");
+    public Hand() {
+        this.hands = new HashMap<>();
+    }
 
-        if(cards != null){
-            this.numOfCards = cards.size();
-            for(int i = 0; i < cards.size();i++){
-                this.addCard(cards.getCard(i));
-            }
-        }else{
-            //if handis empty then the card will be null
-            this.numOfCards = 0;
+    // Add a card to the hand of a specific player
+    public void addCard(Player player, Card card) {
+        List<Card> playerHand = hands.getOrDefault(player, new ArrayList<>());
+        playerHand.add(card);
+        hands.put(player, playerHand);
+    }
+
+    // Removes cards that have been played from the hand of a specific player
+    public void removeCards(Player player, PlayedCards playedCards) {
+        List<Card> playerHand = hands.get(player);
+        if (playerHand != null) {
+            playerHand.removeAll(playedCards.getCards());
         }
-
-    }
-    //get the highest card of the hand
-    public card getHighestCard(){
-        this.sort();
-        return this.getCard(0);
     }
 
-    //get player for this hand
-    public Player getPlayer(){
-        return this.player;
-    }
-    public int getNumOfCards(){
-        return this.numOfCards;
+    // Clears the hand of a specific player
+    public void clear(Player player) {
+        hands.remove(player);
     }
 
-    public boolean isValid(CardList hand){
-        // valid hand must be at least 1 card e
-        return this.getNumOfCards() > 0;
+    // Returns the hand of a specific player
+    public List<Card> getHand(Player player) {
+        return hands.getOrDefault(player, new ArrayList<>());
     }
 
-
-    public boolean beats(Hand hand){
-        if(hand == null){
-            return true;
-        }
-        //check the number of cards as only the same number of cards can go against each other
-        if(this.getNumOfCards() != hand.getNumOfCards()){
-            return false;
-        }else if(this.getType() == hand.getType()){
-            //check if the hand against are of the same type then continue comparison
-            if(this.getHighestCard().compareTo(hand.getHighestCard()) > 0){
-                return true;
-            }else{
-                return false;
-            }
-        }else if (this.againstArrayList.contains(hand.getType())){
-            return true;
-        }
-        return false;
+    // Checks if the hand of a specific player is empty
+    public boolean isEmpty(Player player) {
+        List<Card> playerHand = hands.get(player);
+        return playerHand == null || playerHand.isEmpty();
     }
-    //so that other classes can use make this abstract
-    public abstract String getType();
-     
+
+    // Returns the size of the hand of a specific player
+    public int getSize(Player player) {
+        List<Card> playerHand = hands.get(player);
+        return playerHand != null ? playerHand.size() : 0;
+    }
+
+    // Returns a copy of the hand of a specific player to avoid modification from outside
+    public List<Card> getCards(Player player) {
+        List<Card> playerHand = hands.get(player);
+        return playerHand != null ? new ArrayList<>(playerHand) : new ArrayList<>();
+    }
 }

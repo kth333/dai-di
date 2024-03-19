@@ -6,7 +6,7 @@ public class StraightCardTest {
     @Test
     public void testIsValid() {
         // Create a CardList and populate it with Card objects
-        CardList hand = new CardList();
+        Hand hand = new Hand();
         hand.add(new Card(Rank.ACE, Suit.HEARTS));
         hand.add(new Card(Rank.TWO, Suit.HEARTS));
         hand.add(new Card(Rank.THREE, Suit.HEARTS));

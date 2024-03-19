@@ -1,4 +1,4 @@
-public class PassCard extends Hand {
+public class PassCard extends PlayedCards {
     public PassCard(Player player){
         
         //no cards

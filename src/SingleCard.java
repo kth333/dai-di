@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 import Card.Suit;
 
-public class SingleCard extends Hand{
+public class SingleCard extends PlayedCards {
     
     private String type;
 
