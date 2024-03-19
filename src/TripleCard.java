@@ -1,3 +1,5 @@
+
+
 public class TripleCard extends Hand{
     private String type;
 

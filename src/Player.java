@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class Player {
     private String name;
     private CardList hand;
@@ -53,8 +49,8 @@ public class Player {
         points -= deduct;
     }
 
-    public double loseGame(double rate){
-        double deduct=rate*getNumOfCards();
+    public double loseGame(double rate) {
+        double deduct = rate * getNumOfCards();
         deductPoints(deduct);
         return deduct;
     }
@@ -71,82 +67,23 @@ public class Player {
         hand.sort();
     }
 
-    public boolean has(Card card){
+    public boolean has(Card card) {
         return hand.contains(card);
-    }
-
-    //To be moved to CardGamePlayer
-    public void winGame(List<Player> playerList, int winner, double rate){
-        double winnings=0;
-        for (int i=0;i<playerList.size();i++){
-            if (i!=winner){
-                Player player=playerList.get(i);
-                winnings+=player.loseGame(rate);
-            }
-        }
-        playerList.get(winner).addPoints(winnings);;
-    }
-
-    public List<Player> playerOrder(List<Player> playerList,Card startCard,int numPlayers){
-        List<Player> playerOrder = new ArrayList<>();
-
-        //populate playerOrder list positions
-        for (int i=0;i<numPlayers;i++){
-            playerOrder.add(null);
-        }
-
-        //Set player Order
-        for (int i = 0; i < numPlayers; i++) {
-            //Get first player
-            Player player = playerList.get(i);
-            //Check if has startCard
-            if (player.has(startCard)) {
-                //If have startCard assign as first player
-                //Assumes that all 52 cards are dealt out properly
-                playerOrder.set(0, player);
-            } else {
-                //If not set their turn order as one of the other positions
-                boolean turnOrderSet=false;
-                //Set a do loop until turn order is successfully set
-                do {
-                    //nextInt(1,numPlayers) will generate random number inclusive 1 and exclusive numPlayers
-                    int position = ThreadLocalRandom.current().nextInt(1, numPlayers);
-                    //Set the player in the position if it is empty
-                    if (playerOrder.get(position)==null) {
-                        playerOrder.set(position,player);
-                        turnOrderSet=true;
-                    }
-                } while (!turnOrderSet);
-            }
-        }
-        return playerOrder;
-    }
-
-    public void displayPlayerOrder(List<Player> playerOrder){
-        for (int i=0;i<playerOrder.size();i++){
-            Player player=playerOrder.get(i);
-            String playerName=null;
-            if (player instanceof Player){
-                playerName=player.getName();
-            } else{
-                playerName="Missing";
-            }
-            System.out.println("Player "+i+" is "+playerName);
-        }
     }
 
     public CardList play(Integer cardIndex) {
         if (cardIndex == null) {
             return null;
         }
+
         CardList playedCards = new CardList();
-        for (int index : cardIndex) {
-            if (index >= 0 && index < hand.size()) {
+        for (int index=0;index<cardIndex;index++) {
+            if (index < hand.size()) {
                 Card card = hand.getCard(index);
                 playedCards.addCard(card);
+                hand.removeCard(card);
             }
         }
-        hand.removeCards(playedCards);
         return playedCards;
     }
 

@@ -3,7 +3,7 @@ public abstract class Hand extends CardList {
     private Player player;
     private int numOfCards;
 
-    //store the type of hand against this hand 
+    //store the type of hand against this hand
     public ArrayList<String> againstArrayList;
 
     public Hand(Player player, CardList cards){

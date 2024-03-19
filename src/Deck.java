@@ -19,6 +19,10 @@ public class Deck {
         Collections.shuffle(cards);
     }
 
+    public int size(){
+        return cards.size();
+    }
+
     public Card dealCard(){
         //remove a card from deck to deal if not empty
         if(!cards.isEmpty()){
