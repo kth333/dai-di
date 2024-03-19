@@ -38,4 +38,7 @@ public class StraightFlushCard extends PlayedCards {
         //same i havent implement whether A to 5 consider straight
         return CheckIfFlush && CheckIfStraight; // satisfy both conditon 
     }
+    public String getType(){
+        return this.type;
+    }
 }

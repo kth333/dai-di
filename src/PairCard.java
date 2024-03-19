@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 
-public class PairCard extends PlayedCards {
+public class PairCard extends Hand{
     private String type;
 
-    public Pair(Player player, Hand cards){
+    public Pair(Player player, CardList cards){
         super(player, cards);
         this.type = "PairCard";
     }
@@ -13,13 +13,11 @@ public class PairCard extends PlayedCards {
         return this.type.equals("PairCard");
     }
 
-    public static boolean isValid(Hand hand){
+    public static boolean isValid(CardList hand){
         if(hand.size() == 2){
-            Card card = hand.getCard(0);
-            Suit suit = card.getSuit();
-            Rank rank = card.getRank();
-
-            return true;
+            Card card1 = hand.getCard(0);
+            Card card2 = hand.getCard(1);
+            return card1.getRank().equals(card2.getRank());
         }
         return false;
     }
