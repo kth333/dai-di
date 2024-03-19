@@ -54,4 +54,4 @@ public class Card implements Comparable <Card> {
         }
         return this.suit.compareTo(other.suit);
     }
-}   
+}
