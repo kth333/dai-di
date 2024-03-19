@@ -34,13 +34,6 @@ public class Player {
         return name;
     }
 
-    // public void playCard(Card card) {
-    // if (hand.contains(card)) {
-    // hand.removeCard(card);
-    // // might need to add the card to the area being played
-    // }
-    // }
-
     public void play(List<Integer> selectedIndices, List<Card> hand, PlayedCards previousCards) {
         // Validate selected indices
         boolean validSelection = true;
@@ -88,11 +81,15 @@ public class Player {
     }
 
     public void addPoints(double add) {
-        points += add;
+        if (add>0){
+            points += add;
+        }
     }
 
     public void deductPoints(double deduct) {
-        points -= deduct;
+        if (deduct>0){
+            points -= deduct;
+        }
     }
 
     public double loseGame(double rate) {
@@ -102,44 +99,42 @@ public class Player {
     }
 
     public void removeAllCards() {
-        hand.clear(this); // Pass player to clear()
+        hand.clear(); // Pass player to clear()
     }
 
     public int getNumOfCards() {
-        return hand.getSize(this); // Pass player to getSize()
+        return hand.getSize(); // Pass player to getSize()
+    }
+
+    public void receiveCard(Card card){//Adds card to hand
+        hand.addCard(card);
     }
 
     public boolean hasCard(Card card) {
         if (card == null) {
             return false;
         }
-        List<Card> cardList = hand.getCards(this);
 
-        if (cardList != null) {
-            return cardList.contains(card);
-        }
-
-        return false;
+        return hand.getCardsInHand().contains(card);
     }
 
-    // To be moved to CardGamePlayer
-    public void winGame(List<Player> playerList, int winner, double rate) {
+    public static void winGame(List<Player> playerList, Player winner, double rate) {
         double winnings = 0;
         for (int i = 0; i < playerList.size(); i++) {
-            if (i != winner) {
+            if (!playerList.get(i).equals(winner)) {
                 Player player = playerList.get(i);
                 winnings += player.loseGame(rate);
             }
         }
-        playerList.get(winner).addPoints(winnings);
+        winner.addPoints(winnings);
     }
 
     public static Comparator<Player> sortByPoints() {
         return Comparator.comparingDouble(Player::getPoints).reversed();
     }
 
-    public List<Player> playerOrder(List<Player> playerList, int numPlayers) {
-        if (playerList == null || numPlayers > 1) {
+    public static List<Player> playerOrder(List<Player> playerList, int numPlayers) {
+        if (playerList == null || numPlayers < 1) {
             return null;
         }
 
@@ -173,11 +168,11 @@ public class Player {
         return Arrays.asList(playerOrder);
     }
 
-    public void displayPlayerOrder(List<Player> playerOrder) {
+    public static void displayPlayerOrder(List<Player> playerOrder) {
         for (int i = 0; i < playerOrder.size(); i++) {
             Player player = playerOrder.get(i);
             String playerName = null;
-            if (player instanceof Player) {
+            if (player!=null) {
                 playerName = player.getName();
             } else {
                 playerName = "Missing";

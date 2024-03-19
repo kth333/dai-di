@@ -1,1 +1,0 @@
-javac -cp src;lib/* -d classes test/PlayerOrderTest.java

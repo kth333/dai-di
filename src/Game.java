@@ -21,12 +21,16 @@ public class Game {
 
         // Create the human player with the entered name
         Player humanPlayer = new Player(playerName);
+        humanPlayer.addPoints(100);
 
         // Create three bot players with unique random names
         List<String> usedNames = new ArrayList<>();
         Player bot1 = new Player(humanPlayer.getName(), usedNames);
         Player bot2 = new Player(humanPlayer.getName(), usedNames);
         Player bot3 = new Player(humanPlayer.getName(), usedNames);
+        bot1.addPoints(100);
+        bot2.addPoints(100);
+        bot3.addPoints(100);
 
         while (true) {
             displayMenu();
@@ -69,62 +73,66 @@ public class Game {
 
         // Distribute cards to players
         List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
-        Map<Player, List<Card>> playersHands = deck.distributeCards(players, startCardsPerPlayer);
+        deck.distributeCards(players, startCardsPerPlayer);
+        // Map<Player, List<Card>> playersHands = deck.distributeCards(players, startCardsPerPlayer);
 
         // List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
         // displayPlayerOrder(playerOrder); // shit takes forever to run
 
         // Determine the player with the 3 of diamonds to start the round
-        Player startingPlayer = findStartingPlayer(playersHands);
-        System.out.println(startingPlayer.getName() + " starts the round!");
+        List<Player> playerOrder=Player.playerOrder(players, NUM_PLAYERS);
+        System.out.println(playerOrder.get(0).getName() + " starts the round!");
 
         Player winner = null;
         // Game loop
-        Player currentPlayer = startingPlayer;
+        Player currentPlayer = playerOrder.get(0);
         PlayedCards previousCards = null; // Initialize previous cards
 
         while (winner == null) {
             if (currentPlayer.equals(humanPlayer)) {
                 System.out.println("Your turn!");
-                System.out.println("Your Hand: " + playersHands.get(humanPlayer));
-                humanTurn(currentPlayer, playersHands, previousCards);
+                System.out.println("Your Hand: " + currentPlayer.getHand().getCardsInHand());
+                humanTurn(currentPlayer, previousCards);
             } else {
                 System.out.println(currentPlayer.getName() + "'s turn!");
-                botTurn(currentPlayer, previousCards, playersHands);
+                botTurn(currentPlayer, previousCards);
             }
-            winner = findWinner(playersHands);
+            winner = findWinner(playerOrder);
             // Switch to the next player
-            currentPlayer = getNextPlayer(currentPlayer, players);
+            currentPlayer = getNextPlayer(currentPlayer, playerOrder);
         }
 
         // Display winner
         System.out.println(winner.getName() + " wins!");
 
+        //Point calculations
+        Player.winGame(playerOrder, winner, 1);
+
         // Show ranking of players
         Collections.sort(players, Player.sortByPoints());
-        System.out.println("Rank\tName\t\tPoints");
+        System.out.println("Rank\tName\t\tPoints\t\tCards Left");
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
-            System.out.printf("%-6d\t%-15s\t%-5.1f\n", (i + 1), player.getName(), player.getPoints());
+            System.out.printf("%-6d\t%-15s\t%-5.1f\t\t%-5d\n", (i + 1), player.getName(), player.getPoints(),player.getNumOfCards());
         }
     }
 
-    private static Player findStartingPlayer(Map<Player, List<Card>> playersHands) {
-        for (Player player : playersHands.keySet()) {
-            List<Card> hand = playersHands.get(player);
-            if (hand != null) { // Check if the hand is not null
-                for (Card card : hand) {
-                    if (card.getSuit() == Card.Suit.DIAMONDS && card.getRank() == Card.Rank.THREE) {
-                        return player;
-                    }
-                }
-            }
-        }
-        return null; // 3 of Diamonds not found
-    }
+    // private static Player findStartingPlayer(Map<Player, List<Card>> playersHands) {
+    //     for (Player player : playersHands.keySet()) {
+    //         List<Card> hand = playersHands.get(player);
+    //         if (hand != null) { // Check if the hand is not null
+    //             for (Card card : hand) {
+    //                 if (card.getSuit() == Card.Suit.DIAMONDS && card.getRank() == Card.Rank.THREE) {
+    //                     return player;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return null; // 3 of Diamonds not found
+    // }
 
-    private static void humanTurn(Player currentPlayer, Map<Player, List<Card>> playersHands, PlayedCards previousCards) {
-        List<Card> hand = playersHands.get(currentPlayer);
+    private static void humanTurn(Player currentPlayer, PlayedCards previousCards) {
+        List<Card> hand = currentPlayer.getHand().getCardsInHand();
 
         while (true) {
             System.out.print("Select cards to play (enter indices separated by spaces) or type p to pass: ");
@@ -182,9 +190,9 @@ public class Game {
         }
     }
 
-    public static void botTurn(Player botPlayer, PlayedCards previousCards, Map<Player, List<Card>> playersHands) {
+    public static void botTurn(Player botPlayer, PlayedCards previousCards) {
         // Get the bot player's hand
-        List<Card> botHand = playersHands.get(botPlayer);
+        List<Card> botHand = botPlayer.getHand().getCardsInHand();
 
         // Check if the bot player should pass
 
@@ -215,10 +223,10 @@ public class Game {
         return players.get(nextIndex);
     }
 
-    private static Player findWinner(Map<Player, List<Card>> playersHands) {
-        for (Map.Entry<Player, List<Card>> entry : playersHands.entrySet()) {
-            if (entry.getValue().isEmpty()) {
-                return entry.getKey();
+    private static Player findWinner(List<Player> playerList) {
+        for (Player player : playerList) {
+            if (player.getHand().isEmpty()) {
+                return player;
             }
         }
         return null; // No winner found

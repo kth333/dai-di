@@ -28,22 +28,19 @@ public class Deck {
         Collections.shuffle(deck);
     }
 
-    public Map<Player, List<Card>> distributeCards(List<Player> players, int startCardsPerPlayer) {
-        Map<Player, List<Card>> playersHands = new HashMap<>();
-
-        // Initialize hands for each player
-        for (Player player : players) {
-            playersHands.put(player, new ArrayList<>());
+    public boolean distributeCards(List<Player> players, int startCardsPerPlayer) {
+        if (players==null || startCardsPerPlayer<1){
+            return false;
         }
 
         // Distribute cards to each player
         for (int i = 0; i < startCardsPerPlayer; i++) {
             for (Player player : players) {
-                playersHands.get(player).add(deck.remove(0)); // Remove card from deck and add to player's hand
+                player.receiveCard((deck.remove(0))); // Remove card from deck and add to player's hand
             }
         }
 
-        return playersHands;
+        return true;
     }
 
     @Override

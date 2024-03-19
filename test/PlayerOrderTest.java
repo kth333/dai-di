@@ -9,8 +9,12 @@ public class PlayerOrderTest {
         List<Player> playerlist = new ArrayList<>();
         playerlist.add(new Player("one"));
         playerlist.add(new Player("two"));
-        playerlist.add(new Player("three", 90));
-        playerlist.add(new Player("four", 80));
+        playerlist.add(new Player("three"));
+        playerlist.add(new Player("four"));
+        playerlist.get(0).addPoints(100);
+        playerlist.get(1).addPoints(100);
+        playerlist.get(2).addPoints(90);
+        playerlist.get(3).addPoints(80);
 
         // Create and shuffle deck
         Deck deck = new Deck();
@@ -19,15 +23,15 @@ public class PlayerOrderTest {
         int NUM_PLAYERS = playerlist.size();
         
         // Distribute cards to players
-        Map<Player, List<Card>> playerHands=deck.distributeCards(playerlist, NUM_PLAYERS)
-        Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+        Map<Player, List<Card>> playerHands=deck.distributeCards(playerlist, NUM_PLAYERS);
+        
         System.out.println(playerlist.get(0).getNumOfCards());
         System.out.println(playerlist.get(1).getNumOfCards());
         System.out.println(playerlist.get(2).getNumOfCards());
         System.out.println(playerlist.get(3).getNumOfCards());
         //Player playerTest = new Player("Test");
 
-        List<Player> order = PlayerGame.playerOrder(playerlist, startCard, NUM_PLAYERS);
+        List<Player> order = PlayerGame.playerOrder(playerlist, NUM_PLAYERS);
 
         // Call winGame
         double rate = 0.1;
