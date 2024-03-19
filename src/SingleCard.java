@@ -2,9 +2,11 @@ import java.util.ArrayList;
 
 import Card.Suit;
 
-public class SingleCard extends PlayedCards {
+public class SingleCard extends Hand{
     
     private String type;
+    private Suit cardSuit;
+    private Rank cardRank;
 
 
     //check player SingleCard and their List of cards
@@ -20,16 +22,21 @@ public class SingleCard extends PlayedCards {
     
     //check for handsize first then get its suit and rank return true if all correct
     public boolean static isValid(CardList hand){
-        if(hand.size() == 1){
-            Card card = hand.getCard(0);
-            Suit suit = card.getSuit();
-            Rank rank = card.getRank();
-            return true
+        if(hand.size() == 1 && hand != null){
+            this.cardSuit = card.getSuit();
+            this.cardRank = card.getRank();
+            return true;
         }
         return false;
     }
 
     public String getType(){
         return this.type;
+    }
+    public Suit getCardSuit() {
+        return this.cardSuit;
+    }
+    public Rank getCardRank() {
+        return this.cardRank;
     }
 }
