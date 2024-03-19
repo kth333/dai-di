@@ -6,3 +6,4 @@ classes/PlayerOrderTest.class
 *.class
 test/WinGameTest.java
 test/WinGameTest.java
+src/PlayerGame.java

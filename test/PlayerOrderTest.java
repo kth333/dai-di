@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 public class PlayerOrderTest {
@@ -18,13 +19,7 @@ public class PlayerOrderTest {
         int NUM_PLAYERS = playerlist.size();
         
         // Distribute cards to players
-        for (int i = 0; i < NUM_PLAYERS; i++) {
-            Player player = playerlist.get(i);
-            for (int j = i * (deckSize / NUM_PLAYERS); j < (i + 1) * (deckSize / NUM_PLAYERS); j++) {
-                // hand.add(deck.get(j));
-                player.receiveCard(deck.dealCard());
-            }
-        }
+        Map<Player, List<Card>> playerHands=deck.distributeCards(playerlist, NUM_PLAYERS)
         Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
         System.out.println(playerlist.get(0).getNumOfCards());
         System.out.println(playerlist.get(1).getNumOfCards());
