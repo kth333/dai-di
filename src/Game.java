@@ -32,6 +32,7 @@ public class Game {
             displayMenu();
             try {
                 int choice = scanner.nextInt();
+                scanner.nextLine();
                 switch (choice) {
                     case 1:
                         startGame(humanPlayer, bot1, bot2, bot3);
