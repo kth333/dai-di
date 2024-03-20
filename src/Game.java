@@ -168,7 +168,6 @@ public class Game {
                     }
                 } while (!turnOrderSet);
             }
-            System.out.println("Player " + i + " is " + playerName);
         }
         return Arrays.asList(playerOrder);
     }
