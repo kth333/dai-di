@@ -206,4 +206,8 @@ public class Game {
         }
         return null; // No winner found
     }
+
+    private static void quitGame() {
+        System.out.println("\nBye Bye!");
+    }
 }
