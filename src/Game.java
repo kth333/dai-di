@@ -54,7 +54,7 @@ public class Game {
                 Bot bot = (Bot)currentPlayer;
                 playResult = bot.play(currentPlayer, previousCards, consecutivePasses);
             } else{
-                System.out.println("\n"+currentPlayer.getName()+" Hand: " + currentPlayer.getHand().getCardsInHand());
+                System.out.println("\n"+currentPlayer.getName()+" Hand: " + currentPlayer.getHand());
                 playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, scanner);
             }
 
