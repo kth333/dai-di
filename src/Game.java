@@ -53,10 +53,6 @@ public class Game {
             }
             turn++;
             round += (turn - 1) / playerOrder.size();
-            if ((turn - 1) % playerOrder.size() == 0) {
-                // Reset the turn to 1
-                turn = 1;
-            }
             // Look for a winner
             winner = findWinner(playerOrder);
             // Switch to the next player
