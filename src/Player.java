@@ -12,10 +12,10 @@ public class Player {
     }
     
     // Method for player to play cards
-    public void play(Player currentPlayer, PlayedCards previousCards) {
+    public PlayedCards play(Player currentPlayer, PlayedCards previousCards, int turn) {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
         Scanner scanner = new Scanner(System.in);
-
+        
         while (true) {
             System.out.print("\nSelect cards to play (enter indices separated by spaces) or type p to pass: ");
             String input = scanner.nextLine();
@@ -23,7 +23,7 @@ public class Player {
             if (input.toLowerCase().equals("p")) {
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 previousCards = null; // Reset previous cards if the player passes
-                return; // Exit the method if the player chooses to pass
+                return previousCards; // Exit the method if the player chooses to pass
             }
 
             boolean validSelection = true;
@@ -53,6 +53,10 @@ public class Player {
             PlayedCards playedCards = new PlayedCards(currentPlayer, selectedCards);
           
             // Check if the selected cards win against the previous cards
+            if (turn == 1 && !playedCards.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
+                System.out.println("\nYou must include 3 of Diamonds on the first turn!");
+                continue;
+            }
             if (!playedCards.isValidSize()) {
                 System.out.println("\nInvalid selection! Please select one, two, three or five cards.");
                 continue;
@@ -66,13 +70,12 @@ public class Player {
     
             // Display the played cards
             System.out.println("\n" + currentPlayer.getName() + " played: " + playedCards.getCards());
-    
             // Remove the played cards from the player's hand
             hand.removeAll(playedCards.getCards());
             previousCards = playedCards;
-            break; // Exit the loop after a valid play
+            return previousCards;
     }
-}
+    }
 
     public Hand getHand() {
         return hand;

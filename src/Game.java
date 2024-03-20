@@ -28,18 +28,23 @@ public class Game {
         System.out.println("\n" + playerOrder.get(0).getName() + " starts the round!");
 
         Player winner = null;
-        // Game loop
         Player currentPlayer = playerOrder.get(0);
         PlayedCards previousCards = null; // Initialize previous cards
-
+        int turn = 1;
+        int round = 1;
+        
+        // Game loop
         while (winner == null) {
+            System.out.println("\nRound: " + round + " Turn: " + turn);
             if (currentPlayer.equals(humanPlayer)) {
-                System.out.println("\nYour turn!");
+                System.out.println("Your turn!");
                 System.out.println("\nYour Hand: " + currentPlayer.getHand());
             } else {
-                System.out.println("\n" + currentPlayer.getName() + "'s turn!");
+                System.out.println(currentPlayer.getName() + "'s turn!");
             }
-            currentPlayer.play(currentPlayer, previousCards);
+            previousCards = currentPlayer.play(currentPlayer, previousCards, turn);
+            turn++;
+            round += turn / 4;
             // Look for a winner
             winner = findWinner(playerOrder);
             // Switch to the next player

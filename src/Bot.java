@@ -22,7 +22,7 @@ public class Bot extends Player {
     }
 
     @Override
-    public void play(Player botPlayer, PlayedCards previousCards) {
+    public PlayedCards play(Player botPlayer, PlayedCards previousCards, int turn) {
         // Get the bot player's hand
         List<Card> botHand = botPlayer.getHand().getCardsInHand();
 
@@ -31,22 +31,26 @@ public class Bot extends Player {
         // Get all valid combinations in the bot's hand
         List<PlayedCards> validCombinations = getAllValidCombinations(botHand, previousCards);
 
-        if (previousCards != null && validCombinations == null) {
-            System.out.println("\n" + botPlayer.getName() + " passed their turn.");
-            previousCards = null; // Reset previous cards if the player passes
-            return;
-        }
-
-        // Check each valid combination against the previous cards
-        for (PlayedCards combination : validCombinations) {
-            if (previousCards == null || combination.winsAgainst(previousCards)) {
-                // If the combination wins or there are no previous cards, play it
-                System.out.println("\n" + botPlayer.getName() + " played: " + combination);
-                previousCards = combination; // Update the previous cards
-                botHand.removeAll(combination.getCards()); // Remove the played cards from the bot's hand
-                return;
+        if (validCombinations != null) {
+            // Check each valid combination against the previous cards
+            for (PlayedCards combination : validCombinations) {
+                if (previousCards == null || combination.winsAgainst(previousCards)) {
+                    if (turn == 1 && !combination.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
+                        // If it's the first turn and the combination doesn't contain 3 of Diamonds, continue searching
+                        continue;
+                    }
+                    // If the combination wins or there are no previous cards, play it
+                    previousCards = combination; // Update the previous cards
+                    System.out.println("\n" + botPlayer.getName() + " played: " + combination);
+                    botHand.removeAll(combination.getCards()); // Remove the played cards from the bot's hand
+                    if (previousCards != null) {
+                        return previousCards;
+                    }
+                }
             }
         }
+        System.out.println("\n" + botPlayer.getName() + " passed their turn.");
+        return null;    
     }
 
     private static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
@@ -139,12 +143,12 @@ public class Bot extends Player {
 
     private static List<PlayedCards> findFiveCombination(List<Card> hand) {
         List<PlayedCards> combinations = new ArrayList<>();
-    
+
         // Check if the hand has at least 5 cards
         if (hand.size() < 5) {
             return combinations; // Return an empty list if the hand doesn't have enough cards
         }
-    
+
         // Generate all combinations of 5 cards
         for (int i = 0; i < hand.size() - 4; i++) {
             for (int j = i + 1; j < hand.size() - 3; j++) {
