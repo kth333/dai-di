@@ -28,6 +28,19 @@ public class Player {
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 consecutivePasses++;
                 return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
+            }else if(input.toLowerCase().equals("r")){ // sort the hand by rank
+                    currentPlayer.getHand().sortByRank();
+                    System.out.println("Hand sorted by rank: "+ currentPlayer.getHand().getCardsInHand());
+                    continue;
+            }else if(input.toLowerCase().equals("s")){// sort the hand by suit
+                    currentPlayer.getHand().sortBySuit();
+                    System.out.println("Hand sorted by suit: "+ currentPlayer.getHand().getCardsInHand());
+                    continue;
+            } else if (input.toLowerCase().equals("q")) {
+                    //System.out.println("Setting quit flag..."); // Debugging statement
+                    PlayResult result = new PlayResult(previousCards, consecutivePasses);
+                    result.setQuit(true); // Set the quit flag when player chooses to quit
+                    return result;
             }
 
             boolean validSelection = true;
