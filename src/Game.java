@@ -5,8 +5,8 @@ public class Game {
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
 
-    public void startGame(String firstPlayerName,Scanner scanner) {
-        List<Player> players=getPlayers(firstPlayerName, scanner);
+    public void startGame(String firstPlayerName, Scanner scanner) {
+        List<Player> players = getPlayers(firstPlayerName, scanner);
 
         // Create and shuffle deck
         Deck deck = new Deck();
@@ -51,11 +51,12 @@ public class Game {
             System.out.println("\nRound: " + round + " Turn: " + turn);
             System.out.println(currentPlayer.getName() + "'s turn!");
             if (currentPlayer instanceof Bot) {
-                Bot bot=(Bot)currentPlayer;
-                playResult=bot.play(currentPlayer, previousCards, consecutivePasses);
-            } else{
-                System.out.println("\n"+currentPlayer.getName()+" Hand: " + currentPlayer.getHand().getCardsInHand());
-                playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses,scanner);
+                Bot bot = (Bot) currentPlayer;
+                playResult = bot.play(currentPlayer, previousCards, consecutivePasses);
+            } else {
+                System.out
+                        .println("\n" + currentPlayer.getName() + " Hand: " + currentPlayer.getHand().getCardsInHand());
+                playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, scanner);
             }
 
             previousCards = playResult.getPreviousCards();
@@ -98,12 +99,17 @@ public class Game {
         int players = 1;
         do {
             System.out.print("Select number of human players: ");
-            players = scanner.nextInt();
-            scanner.nextLine();
-            if (players < 1 || players > NUM_PLAYERS) {
-                System.out.println("Invalid player number! Player number is only 1 to 4.");
-            } else {
-                break;
+            try{
+                players = scanner.nextInt();
+                scanner.nextLine();
+                if (players < 1 || players > NUM_PLAYERS) {
+                    System.out.println("Invalid player number! Player number is only 1 to 4.");
+                } else {
+                    break;
+                }
+            } catch(InputMismatchException e){
+                scanner.nextLine();
+                System.out.println("Player number must be a number");
             }
         } while (true);
 
@@ -115,12 +121,12 @@ public class Game {
             do {
                 System.out.print("Enter player " + i + " name: ");
                 name = scanner.nextLine();
-                if (name != null && name.length() > 0 && !playerNames.contains(name)) {
+                if (name != null && name.length() > 0 && name.length()<20 && !playerNames.contains(name)) {
                     playerNames.add(name);
                     playerList.add(new Player(name));
                     break;
                 } else {
-                    System.out.println("Invalid name try again!");
+                    System.out.println("Invalid name try again! Names cannot be reused and is length 1 to 20");
                 }
             } while (true);
         }
