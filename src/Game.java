@@ -16,7 +16,7 @@ public class Game {
 
         System.out.print("\nPlayers: ");
         for (int i = 0; i < NUM_PLAYERS - 1; i++) {
-            System.out.print(players.get(i).getName() + ",");
+            System.out.print(players.get(i).getName() + ", ");
         }
         System.out.print(players.getLast().getName() + "\n");
 
