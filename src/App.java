@@ -1,11 +1,17 @@
 import java.util.Scanner;
 
+import Music.MusicPlayer;
+
 public class App {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         // Give the user a warm welcome :)
         System.out.println("Welcome to Dai Di!");
+
+        // Play background music
+        MusicPlayer musicPlayer = new MusicPlayer();
+        musicPlayer.playMusic("Music/music.wav");
 
         // Prompt the user to enter their name
         System.out.print("Enter your name: ");
@@ -33,6 +39,7 @@ public class App {
                         break; // Continue showing menu
                     case 3:
                         System.out.println("Bye Bye!");
+                        musicPlayer.stopMusic();
                         return; // Exit the program
                     default:
                         System.out.println("Invalid choice! Please enter 1, 2, or 3.");
