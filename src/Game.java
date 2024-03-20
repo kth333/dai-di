@@ -5,7 +5,9 @@ public class Game {
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
 
-    public void startGame(List<Player> players,Scanner scanner) {
+    public void startGame(String firstPlayerName,Scanner scanner) {
+        List<Player> players=getPlayers(firstPlayerName, scanner);
+
         // Create and shuffle deck
         Deck deck = new Deck();
         deck.shuffle();
