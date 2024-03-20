@@ -5,7 +5,7 @@ public class Game {
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
 
-    public void startGame(List<Player> players) {
+    public void startGame(List<Player> players,Scanner scanner) {
         // Create and shuffle deck
         Deck deck = new Deck();
         deck.shuffle();
@@ -48,12 +48,14 @@ public class Game {
         while (winner == null) {
             System.out.println("\nRound: " + round + " Turn: " + turn);
             System.out.println(currentPlayer.getName() + "'s turn!");
-            if (!(currentPlayer instanceof Bot)) {
-                System.out.println("\nYour Hand: " + currentPlayer.getHand().getCardsInHand());
+            if (currentPlayer instanceof Bot) {
+                Bot bot=(Bot)currentPlayer;
+                playResult=bot.play(currentPlayer, previousCards, consecutivePasses);
+            } else{
+                System.out.println("\n"+currentPlayer.getName()+" Hand: " + currentPlayer.getHand().getCardsInHand());
+                playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses,scanner);
             }
-            
 
-            playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses);
             previousCards = playResult.getPreviousCards();
             // get number of times passed in round so far
             consecutivePasses = playResult.getConsecutivePasses();
@@ -88,6 +90,46 @@ public class Game {
             System.out.printf("%-6d\t%-15s\t%-5.1f\t\t%-5d\n", (i + 1), player.getName(), player.getPoints(),
                     player.getNumOfCards());
         }
+    }
+
+    public List<Player> getPlayers(String firstPlayerName,Scanner scanner) {
+        int players = 1;
+        do {
+            System.out.print("Select number of human players: ");
+            players = scanner.nextInt();
+            scanner.nextLine();
+            if (players < 1 || players > NUM_PLAYERS) {
+                System.out.println("Invalid player number! Player number is only 1 to 4.");
+            } else {
+                break;
+            }
+        } while (true);
+
+        List<Player> playerList = new ArrayList<Player>(Arrays.asList(new Player(firstPlayerName)));
+        List<String> playerNames = new ArrayList<String>(Arrays.asList(firstPlayerName));
+        // Create human players
+        for (int i = 2; i <= players; i++) {
+            String name = null;
+            do {
+                System.out.print("Enter player " + i + " name: ");
+                name = scanner.nextLine();
+                if (name != null && name.length() > 0 && !playerNames.contains(name)) {
+                    playerNames.add(name);
+                    playerList.add(new Player(name));
+                    break;
+                } else {
+                    System.out.println("Invalid name try again!");
+                }
+            } while (true);
+        }
+
+        if (players < NUM_PLAYERS) {
+            for (int i = 0; i < 4 - players; i++) {
+                playerList.add(new Bot(playerNames, Bot.usedNames));
+            }
+        }
+
+        return playerList;
     }
 
     private static List<Player> playerOrder(List<Player> playerList, int numPlayers) {

@@ -12,9 +12,8 @@ public class Player {
     }
     
     // Method for player to play cards
-    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses) {
+    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses,Scanner scanner) {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
-        Scanner scanner = new Scanner(System.in);
         
         while (true) {
             System.out.print("\nSelect cards to play (enter indices separated by spaces) or type p to pass: ");

@@ -37,7 +37,6 @@ public class Bot extends Player {
         return name;
     }
 
-    @Override
     public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses) {
         // Get the bot player's hand
         List<Card> botHand = botPlayer.getHand().getCardsInHand();

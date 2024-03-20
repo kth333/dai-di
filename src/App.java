@@ -1,6 +1,4 @@
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -28,43 +26,9 @@ public class App {
                     case 1:
                         Game game = new Game();
 
-                        int players=1;
-                        do{
-                            System.out.print("Select number of human players: ");
-                            players = scanner.nextInt();
-                            scanner.nextLine();
-                            if (players<1 || players>4){
-                                System.out.println("Invalid player number! Player number is only 1 to 4.");
-                            } else{
-                                break;
-                            }
-                        } while(true);
+                        List<Player> playerList=game.getPlayers(playerName,scanner);
 
-                        List<Player> playerList = new ArrayList<Player>(Arrays.asList(new Player(playerName)));
-                        List<String> playerNames = new ArrayList<String>(Arrays.asList(playerName));
-                        //Create human players
-                        for (int i=2;i<=players;i++){
-                            String name=null;
-                            do{
-                                System.out.print("Enter player "+i+" name: ");
-                                name=scanner.nextLine();
-                                if (name!=null && name.length()>0 && !playerNames.contains(name)){
-                                    playerNames.add(name);
-                                    playerList.add(new Player(name));
-                                    break;
-                                } else{
-                                    System.out.println("Invalid name try again!");
-                                }
-                            } while(true);
-                        }
-
-                        if (players<4){
-                            for (int i=0;i<4-players;i++){
-                                playerList.add(new Bot(playerNames,Bot.usedNames));
-                            }
-                        }
-
-                        game.startGame(playerList);
+                        game.startGame(playerList,scanner);
                         return; // Exit the loop and terminate the program
                     case 2:
                         System.out.println("\nInstructions:");
