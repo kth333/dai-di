@@ -16,8 +16,14 @@ public class Player {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
         
         while (true) {
-            System.out.print("\nSelect cards to play (enter indices separated by spaces) or type p to pass: ");
-            String input = scanner.nextLine();
+             System.out.print("\nOptions:\n" +
+                 " - Select cards to play (enter indices separated by spaces)\n" +
+                 " - Type 'p' to pass\n" +
+                 " - Type 's' to sort hand by suit\n" +
+                 " - Type 'r' to sort hand by rank\n" +
+                 " - Type 'q' to quit the game\n" + 
+                 "Your choice: ");
+                String input = scanner.nextLine();
 
             Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
             if (input.toLowerCase().equals("p")) {
