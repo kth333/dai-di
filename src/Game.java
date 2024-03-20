@@ -44,7 +44,7 @@ public class Game {
             } else {
                 System.out.println(currentPlayer.getName() + "'s turn!");
             }
-            playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, turn);
+            playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, round, turn);
             previousCards = playResult.getPreviousCards();
             consecutivePasses = playResult.getConsecutivePasses();
             // Check if the player passed
@@ -53,6 +53,11 @@ public class Game {
             }
             turn++;
             round += (turn - 1) / playerOrder.size();
+            if ((turn - 1) % playerOrder.size() == 0) {
+                // Reset the turn to 1
+                turn = 1;
+            }
+
             // Look for a winner
             winner = findWinner(playerOrder);
             // Switch to the next player

@@ -22,7 +22,7 @@ public class Bot extends Player {
     }
 
     @Override
-    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses, int turn) {
+    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses, int round, int turn) {
         // Get the bot player's hand
         List<Card> botHand = botPlayer.getHand().getCardsInHand();
 
@@ -35,7 +35,7 @@ public class Bot extends Player {
             // Check each valid combination against the previous cards
             for (PlayedCards combination : validCombinations) {
                 if (previousCards == null || combination.winsAgainst(previousCards)) {
-                    if (turn == 1 && !combination.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
+                    if (round == 1 &&turn == 1 && !combination.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
                         // If it's the first turn and the combination doesn't contain 3 of Diamonds, continue searching
                         continue;
                     }
