@@ -12,7 +12,7 @@ public class Player {
     }
     
     // Method for player to play cards
-    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, int turn) {
+    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses) {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
         Scanner scanner = new Scanner(System.in);
         
@@ -20,7 +20,12 @@ public class Player {
             System.out.print("\nSelect cards to play (enter indices separated by spaces) or type p to pass: ");
             String input = scanner.nextLine();
 
+            Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
             if (input.toLowerCase().equals("p")) {
+                if (hasCard(startCard)){
+                    System.out.println("Need to play 3 of Diamonds cannot pass first turn");
+                    continue;
+                }
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 consecutivePasses++;
                 return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
@@ -51,10 +56,10 @@ public class Player {
             
             // Create an instance of PlayedCards to store the selected cards
             PlayedCards playedCards = new PlayedCards(currentPlayer, selectedCards);
-          
+            
             // Check if the selected cards win against the previous cards
-            if (turn == 1 && !playedCards.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
-                System.out.println("\nYou must include 3 of Diamonds on the first turn!");
+            if (hasCard(startCard) && !playedCards.getCards().contains(startCard)) {
+                System.out.println("\nYou must play 3 of Diamonds on the first turn!");
                 continue;
             }
             if (!playedCards.isValidSize()) {

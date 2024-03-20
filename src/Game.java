@@ -5,16 +5,22 @@ public class Game {
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
 
-    public void startGame(Player humanPlayer, Player bot1, Player bot2, Player bot3) {
+    public void startGame(List<Player> players) {
         // Create and shuffle deck
         Deck deck = new Deck();
         deck.shuffle();
 
-        System.out.println("\nPlayers: " + humanPlayer.getName() + ", " + bot1.getName() + ", " + bot2.getName() + ", "
-                + bot3.getName());
+        // System.out.println("\nPlayers: " + players.getName() + ", " + bot1.getName()
+        // + ", " + bot2.getName() + ", "
+        // + bot3.getName());
+
+        System.out.print("\nPlayers: ");
+        for (int i = 0; i < NUM_PLAYERS - 1; i++) {
+            System.out.print(players.get(i).getName() + ",");
+        }
+        System.out.print(players.getLast().getName() + "\n");
 
         // Give 100 points to each player at the start of the game
-        List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
         for (Player player : players) {
             player.addPoints(100);
         }
@@ -25,7 +31,7 @@ public class Game {
         // Determine the player with the 3 of diamonds to start the round
         List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
 
-        //show order of players
+        // show order of players
         displayPlayerOrder(playerOrder);
 
         System.out.println("\n" + playerOrder.get(0).getName() + " starts the round!");
@@ -37,29 +43,30 @@ public class Game {
         int round = 1;
         int consecutivePasses = 0;
         PlayResult playResult = new PlayResult(previousCards, consecutivePasses);
-        
+
         // Game loop
         while (winner == null) {
-            System.out.println("\nRound: " + round + " Turn: " + turn % NUM_PLAYERS);
-            if (currentPlayer.equals(humanPlayer)) {
-                //For human players
-                System.out.println("Your turn!");
+            System.out.println("\nRound: " + round + " Turn: " + turn);
+            System.out.println(currentPlayer.getName() + "'s turn!");
+            if (!(currentPlayer instanceof Bot)) {
                 System.out.println("\nYour Hand: " + currentPlayer.getHand().getCardsInHand());
-            } else {
-                //For bot players
-                System.out.println(currentPlayer.getName() + "'s turn!");
             }
+            
 
-            playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, turn);
+            playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses);
             previousCards = playResult.getPreviousCards();
-            //get number of times passed in round so far
+            // get number of times passed in round so far
             consecutivePasses = playResult.getConsecutivePasses();
             // Check if the player passed
             if (consecutivePasses >= 3) {
                 previousCards = null;
             }
             turn++;
-            round += (turn - 1) / playerOrder.size();
+            round += (turn - 1) / NUM_PLAYERS;
+            if ((turn - 1) % NUM_PLAYERS == 0) {
+                // Reset the turn to 1
+                turn = 1;
+            }
             // Look for a winner
             winner = findWinner(playerOrder);
             // Switch to the next player
@@ -84,7 +91,7 @@ public class Game {
     }
 
     private static List<Player> playerOrder(List<Player> playerList, int numPlayers) {
-        //Set turn order of players
+        // Set turn order of players
         Random random = new Random();
         if (playerList == null || numPlayers < 1) {
             return null;
@@ -123,14 +130,14 @@ public class Game {
     }
 
     private static void displayPlayerOrder(List<Player> playerOrder) {
-        //to display player order again
+        // to display player order again
         System.out.println("Turn order is:");
-        for (int i = 0; i < playerOrder.size()-1; i++) {
+        for (int i = 0; i < playerOrder.size() - 1; i++) {
             Player player = playerOrder.get(i);
             String playerName = player.getName();
-            System.out.printf("%s then ",playerName);
+            System.out.printf("%s then ", playerName);
         }
-        System.out.printf("%s.",playerOrder.getLast().getName());
+        System.out.printf("%s.", playerOrder.getLast().getName());
     }
 
     private static Player getNextPlayer(Player currentPlayer, List<Player> players) {
@@ -142,9 +149,9 @@ public class Game {
 
     private static Player findWinner(List<Player> playerList) {
         for (Player player : playerList) {
-            //search playerList for an empty hand
+            // search playerList for an empty hand
             if (player.getHand().isEmpty()) {
-                return player;//Player with empty hand is winner
+                return player;// Player with empty hand is winner
             }
         }
         return null; // No winner found
