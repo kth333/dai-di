@@ -4,7 +4,7 @@ import java.util.List;
 public class Game {
 
     private static final int NUM_PLAYERS = 4;
-    private static final int startCardsPerPlayer = 13;
+    private static final int CARDS_PER_PLAYER = 13;
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -32,6 +32,7 @@ public class Game {
             displayMenu();
             try {
                 int choice = scanner.nextInt();
+                scanner.nextLine();
                 switch (choice) {
                     case 1:
                         startGame(humanPlayer, bot1, bot2, bot3);
