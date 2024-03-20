@@ -6,6 +6,8 @@ public class Game {
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
     private static final Scanner scanner = new Scanner(System.in);
+    private static int passCount = 0;
+    private static PlayedCards previousCards = null;
 
     public static void main(String[] args) {
         // Give the user a warm welcome :)
@@ -70,9 +72,7 @@ public class Game {
 
         // Distribute cards to players
         List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
-        deck.distributeCards(players, startCardsPerPlayer);
-        // Map<Player, List<Card>> playersHands = deck.distributeCards(players,
-        // startCardsPerPlayer);
+        deck.distributeCards(players, CARDS_PER_PLAYER);
 
         // List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
         // displayPlayerOrder(playerOrder); // shit takes forever to run
@@ -84,21 +84,20 @@ public class Game {
         Player winner = null;
         // Game loop
         Player currentPlayer = playerOrder.get(0);
-        PlayedCards previousCards = null; // Initialize previous cards
-        int passCount = 0;
+        //PlayedCards previousCards = null; // Initialize previous cards
 
         while (winner == null) {
             if (currentPlayer.equals(humanPlayer)) {
                 System.out.println("Your turn!");
                 System.out.println("Your Hand: " + currentPlayer.getHand().getCardsInHand());
-                humanTurn(currentPlayer, previousCards, passCount);
+                humanTurn(currentPlayer);
             } else {
                 System.out.println(currentPlayer.getName() + "'s turn!");
-                botTurn(currentPlayer, previousCards, passCount);
+                botTurn(currentPlayer);
             }
             winner = findWinner(playerOrder);
             // Switch to the next player
-            currentPlayer = getNextPlayer(currentPlayer, playerOrder,passCount);
+            currentPlayer = getNextPlayer(currentPlayer, playerOrder);
         }
 
         // Display winner
@@ -117,23 +116,7 @@ public class Game {
         }
     }
 
-    // private static Player findStartingPlayer(Map<Player, List<Card>>
-    // playersHands) {
-    // for (Player player : playersHands.keySet()) {
-    // List<Card> hand = playersHands.get(player);
-    // if (hand != null) { // Check if the hand is not null
-    // for (Card card : hand) {
-    // if (card.getSuit() == Card.Suit.DIAMONDS && card.getRank() ==
-    // Card.Rank.THREE) {
-    // return player;
-    // }
-    // }
-    // }
-    // }
-    // return null; // 3 of Diamonds not found
-    // }
-
-    private static void humanTurn(Player currentPlayer, PlayedCards previousCards,int passCount) {
+    private static void humanTurn(Player currentPlayer) {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
 
         while (true) {
@@ -143,7 +126,7 @@ public class Game {
             if (input.toLowerCase().equals("p")) {
                 System.out.println(currentPlayer.getName() + " passed their turn.");
                 passCount++;
-                //previousCards = null; // Reset previous cards if the player passes
+                // previousCards = null; // Reset previous cards if the player passes
                 return; // Exit the method if the player chooses to pass
             }
 
@@ -193,7 +176,7 @@ public class Game {
         }
     }
 
-    public static void botTurn(Player botPlayer, PlayedCards previousCards,int passCount) {
+    public static void botTurn(Player botPlayer) {
         // Get the bot player's hand
         List<Card> botHand = botPlayer.getHand().getCardsInHand();
 
@@ -201,11 +184,10 @@ public class Game {
 
         // Get all valid combinations in the bot's hand
         List<PlayedCards> validCombinations = HandValidator.getAllValidCombinations(botHand, previousCards);
-
-        if (previousCards != null && validCombinations == null) {
+        if (previousCards != null && (validCombinations == null || validCombinations.size()==0)) {
             System.out.println(botPlayer.getName() + " passed their turn.");
             passCount++;
-            //previousCards = null; // Reset previous cards if the player passes
+            // previousCards = null; // Reset previous cards if the player passes
             return;
         }
 
@@ -221,8 +203,14 @@ public class Game {
         }
     }
 
-    private static Player getNextPlayer(Player currentPlayer, List<Player> players,int passCount) {
+    private static Player getNextPlayer(Player currentPlayer, List<Player> players) {
         int currentIndex = players.indexOf(currentPlayer);
+        if (currentIndex + 1 == players.size()) {
+            if (passCount == players.size()) {
+                previousCards = null;
+            }
+            passCount = 0;
+        }
         int nextIndex = (currentIndex + 1) % players.size(); // Wrap around to the beginning if at the end
         return players.get(nextIndex);
     }
