@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.List;
 
 public class App {
     private static final Scanner scanner = new Scanner(System.in);
@@ -26,9 +25,7 @@ public class App {
                     case 1:
                         Game game = new Game();
 
-                        List<Player> playerList=game.getPlayers(playerName,scanner);
-
-                        game.startGame(playerList,scanner);
+                        game.startGame(playerName,scanner);
                         return; // Exit the loop and terminate the program
                     case 2:
                         System.out.println("\nInstructions:");
