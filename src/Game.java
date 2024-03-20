@@ -51,17 +51,16 @@ public class Game {
             System.out.println("\nRound: " + round + " Turn: " + turn);
             System.out.println(currentPlayer.getName() + "'s turn!");
             if (currentPlayer instanceof Bot) {
-                Bot bot=(Bot)currentPlayer;
-                playResult=bot.play(currentPlayer, previousCards, consecutivePasses);
+                Bot bot = (Bot)currentPlayer;
+                playResult = bot.play(currentPlayer, previousCards, consecutivePasses);
             } else{
                 System.out.println("\n"+currentPlayer.getName()+" Hand: " + currentPlayer.getHand().getCardsInHand());
-                playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses,scanner);
+                playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, scanner);
             }
 
             previousCards = playResult.getPreviousCards();
             // get number of times passed in round so far
             consecutivePasses = playResult.getConsecutivePasses();
-            // Check if the player passed
             if (consecutivePasses >= 3) {
                 previousCards = null;
             }
