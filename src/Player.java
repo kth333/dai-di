@@ -25,7 +25,7 @@ public class Player {
                  "Your choice: ");
                 String input = scanner.nextLine();
 
-            Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+            Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
             if (input.toLowerCase().equals("pass")) {
                 if (hasCard(startCard)){
                     System.out.println("Need to play 3 of Diamonds cannot pass first turn!");
@@ -34,11 +34,11 @@ public class Player {
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 consecutivePasses++;
                 return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
-            }else if(input.toLowerCase().equals("rank")){ // sort the hand by rank
+            } else if (input.toLowerCase().equals("rank")){ // sort the hand by rank
                     currentPlayer.getHand().sortByRank();
                     System.out.println("\nHand sorted by rank: "+ currentPlayer.getHand().getCardsInHand());
                     continue;
-            }else if(input.toLowerCase().equals("suit")){// sort the hand by suit
+            } else if (input.toLowerCase().equals("suit")){// sort the hand by suit
                     currentPlayer.getHand().sortBySuit();
                     System.out.println("\nHand sorted by suit: "+ currentPlayer.getHand().getCardsInHand());
                     continue;
