@@ -48,6 +48,13 @@ public class Game {
 
         // Game loop
         while (winner == null) {
+            //quit game if choose q
+            if (playResult.isQuit()) {
+                //System.out.println("Quit flag detected, quitting...");
+                quitGame(); 
+                return; // exit the startGame method, ending the game
+            }
+            
             System.out.println("\nRound: " + round + " Turn: " + turn);
             System.out.println(currentPlayer.getName() + "'s turn!");
             if (currentPlayer instanceof Bot) {
