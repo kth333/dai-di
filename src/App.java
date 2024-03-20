@@ -24,8 +24,7 @@ public class App {
                 switch (choice) {
                     case 1:
                         Game game = new Game();
-
-                        game.startGame(playerName,scanner);
+                        game.startGame(playerName, scanner);
                         return; // Exit the loop and terminate the program
                     case 2:
                         System.out.println("\nInstructions:");

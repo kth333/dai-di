@@ -18,15 +18,15 @@ public class Player {
         while (true) {
              System.out.print("\nOptions:\n" +
                  " - Select cards to play (enter indices separated by spaces)\n" +
-                 " - Type 'p' to pass\n" +
-                 " - Type 's' to sort hand by suit\n" +
-                 " - Type 'r' to sort hand by rank\n" +
-                 " - Type 'q' to quit the game\n" + 
+                 " - Type 'pass' to pass\n" +
+                 " - Type 'suit' to sort hand by suit\n" +
+                 " - Type 'rank' to sort hand by rank\n" +
+                 " - Type 'quit' to quit the game\n" + 
                  "Your choice: ");
                 String input = scanner.nextLine();
 
             Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
-            if (input.toLowerCase().equals("p")) {
+            if (input.toLowerCase().equals("pass")) {
                 if (hasCard(startCard)){
                     System.out.println("Need to play 3 of Diamonds cannot pass first turn!");
                     continue;
@@ -34,15 +34,15 @@ public class Player {
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 consecutivePasses++;
                 return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
-            }else if(input.toLowerCase().equals("r")){ // sort the hand by rank
+            }else if(input.toLowerCase().equals("rank")){ // sort the hand by rank
                     currentPlayer.getHand().sortByRank();
-                    System.out.println("Hand sorted by rank: "+ currentPlayer.getHand().getCardsInHand());
+                    System.out.println("\nHand sorted by rank: "+ currentPlayer.getHand().getCardsInHand());
                     continue;
-            }else if(input.toLowerCase().equals("s")){// sort the hand by suit
+            }else if(input.toLowerCase().equals("suit")){// sort the hand by suit
                     currentPlayer.getHand().sortBySuit();
-                    System.out.println("Hand sorted by suit: "+ currentPlayer.getHand().getCardsInHand());
+                    System.out.println("\nHand sorted by suit: "+ currentPlayer.getHand().getCardsInHand());
                     continue;
-            } else if (input.toLowerCase().equals("q")) {
+            } else if (input.toLowerCase().equals("quit")) {
                     //System.out.println("Setting quit flag..."); // Debugging statement
                     PlayResult result = new PlayResult(previousCards, consecutivePasses);
                     result.setQuit(true); // Set the quit flag when player chooses to quit
