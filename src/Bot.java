@@ -12,6 +12,11 @@ public class Bot extends Player {
         usedNames.add(getName());
     }
 
+    public Bot(List<String> playerNames, List<String> usedNames) {
+        super(generateBotName(playerNames, usedNames));
+        usedNames.add(getName());
+    }
+
     private static String generateBotName(String playerName, List<String> usedNames) {
         usedNames.add(playerName);
         String name;
@@ -21,8 +26,18 @@ public class Bot extends Player {
         return name;
     }
 
-    @Override
-    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses, int round, int turn) {
+    private static String generateBotName(List<String> playerNames, List<String> usedNames) {
+        for (String usedname:playerNames){
+            usedNames.add(usedname);
+        }
+        String name;
+        do {
+            name = botNames[random.nextInt(botNames.length)];
+        } while (usedNames.contains(name));
+        return name;
+    }
+
+    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses) {
         // Get the bot player's hand
         List<Card> botHand = botPlayer.getHand().getCardsInHand();
 
@@ -35,8 +50,9 @@ public class Bot extends Player {
             // Check each valid combination against the previous cards
             for (PlayedCards combination : validCombinations) {
                 if (previousCards == null || combination.winsAgainst(previousCards)) {
-                    if (round == 1 &&turn == 1 && !combination.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
-                        // If it's the first turn and the combination doesn't contain 3 of Diamonds, continue searching
+                    Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+                    if (hasCard(startCard) && !combination.getCards().contains(startCard)) {
+                        // If bot has 3 of Diamonds and the combination doesn't contain 3 of Diamonds, continue searching
                         continue;
                     }
                     // If the combination wins or there are no previous cards, play it
