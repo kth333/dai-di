@@ -32,6 +32,8 @@ public class Game {
         PlayedCards previousCards = null; // Initialize previous cards
         int turn = 1;
         int round = 1;
+        int consecutivePasses = 0;
+        PlayResult playResult = new PlayResult(previousCards, consecutivePasses);
         
         // Game loop
         while (winner == null) {
@@ -42,9 +44,19 @@ public class Game {
             } else {
                 System.out.println(currentPlayer.getName() + "'s turn!");
             }
-            previousCards = currentPlayer.play(currentPlayer, previousCards, turn);
+            playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, turn);
+            previousCards = playResult.getPreviousCards();
+            consecutivePasses = playResult.getConsecutivePasses();
+            // Check if the player passed
+            if (consecutivePasses >= 3) {
+                previousCards = null;
+            }
             turn++;
-            round += turn / 4;
+            round += (turn - 1) / playerOrder.size();
+            if ((turn - 1) % playerOrder.size() == 0) {
+                // Reset the turn to 1
+                turn = 1;
+            }
             // Look for a winner
             winner = findWinner(playerOrder);
             // Switch to the next player

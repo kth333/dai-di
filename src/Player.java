@@ -12,7 +12,7 @@ public class Player {
     }
     
     // Method for player to play cards
-    public PlayedCards play(Player currentPlayer, PlayedCards previousCards, int turn) {
+    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, int turn) {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
         Scanner scanner = new Scanner(System.in);
         
@@ -22,8 +22,8 @@ public class Player {
 
             if (input.toLowerCase().equals("p")) {
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
-                previousCards = null; // Reset previous cards if the player passes
-                return previousCards; // Exit the method if the player chooses to pass
+                consecutivePasses++;
+                return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
             }
 
             boolean validSelection = true;
@@ -73,7 +73,8 @@ public class Player {
             // Remove the played cards from the player's hand
             hand.removeAll(playedCards.getCards());
             previousCards = playedCards;
-            return previousCards;
+            consecutivePasses = 0;
+            return new PlayResult(previousCards, consecutivePasses);
     }
     }
 

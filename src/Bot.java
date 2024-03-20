@@ -22,7 +22,7 @@ public class Bot extends Player {
     }
 
     @Override
-    public PlayedCards play(Player botPlayer, PlayedCards previousCards, int turn) {
+    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses, int turn) {
         // Get the bot player's hand
         List<Card> botHand = botPlayer.getHand().getCardsInHand();
 
@@ -44,13 +44,15 @@ public class Bot extends Player {
                     System.out.println("\n" + botPlayer.getName() + " played: " + combination);
                     botHand.removeAll(combination.getCards()); // Remove the played cards from the bot's hand
                     if (previousCards != null) {
-                        return previousCards;
+                        consecutivePasses = 0;
+                        return new PlayResult(previousCards, consecutivePasses);
                     }
                 }
             }
         }
         System.out.println("\n" + botPlayer.getName() + " passed their turn.");
-        return null;    
+        consecutivePasses++;
+        return new PlayResult(previousCards, consecutivePasses);    
     }
 
     private static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
