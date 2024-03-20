@@ -4,67 +4,78 @@ public class Player {
     private String name;
     private Hand hand;
     private double points;
-    private static final String[] botNames = { "Yeow Leong", "Zhi Yuan", "Lay Foo", "Fang Yuan", "Tony", "Lily Kong" }; // Array
-                                                                                                                        // of
-                                                                                                                        // bot
-                                                                                                                        // names
-    private static final Random random = new Random(); // Random object for selecting bot names
 
-    // Constructor for human player with a custom name
+    // Constructor for player with a custom name
     public Player(String name) {
         this.name = name;
         this.hand = new Hand();
     }
+    
+    // Method for player to play cards
+    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, int turn) {
+        List<Card> hand = currentPlayer.getHand().getCardsInHand();
+        Scanner scanner = new Scanner(System.in);
+        
+        while (true) {
+            System.out.print("\nSelect cards to play (enter indices separated by spaces) or type p to pass: ");
+            String input = scanner.nextLine();
 
-    // Constructor for bots with randomly assigned names
-    public Player(String playerName, List<String> usedNames) {
-        this.hand = new Hand();
-        usedNames.add(playerName); // Add the player's name to the list of used names
-        this.name = generateBotName(usedNames);
-    }
-
-    // Method to generate a random bot name
-    private String generateBotName(List<String> usedNames) {
-        String name;
-        do {
-            name = botNames[random.nextInt(botNames.length)];
-        } while (usedNames.contains(name));
-        usedNames.add(name);
-        return name;
-    }
-
-    public void play(List<Integer> selectedIndices, List<Card> hand, PlayedCards previousCards) {
-        // Validate selected indices
-        boolean validSelection = true;
-        List<Card> selectedCards = new ArrayList<>();
-        for (int index : selectedIndices) {
-            if (index < 0 || index >= hand.size()) {
-                System.out.println("Invalid index! Please select indices within the range of your hand.");
-                validSelection = false;
-                break; // Continue to prompt the player for valid input
+            if (input.toLowerCase().equals("p")) {
+                System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
+                consecutivePasses++;
+                return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
             }
-            selectedCards.add(hand.get(index));
-        }
 
-        if (!validSelection) {
-            return; // Continue to prompt the player for valid input
-        }
-
-        // Create an instance of PlayedCards to store the selected cards
-        PlayedCards playedCards = new PlayedCards(this, selectedCards);
-
-        // Check if the selected cards win against the previous cards
-        if (previousCards != null && !playedCards.winsAgainst(previousCards)) {
-            System.out.println("Invalid selection! The selected cards do not win against the previous cards.");
-            return; // Continue to prompt the player for valid input
-        }
-
-        // Display the played cards
-        System.out.println(this.getName() + " played: " + playedCards.getCards());
-
-        // Remove the played cards from the player's hand
-        hand.removeAll(playedCards.getCards());
-        previousCards = playedCards;
+            boolean validSelection = true;
+            List<Card> selectedCards = new ArrayList<>();
+            String[] indices = input.split("\\s+");
+            for (String indexStr : indices) {
+                try {
+                    int index = Integer.parseInt(indexStr);
+                    if (index < 0 || index >= hand.size()) {
+                        System.out.println("\nInvalid index! Please select indices within the range of your hand.");
+                        validSelection = false;
+                        break; // Continue to prompt the player for valid input
+                    }
+                    selectedCards.add(hand.get(index));
+                } catch (NumberFormatException e) {
+                    System.out.println("\nInvalid input! Please enter indices separated by spaces.");
+                    validSelection = false;
+                    break; // Continue to prompt the player for valid input
+                }
+            }
+            
+            if (!validSelection) {
+                continue; // Continue to prompt the player for valid input
+            }
+            
+            // Create an instance of PlayedCards to store the selected cards
+            PlayedCards playedCards = new PlayedCards(currentPlayer, selectedCards);
+          
+            // Check if the selected cards win against the previous cards
+            if (turn == 1 && !playedCards.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
+                System.out.println("\nYou must include 3 of Diamonds on the first turn!");
+                continue;
+            }
+            if (!playedCards.isValidSize()) {
+                System.out.println("\nInvalid selection! Please select one, two, three or five cards.");
+                continue;
+            } else if (playedCards.getType().equals("Invalid")) {
+                System.out.println("\nInvalid selection! Please select a valid combination.");
+                continue;
+            } else if (previousCards != null && !playedCards.winsAgainst(previousCards)) {
+                System.out.println("\nInvalid selection! The selected cards do not beat previous cards.");
+                continue; // Continue to prompt the player for valid input
+            }
+    
+            // Display the played cards
+            System.out.println("\n" + currentPlayer.getName() + " played: " + playedCards.getCards());
+            // Remove the played cards from the player's hand
+            hand.removeAll(playedCards.getCards());
+            previousCards = playedCards;
+            consecutivePasses = 0;
+            return new PlayResult(previousCards, consecutivePasses);
+    }
     }
 
     public Hand getHand() {
@@ -131,55 +142,4 @@ public class Player {
     public static Comparator<Player> sortByPoints() {
         return Comparator.comparingDouble(Player::getPoints).reversed();
     }
-
-    public static List<Player> playerOrder(List<Player> playerList, int numPlayers) {
-        if (playerList == null || numPlayers < 1) {
-            return null;
-        }
-
-        Player[] playerOrder = new Player[numPlayers];
-
-        // Set player Order
-        for (int i = 0; i < numPlayers; i++) {
-            // Get first player
-            Player player = playerList.get(i);
-            // Check if has startCard
-            if (player.hasCard(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
-                // If have startCard assign as first player
-                // Assumes that all 52 cards are dealt out properly
-                playerOrder[0] = player;
-            } else {
-                // If not set their turn order as one of the other positions
-                boolean turnOrderSet = false;
-                // Set a do loop until turn order is successfully set
-                do {
-                    // nextInt(max-min) will generate random number from 0 to max-2
-                    // max - min sets max-2 to be highest random int generated
-                    // +1 will ensure that it will never be 0
-                    int max=numPlayers;
-                    int position=random.nextInt((max - 1)) + 1;
-                    // Set the player in the position if it is empty
-                    if (playerOrder[position] == null) {
-                        playerOrder[position] = player;
-                        turnOrderSet = true;
-                    }
-                } while (!turnOrderSet);
-            }
-        }
-        return Arrays.asList(playerOrder);
-    }
-
-    public static void displayPlayerOrder(List<Player> playerOrder) {
-        for (int i = 0; i < playerOrder.size(); i++) {
-            Player player = playerOrder.get(i);
-            String playerName = null;
-            if (player!=null) {
-                playerName = player.getName();
-            } else {
-                playerName = "Missing";
-            }
-            System.out.println("Player " + i + " is " + playerName);
-        }
-    }
-
 }
