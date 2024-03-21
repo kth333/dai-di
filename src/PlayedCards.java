@@ -140,7 +140,7 @@ public class PlayedCards {
     public String toString() {
         String result = "[";
         for (int i = 0; i < cards.size(); i++) {
-            result += i + ". " + cards.get(i);
+            result += cards.get(i);
             if (i < cards.size() - 1) {
                 result += ", ";
             }

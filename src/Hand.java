@@ -58,6 +58,7 @@ public class Hand {
             }
         });
     }
+    
       //sort it by suit by getting the list of hand and compare
     public void sortBySuit() {
         Collections.sort(hand, new Comparator<Card>() {
@@ -71,7 +72,6 @@ public class Hand {
             }
         });
     }
-
 
     @Override
     public String toString() {
