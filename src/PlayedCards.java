@@ -138,18 +138,14 @@ public class PlayedCards {
 
     @Override
     public String toString() {
-        if (cards.isEmpty()) {
-            return "[]"; // Return empty brackets if the list is empty
-        }
-
-        StringBuilder result = new StringBuilder("[");
+        String result = "[";
         for (int i = 0; i < cards.size(); i++) {
-            result.append(cards.get(i));
+            result += i + ". " + cards.get(i);
             if (i < cards.size() - 1) {
-                result.append(", ");
+                result += ", ";
             }
         }
-        result.append("]");
-        return result.toString();
+        result += "]";
+        return result;
     }
 }
