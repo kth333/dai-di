@@ -86,7 +86,7 @@ public class Player {
             } else if (playedCards.getType().equals("Invalid")) {
                 System.out.println("\nInvalid selection! Please select a valid combination.");
                 continue;
-            } else if (previousCards != null && !playedCards.winsAgainst(previousCards)) {
+            } else if (!playedCards.winsAgainst(previousCards)) {
                 System.out.println("\nInvalid selection! The selected cards do not beat previous cards.");
                 continue; // Continue to prompt the player for valid input
             }
