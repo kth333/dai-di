@@ -104,12 +104,15 @@ public class Game {
         int players = 1;
         do {
             System.out.print("Select number of human players: ");
-            players = scanner.nextInt();
-            scanner.nextLine();
-            if (players < 1 || players > NUM_PLAYERS) {
-                System.out.println("Invalid player number! Player number is only 1 to 4.");
-            } else {
-                break;
+            try {
+                players = Integer.parseInt(scanner.nextLine());
+                if (players < 1 || players > NUM_PLAYERS) {
+                    System.out.println("Invalid player number! Player number is only 1 to 4.");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter 1, 2, 3 or 4.");
             }
         } while (true);
 
