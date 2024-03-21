@@ -36,11 +36,11 @@ public class Player {
                 return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
             } else if (input.toLowerCase().equals("rank")){ // sort the hand by rank
                     currentPlayer.getHand().sortByRank();
-                    System.out.println("\nHand sorted by rank: "+ currentPlayer.getHand().getCardsInHand());
+                    System.out.println("\nHand sorted by rank: "+ currentPlayer.getHand());
                     continue;
             } else if (input.toLowerCase().equals("suit")){// sort the hand by suit
                     currentPlayer.getHand().sortBySuit();
-                    System.out.println("\nHand sorted by suit: "+ currentPlayer.getHand().getCardsInHand());
+                    System.out.println("\nHand sorted by suit: "+ currentPlayer.getHand());
                     continue;
             } else if (input.toLowerCase().equals("quit")) {
                     //System.out.println("Setting quit flag..."); // Debugging statement
