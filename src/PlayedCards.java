@@ -56,7 +56,8 @@ public class PlayedCards {
 
         // Compare the number of cards in each set
         if (thisSize != otherSize) {
-            return false; // If the number of cards is different, they cannot win against each other (invalid)
+            return false; // If the number of cards is different, they cannot win against each other
+                          // (invalid)
         } else {
             if (thisSize == 5) {
                 // Get the combination rankings for both hands
@@ -74,7 +75,8 @@ public class PlayedCards {
                         return true;
                     } else if (rankComparison == 0) {
                         // If ranks are equal, compare the suits
-                        int suitComparison = this.getHighestCard().getSuit().compareTo(other.getHighestCard().getSuit());
+                        int suitComparison = this.getHighestCard().getSuit()
+                                .compareTo(other.getHighestCard().getSuit());
                         if (suitComparison > 0) {
                             return true;
                         }
@@ -138,14 +140,18 @@ public class PlayedCards {
 
     @Override
     public String toString() {
-        String result = "[";
+        if (cards.isEmpty()) {
+            return "[]"; // Return empty brackets if the list is empty
+        }
+
+        StringBuilder result = new StringBuilder("[");
         for (int i = 0; i < cards.size(); i++) {
-            result += i + ". " + cards.get(i);
+            result.append(cards.get(i));
             if (i < cards.size() - 1) {
-                result += ", ";
+                result.append(", ");
             }
         }
-        result += "]";
-        return result;
+        result.append("]");
+        return result.toString();
     }
 }

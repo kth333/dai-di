@@ -24,7 +24,11 @@ public class App {
                 switch (choice) {
                     case 1:
                         Game game = new Game();
-                        game.startGame(playerName, scanner);
+                        Player humanPlayer = new Player(playerName);
+                        Player bot1 = new Bot(humanPlayer.getName(), Bot.usedNames);
+                        Player bot2 = new HardBot(humanPlayer.getName(), Bot.usedNames);
+                        Player bot3 = new Bot(humanPlayer.getName(), Bot.usedNames);
+                        game.startGame(humanPlayer, bot1, bot2, bot3);
                         return; // Exit the loop and terminate the program
                     case 2:
                         System.out.println("\nInstructions:");
