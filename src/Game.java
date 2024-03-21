@@ -105,10 +105,13 @@ public class Game {
                 System.out.printf("%-6d\t%-15s\t%-13.1f\t%-5d\n", (i + 1), player.getName(), player.getPoints(),
                         player.getNumOfCards());
             }
+
+            // Clear the hand of each player for the next round
             for (Player player : players) {
                 player.getHand().clear();
             }
         }
+        // Display winner of the game after all 5 rounds are completed
         System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
     }
 
