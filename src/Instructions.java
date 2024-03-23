@@ -1,7 +1,15 @@
 import java.util.*;
 import java.io.*;
 
+/**
+ * Utility class for displaying game instructions.
+ */
 public class Instructions {
+
+    /**
+     * Displays the game instructions stored in a text file named "Rules.txt".
+     * If the file is not found, a message indicating that the rules were not found is printed.
+     */
 
     public static void displayInstructions(){
         String RuleName = "Rules.txt";
