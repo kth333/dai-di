@@ -130,7 +130,14 @@ public class Player {
     }
 
     public double loseGame(double rate) {
-        double deduct = rate * getNumOfCards();
+        // double deduct = rate * getNumOfCards();
+        int numCards=getNumOfCards();
+        double deduct = numCards * rate;
+        if (numCards >= 10) {//If num of Cards greater then rate *3 loss
+            deduct *= 3;
+        } else if (numCards >=7) {//If num of cards equal to rate then *2 loss
+            deduct *= 2;
+        }
         deductPoints(deduct);
         return deduct;
     }
