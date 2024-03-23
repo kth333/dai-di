@@ -9,7 +9,7 @@ public class Hand {
 
     // Add a card to the hand of a specific player
     public void addCard(Card card) {
-        if (card!=null){
+        if (card != null) {
             hand.add(card);
         }
     }
@@ -41,13 +41,37 @@ public class Hand {
         return hand.size();
     }
 
-    // Returns a copy of the hand of a specific player to avoid modification from outside
+    // Returns a copy of the hand of a specific player to avoid modification from
+    // outside
     public List<Card> getCards() {
-        List<Card> handCopy=new ArrayList<Card>();
-        for (int i=0;i<hand.size();i++){
+        List<Card> handCopy = new ArrayList<Card>();
+        for (int i = 0; i < hand.size(); i++) {
             handCopy.add(hand.get(i));
         }
         return handCopy;
+    }
+
+    public void sortByRank() {
+        Collections.sort(hand, new Comparator<Card>() {
+            @Override
+            public int compare(Card c1, Card c2) {
+                return c1.getRank().compareTo(c2.getRank());
+            }
+        });
+    }
+
+    // sort it by suit by getting the list of hand and compare
+    public void sortBySuit() {
+        Collections.sort(hand, new Comparator<Card>() {
+            @Override
+            public int compare(Card c1, Card c2) {
+                int suitComparison = c1.getSuit().compareTo(c2.getSuit());
+                if (suitComparison == 0) {
+                    return c1.getRank().compareTo(c2.getRank());
+                }
+                return suitComparison;
+            }
+        });
     }
 
     @Override

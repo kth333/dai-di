@@ -4,7 +4,6 @@ public class Game {
 
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
-    private static final Scanner scanner = new Scanner(System.in);
 
     public void startGame(String firstPlayerName, Scanner scanner) {
         List<Player> players = getPlayers(firstPlayerName, scanner);
@@ -15,7 +14,6 @@ public class Game {
         System.out.print(players.getLast().getName() + "\n");
 
         // Give 100 points to each player at the start of the game
-        List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
         for (Player player : players) {
             player.addPoints(100);
         }
@@ -212,6 +210,8 @@ public class Game {
             String playerName = player.getName();
             System.out.printf("%s -> ", playerName);
         }
+        System.out.printf("%s.", playerOrder.getLast().getName());
+
     }
 
     private static Player getNextPlayer(Player currentPlayer, List<Player> players) {
@@ -227,5 +227,9 @@ public class Game {
             }
         }
         return null; // No winner found
+    }
+    
+    private static void quitGame() {
+        System.out.println("\nBye Bye!");
     }
 }

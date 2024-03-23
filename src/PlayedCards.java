@@ -69,24 +69,15 @@ public class PlayedCards {
                 if (rankingComparison > 0) {
                     return true;
                 } else if (rankingComparison == 0) {
-                    // If the rankings are equal, compare the highest cards
-                    int rankComparison = this.getHighestCard().compareTo(other.getHighestCard());
-                    if (rankComparison > 0) {
-                        return true;
-                    } else if (rankComparison == 0) {
-                        // If ranks are equal, compare the suits
-                        int suitComparison = this.getHighestCard().getSuit()
-                                .compareTo(other.getHighestCard().getSuit());
+                    int suitComparison = this.getHighestCard().getSuit().compareTo(other.getHighestCard().getSuit());
                         if (suitComparison > 0) {
                             return true;
-                        }
-                    }
-                }
+                } 
             } else {
                 // If the number of cards is not five, compare based on the highest card
                 int rankComparison = this.getHighestCard().compareTo(other.getHighestCard());
                 if (rankComparison > 0) {
-                    return true;
+                    return true;    
                 } else if (rankComparison == 0) {
                     // If ranks are equal, compare the suits
                     int suitComparison = this.getHighestCard().getSuit().compareTo(other.getHighestCard().getSuit());
@@ -97,6 +88,7 @@ public class PlayedCards {
             }
         }
         return false;
+    }
     }
 
     public void sortByRank() {
@@ -140,18 +132,14 @@ public class PlayedCards {
 
     @Override
     public String toString() {
-        if (cards.isEmpty()) {
-            return "[]"; // Return empty brackets if the list is empty
-        }
-
-        StringBuilder result = new StringBuilder("[");
+        String result = "[";
         for (int i = 0; i < cards.size(); i++) {
-            result.append(cards.get(i));
+            result += i + ". " + cards.get(i);
             if (i < cards.size() - 1) {
-                result.append(", ");
+                result += ", ";
             }
         }
-        result.append("]");
-        return result.toString();
+        result += "]";
+        return result;
     }
 }
