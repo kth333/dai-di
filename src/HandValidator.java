@@ -1,15 +1,30 @@
 import java.util.*;
-
+/**
+ * Utility class for validating combinations of cards in a hand.
+ */
 public class HandValidator {
-
+    /**
+     * Enum representing the possible combination rankings of a hand.
+     */
     public enum CombinationRanking {
         SINGLE, DOUBLE, TRIPLE, STRAIGHT, FLUSH, FULL_HOUSE, FOUR_OF_A_KIND, STRAIGHT_FLUSH
     };
+      /**
+     * Checks if the played cards form a straight flush.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a straight flush, false otherwise
+     */
 
     public static boolean isStraightFlush(PlayedCards playedCards) {
         return isStraight(playedCards) && isFlush(playedCards);
     }
-
+    /**
+     * Checks if the played cards form a four of a kind.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a four of a kind, false otherwise
+     */
     public static boolean isFourOfAKind(PlayedCards playedCards) {
         List<Card> cards = playedCards.getCards();
         if (cards.size() != 5) {
@@ -27,6 +42,12 @@ public class HandValidator {
         return false;
     }
 
+    /**
+     * Checks if the played cards form a full house.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a full house, false otherwise
+     */
     public static boolean isFullHouse(PlayedCards playedCards) {
         List<Card> cards = playedCards.getCards();
         if (cards.size() != 5) {
@@ -48,6 +69,13 @@ public class HandValidator {
         return foundTriple && foundPair;
     }
 
+    /**
+     * Checks if the played cards form a flush.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a flush, false otherwise
+     */
+
     public static boolean isFlush(PlayedCards playedCards) {
         List<Card> cards = playedCards.getCards();
         if (cards.size() != 5) {
@@ -65,6 +93,13 @@ public class HandValidator {
         }
         return true;
     }
+    
+    /**
+     * Checks if the played cards form a straight.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a straight, false otherwise
+     */
 
     public static boolean isStraight(PlayedCards playedCards) {
         List<Card> cards = playedCards.getCards();
@@ -79,7 +114,12 @@ public class HandValidator {
         }
         return true;
     }
-
+     /**
+     * Checks if the played cards form a triple.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a triple, false otherwise
+     */
     public static boolean isTriple(PlayedCards playedCards) {
         List<Card> cards = playedCards.getCards();
         if (cards.size() != 3) {
@@ -97,7 +137,12 @@ public class HandValidator {
         }
         return true;
     }
-
+     /**
+     * Checks if the played cards form a double.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a double, false otherwise
+     */
     public static boolean isDouble(PlayedCards playedCards) {
         if (playedCards.getNumOfCards() == 2) {
             Card firstCard = playedCards.getCards().get(0);
@@ -106,11 +151,21 @@ public class HandValidator {
         }
         return false;
     }
-
+    /**
+     * Checks if the played cards form a single.
+     *
+     * @param playedCards the set of played cards
+     * @return true if the cards form a single, false otherwise
+     */
     public static boolean isSingle(PlayedCards playedCards) {
         return playedCards.getNumOfCards() == 1;
     }
-
+    /**
+     * Determines the combination ranking of the played cards.
+     *
+     * @param playedCards the set of played cards
+     * @return the combination ranking of the cards
+     */
     public static CombinationRanking getCombinationRanking(PlayedCards playedCards) {
         if (isSingle(playedCards)) {
             return CombinationRanking.SINGLE;
