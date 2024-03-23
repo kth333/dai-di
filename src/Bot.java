@@ -49,7 +49,7 @@ public class Bot extends Player {
         if (validCombinations != null) {
             // Check each valid combination against the previous cards
             for (PlayedCards combination : validCombinations) {
-                if (previousCards == null || combination.winsAgainst(previousCards)) {
+                if (combination.winsAgainst(previousCards)) {
                     Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
                     if (hasCard(startCard) && !combination.getCards().contains(startCard)) {
                         // If bot has 3 of Diamonds and the combination doesn't contain 3 of Diamonds, continue searching
@@ -68,7 +68,7 @@ public class Bot extends Player {
         }
         System.out.println("\n" + botPlayer.getName() + " passed their turn.");
         consecutivePasses++;
-        return new PlayResult(previousCards, consecutivePasses);    
+        return new PlayResult(previousCards, consecutivePasses);
     }
 
     private static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
