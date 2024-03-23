@@ -195,6 +195,16 @@ public class Player {
         return hand.getCardsInHand().contains(card);
     }
 
+    /**
+     * Distributes winnings to all players except the winner based on the given rate.
+     * Loses the game for each player (except the winner) by deducting points at the specified rate,
+     * and adds the deducted points to the winner's total points.
+     *
+     * @param playerList the list of players
+     * @param winner the player who won the game
+     * @param rate the rate at which points are deducted from losing players
+     */
+
     public static void winGame(List<Player> playerList, Player winner, double rate) {
         double winnings = 0;
         for (int i = 0; i < playerList.size(); i++) {
@@ -206,6 +216,11 @@ public class Player {
         winner.addPoints(winnings);
     }
 
+    /**
+     * Provides a comparator for sorting players by their points in descending order.
+     *
+     * @return a comparator for sorting players by points in descending order
+     */
     public static Comparator<Player> sortByPoints() {
         return Comparator.comparingDouble(Player::getPoints).reversed();
     }
