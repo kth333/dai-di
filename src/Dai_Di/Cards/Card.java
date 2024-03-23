@@ -1,3 +1,5 @@
+package Dai_Di.Cards;
+
 import java.util.Objects;
 
 public class Card implements Comparable <Card> {

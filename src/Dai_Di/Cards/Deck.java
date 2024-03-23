@@ -1,6 +1,10 @@
+package Dai_Di.Cards;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import Dai_Di.Players.Player;
 
 public class Deck {
     private ArrayList<Card> deck;

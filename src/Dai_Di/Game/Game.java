@@ -1,12 +1,23 @@
+package Dai_Di.Game;
+
+import Dai_Di.Players.*;
+import Dai_Di.Cards.*;
+
 import java.util.*;
 
 public class Game {
 
     private static final int NUM_PLAYERS = 4;
+    private static final int NUM_ROUNDS = 5;
     private static final int CARDS_PER_PLAYER = 13;
+    private static final int PLAYS_STORED = 8;
+    private static final double POINT_RATE = 1;
 
     public void startGame(String firstPlayerName, Scanner scanner) {
+        // Create list of players
         List<Player> players = getPlayers(firstPlayerName, scanner);
+
+        // Print out list of players
         System.out.print("\nPlayers: ");
         for (int i = 0; i < NUM_PLAYERS - 1; i++) {
             System.out.print(players.get(i).getName() + ", ");
@@ -18,7 +29,7 @@ public class Game {
             player.addPoints(100);
         }
 
-        for (int round = 0; round <= 5;) {
+        for (int round = 0; round < NUM_ROUNDS;) {
             if (round >= 1) {
                 System.out.println("Continue next round? (y/n)");
                 String input = scanner.nextLine();
@@ -33,7 +44,8 @@ public class Game {
                     continue;
                 }
             }
-            // Increment the round counter only when the user chooses to continue (otherwise it increases after an invalid input)
+            // Increment the round counter only when the user chooses to continue (otherwise
+            // it increases after an invalid input)
             round++;
 
             // Create and shuffle deck
@@ -52,9 +64,10 @@ public class Game {
             Player roundWinner = null;
             Player currentPlayer = playerOrder.get(0);
             PlayedCards previousCards = null; // Initialize previous cards
+            List<PlayResult> playHistory = new ArrayList<PlayResult>(); // Initalize play history
             int turn = 1;
             int consecutivePasses = 0;
-            PlayResult playResult = new PlayResult(previousCards, consecutivePasses);
+            PlayResult playResult = new PlayResult(currentPlayer, previousCards, consecutivePasses);
 
             // Game loop
             while (roundWinner == null) {
@@ -69,13 +82,20 @@ public class Game {
                 System.out.println(currentPlayer.getName() + "'s turn!");
                 if (currentPlayer instanceof Bot) {
                     Bot bot = (Bot) currentPlayer;
-                    playResult = bot.play(currentPlayer, previousCards, consecutivePasses);
+                    playResult = bot.play(previousCards, consecutivePasses);
                 } else {
                     System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
-                    playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, scanner);
+                    playResult = currentPlayer.play(previousCards, consecutivePasses, scanner,
+                            playHistory);
                 }
 
+                if (playHistory.size() > PLAYS_STORED) {
+                    playHistory.remove(0);
+                }
+                playHistory.add(playResult);
+
                 previousCards = playResult.getPreviousCards();
+                
                 // get number of times passed in round so far
                 consecutivePasses = playResult.getConsecutivePasses();
                 if (consecutivePasses >= 3) {
@@ -94,7 +114,7 @@ public class Game {
             System.out.println("\n" + roundWinner.getName() + " won Round " + round + "!");
 
             // Point calculations
-            Player.winGame(playerOrder, roundWinner, 1);
+            Player.winGame(playerOrder, roundWinner, POINT_RATE);
 
             // Show ranking of players
             Collections.sort(players, Player.sortByPoints());
@@ -117,17 +137,22 @@ public class Game {
 
     public List<Player> getPlayers(String firstPlayerName, Scanner scanner) {
         int players = 1;
+        // set number of human players
         do {
             System.out.print("Select number of human players: ");
+            // Prompt for number of players
             try {
                 players = Integer.parseInt(scanner.nextLine());
                 if (players < 1 || players > NUM_PLAYERS) {
-                    System.out.println("Invalid player number! Player number is only 1 to 4.");
+                    // players cannot be less then 1 or max NUM_PLAYERS
+                    System.out.println("Invalid player number! Player number is only 1 to " + NUM_PLAYERS + ".");
                 } else {
+                    // valid player number break loop and move to next step
                     break;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter 1, 2, 3 or 4.");
+                // input must be a number
+                System.out.println("Invalid input! Please enter 1 to " + NUM_PLAYERS + ".");
             }
         } while (true);
 
@@ -166,6 +191,7 @@ public class Game {
 
     private static List<Player> playerOrder(List<Player> playerList, int numPlayers) {
         // Set turn order of players
+        // Initialise random
         Random random = new Random();
         if (playerList == null || numPlayers < 1) {
             return null;
@@ -200,11 +226,12 @@ public class Game {
                 } while (!turnOrderSet);
             }
         }
+        // return arrayList playerOrder
         return Arrays.asList(playerOrder);
     }
 
     private static void displayPlayerOrder(List<Player> playerOrder) {
-        // to display player order again
+        // to display player order
         System.out.println("\nTurn order is:");
         for (int i = 0; i < playerOrder.size() - 1; i++) {
             Player player = playerOrder.get(i);

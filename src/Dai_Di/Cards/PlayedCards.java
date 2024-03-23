@@ -1,19 +1,18 @@
+package Dai_Di.Cards;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PlayedCards {
-    private Player player;
     private List<Card> cards;
 
     // Default constructor
     public PlayedCards() {
-        this.player = null;
         this.cards = new ArrayList<>();
     }
 
-    public PlayedCards(Player player, List<Card> cards) {
-        this.player = player;
+    public PlayedCards(List<Card> cards) {
         this.cards = cards;
     }
 
@@ -26,10 +25,6 @@ public class PlayedCards {
     public Card getHighestCard() {
         sortByRank();
         return this.cards.get(0);
-    }
-
-    public Player getPlayer() {
-        return this.player;
     }
 
     public int getNumOfCards() {

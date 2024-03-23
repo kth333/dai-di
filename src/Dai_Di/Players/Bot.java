@@ -1,3 +1,10 @@
+package Dai_Di.Players;
+
+import Dai_Di.Cards.PlayResult;
+import Dai_Di.Cards.PlayedCards;
+import Dai_Di.Cards.Card;
+import Dai_Di.Cards.HandValidator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,6 +24,7 @@ public class Bot extends Player {
         usedNames.add(getName());
     }
 
+    //For only one human player
     private static String generateBotName(String playerName, List<String> usedNames) {
         usedNames.add(playerName);
         String name;
@@ -26,7 +34,9 @@ public class Bot extends Player {
         return name;
     }
 
+    //Overloaded method for multiple playerNames
     private static String generateBotName(List<String> playerNames, List<String> usedNames) {
+        
         for (String usedname:playerNames){
             usedNames.add(usedname);
         }
@@ -37,9 +47,10 @@ public class Bot extends Player {
         return name;
     }
 
-    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses) {
+
+    public PlayResult play(PlayedCards previousCards, int consecutivePasses) {
         // Get the bot player's hand
-        List<Card> botHand = botPlayer.getHand().getCardsInHand();
+        List<Card> botHand = getHand().getCardsInHand();
 
         // Check if the bot player should pass
 
@@ -57,18 +68,18 @@ public class Bot extends Player {
                     }
                     // If the combination wins or there are no previous cards, play it
                     previousCards = combination; // Update the previous cards
-                    System.out.println("\n" + botPlayer.getName() + " played: " + combination);
+                    System.out.println("\n" + getName() + " played: " + combination);
                     botHand.removeAll(combination.getCards()); // Remove the played cards from the bot's hand
                     if (previousCards != null) {
                         consecutivePasses = 0;
-                        return new PlayResult(previousCards, consecutivePasses);
+                        return new PlayResult(this,previousCards, consecutivePasses);
                     }
                 }
             }
         }
-        System.out.println("\n" + botPlayer.getName() + " passed their turn.");
+        System.out.println("\n" + getName() + " passed their turn.");
         consecutivePasses++;
-        return new PlayResult(previousCards, consecutivePasses);
+        return new PlayResult(this,previousCards, consecutivePasses);
     }
 
     private static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
@@ -119,7 +130,7 @@ public class Bot extends Player {
         for (Card card : hand) {
             List<Card> single = new ArrayList<>();
             single.add(card);
-            singles.add(new PlayedCards(null, single));
+            singles.add(new PlayedCards(single));
         }
         return singles;
     }
@@ -131,7 +142,7 @@ public class Bot extends Player {
                 List<Card> doubleCards = new ArrayList<>();
                 doubleCards.add(hand.get(i));
                 doubleCards.add(hand.get(j));
-                PlayedCards doubleCombination = new PlayedCards(null, doubleCards);
+                PlayedCards doubleCombination = new PlayedCards(doubleCards);
                 if (HandValidator.isDouble(doubleCombination)) {
                     doubles.add(doubleCombination);
                 }
@@ -149,7 +160,7 @@ public class Bot extends Player {
                     tripleCards.add(hand.get(i));
                     tripleCards.add(hand.get(j));
                     tripleCards.add(hand.get(k));
-                    PlayedCards tripleCombination = new PlayedCards(null, tripleCards);
+                    PlayedCards tripleCombination = new PlayedCards(tripleCards);
                     if (HandValidator.isTriple(tripleCombination)) {
                         triples.add(tripleCombination);
                     }
@@ -179,7 +190,7 @@ public class Bot extends Player {
                             combinationCards.add(hand.get(k));
                             combinationCards.add(hand.get(l));
                             combinationCards.add(hand.get(m));
-                            PlayedCards combination = new PlayedCards(null, combinationCards);
+                            PlayedCards combination = new PlayedCards(combinationCards);
                             if (HandValidator.isStraightFlush(combination) ||
                                     HandValidator.isFourOfAKind(combination) ||
                                     HandValidator.isFullHouse(combination) ||

@@ -1,4 +1,9 @@
+package Dai_Di;
+
+import Dai_Di.Game.*;
+
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class App {
     private static final Scanner scanner = new Scanner(System.in);
@@ -7,9 +12,16 @@ public class App {
         // Give the user a warm welcome :)
         System.out.println("Welcome to Dai Di!");
 
-        // Prompt the user to enter their name
-        System.out.print("Enter your name: ");
-        String playerName = scanner.nextLine();
+        // Prompt the user to enter their name (up to 16 characters)
+        String playerName;
+        do {
+            System.out.print("Enter your name (up to 16 characters): ");
+            playerName = scanner.nextLine();
+
+            if (playerName.length() > 16) {
+                System.out.println("Enter a shorter name!");
+            }
+        } while (playerName.length() > 16);
 
         while (true) {
             System.out.println("\nOptions:");
@@ -24,8 +36,7 @@ public class App {
                 switch (choice) {
                     case 1:
                         Game game = new Game();
-
-                        game.startGame(playerName,scanner);
+                        game.startGame(playerName, scanner);
                         return; // Exit the loop and terminate the program
                     case 2:
                         System.out.println("\nInstructions:");
@@ -38,8 +49,8 @@ public class App {
                         System.out.println("Invalid choice! Please enter 1, 2, or 3.");
                         break;
                 }
-            } catch (Exception e) {
-                System.out.println("Invalid choice! Please enter 1, 2, or 3.");
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a number.");
                 scanner.nextLine(); // Clear the invalid input from the scanner
             }
         }

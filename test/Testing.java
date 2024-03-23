@@ -67,62 +67,66 @@ public class Testing {
         System.out.println(bot1.getName());
     }
 }
-        // // Distribute cards to players
-        // List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
-        // Map<Player, List<Card>> playersHands = deck.distributeCards(players, startCardsPerPlayer);
+// // Distribute cards to players
+// List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
+// Map<Player, List<Card>> playersHands = deck.distributeCards(players,
+// startCardsPerPlayer);
 
-    //     // Determine the player with the 3 of diamonds to start the round
-    //     Player startingPlayer = findStartingPlayer(players);
-    //     System.out.println(startingPlayer.getName() + " starts the round!");
+// // Determine the player with the 3 of diamonds to start the round
+// Player startingPlayer = findStartingPlayer(players);
+// System.out.println(startingPlayer.getName() + " starts the round!");
 
-    //     Player winner = null;
-    //     // Game loop
-    //     Player currentPlayer = startingPlayer;
-    //     while (winner == null) {
-    //         if (currentPlayer.getPlayerNumber() == 0) {
-    //             // Human player's turn
-    //             playTurn(humanPlayer, playersHands);
-    //         } else {
-    //             // Bot player's turn
-    //             Player botPlayer = getPlayer(currentPlayer.getPlayerNumber(), bot1, bot2, bot3);
-    //             playTurn(botPlayer, playersHands);
-    //         }
-    //         winner = findWinner(playersHands);
-    //         int nextPlayerIndex = (currentPlayer.getPlayerNumber() + 1) % NUM_PLAYERS;
-    //         currentPlayer = players.get(nextPlayerIndex);
-    //     }
+// Player winner = null;
+// // Game loop
+// Player currentPlayer = startingPlayer;
+// while (winner == null) {
+// if (currentPlayer.getPlayerNumber() == 0) {
+// // Human player's turn
+// playTurn(humanPlayer, playersHands);
+// } else {
+// // Bot player's turn
+// Player botPlayer = getPlayer(currentPlayer.getPlayerNumber(), bot1, bot2,
+// bot3);
+// playTurn(botPlayer, playersHands);
+// }
+// winner = findWinner(playersHands);
+// int nextPlayerIndex = (currentPlayer.getPlayerNumber() + 1) % NUM_PLAYERS;
+// currentPlayer = players.get(nextPlayerIndex);
+// }
 
-    //     // Determine winner
-    //     System.out.println(winner.getName() + " wins!");
-    // }
+// // Determine winner
+// System.out.println(winner.getName() + " wins!");
+// }
 
-    // private static Player getPlayer(int playerNumber, Player bot1, Player bot2, Player bot3) {
-    //     switch (playerNumber) {
-    //         case 1:
-    //             return bot1;
-    //         case 2:
-    //             return bot2;
-    //         case 3:
-    //             return bot3;
-    //         default:
-    //             return null;
-    //     }
-    // }
+// private static Player getPlayer(int playerNumber, Player bot1, Player bot2,
+// Player bot3) {
+// switch (playerNumber) {
+// case 1:
+// return bot1;
+// case 2:
+// return bot2;
+// case 3:
+// return bot3;
+// default:
+// return null;
+// }
+// }
 
-//     private static Player findStartingPlayer(List<Player> players) {
-//         for (Player player : players) {
-//             Hand hand = player.getHand();
-//             if (hand != null) { // Check if the hand is not null
-//                 for (int i = 0; i < hand.getSize(); i++) {
-//                     Card card = hand.getCard(i);
-//                     if (card.getSuit() == Card.Suit.DIAMONDS && card.getRank() == Card.Rank.THREE) {
-//                         return player;
-//                     }
-//                 }
-//             }
-//         }
-//         return null; // 3 of Diamonds not found
-//     }
+// private static Player findStartingPlayer(List<Player> players) {
+// for (Player player : players) {
+// Hand hand = player.getHand();
+// if (hand != null) { // Check if the hand is not null
+// for (int i = 0; i < hand.getSize(); i++) {
+// Card card = hand.getCard(i);
+// if (card.getSuit() == Card.Suit.DIAMONDS && card.getRank() ==
+// Card.Rank.THREE) {
+// return player;
+// }
+// }
+// }
+// }
+// return null; // 3 of Diamonds not found
+// }
 // }
 
 private static void humanTurn(Player currentPlayer, Map<Player, List<Card>> playersHands, PlayedCards previousCards) {
@@ -150,9 +154,8 @@ private static void humanTurn(Player currentPlayer, Map<Player, List<Card>> play
         }
 
         currentPlayer.play(selectedIndices, hand, previousCards);
+    }
 }
-}
-
 
 public void play(List<Integer> selectedIndices, List<Card> hand, PlayedCards previousCards) {
     // Validate selected indices

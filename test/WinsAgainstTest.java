@@ -11,7 +11,7 @@ public class WinsAgainstTest {
         System.out.println(singleCards);
         System.out.println(weakerSingle);
         System.out.println("2 of SPADES beats 3 of DIAMONDS: " + singleCards.winsAgainst(weakerSingle));
-        System.out.println("2 of SPADES beats 3 of DIAMONDS: " + weakerSingle.winsAgainst(singleCards));
+        System.out.println("3 of DIAMONDS beats 2 of SPADES: " + weakerSingle.winsAgainst(singleCards));
         System.out.println();
 
         doubleCards.addCard(new Card(Card.Suit.SPADES, Card.Rank.TWO));
@@ -39,6 +39,7 @@ public class WinsAgainstTest {
 
         System.out.println(straightFlush);
         System.out.println("straight flush? " + HandValidator.isStraightFlush(straightFlush));
+        System.out.println();
         straight.addCard(new Card(Card.Suit.HEARTS, Card.Rank.TWO));
         straight.addCard(new Card(Card.Suit.SPADES, Card.Rank.JACK));
         straight.addCard(new Card(Card.Suit.DIAMONDS, Card.Rank.QUEEN));
@@ -46,10 +47,18 @@ public class WinsAgainstTest {
         straight.addCard(new Card(Card.Suit.HEARTS, Card.Rank.ACE));
         System.out.println(straight);
         System.out.println("straight? " + HandValidator.isStraight(straight));
-        System.out.println("straightflush beats straight: " + straightFlush.winsAgainst(straight));
+        System.out.println();
+
+        System.out.println("straight flush beats straight: " + straightFlush.winsAgainst(straight));
         System.out.println("straight beats straight flush: " + straight.winsAgainst(straightFlush));
         System.out.println("Size of straight: " + straight.getCards().size());
         System.out.println("Size of straightFlush: " + straightFlush.getCards().size());
+        System.out.println();
+
+        System.out.println("straight beats single: " + straight.winsAgainst(singleCards));
+        System.out.println("single beats straight: " + singleCards.winsAgainst(straight));
+        System.out.println("straight beats null: " + straight.winsAgainst(null));
+        System.out.println("single beats null: " + singleCards.winsAgainst(null));
 
     }
 }

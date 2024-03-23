@@ -1,1 +1,1 @@
-javac -d classes -cp lib/*;src/*;test/* test/StraightCardTest.java
+javac -d classes -cp lib/*;src src/Dai_Di/App.java

@@ -1,4 +1,6 @@
-import java.util.*;
+package Dai_Di.Cards;
+
+import java.util.List;
 
 public class HandValidator {
 

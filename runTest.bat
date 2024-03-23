@@ -1,1 +1,1 @@
-java -cp "classes;lib/*" org.junit.runner.JUnitCore AllTest
+java -cp classes;lib/* Dai_Di.App
