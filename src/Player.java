@@ -47,6 +47,9 @@ public class Player {
                 PlayResult result = new PlayResult(previousCards, consecutivePasses);
                 result.setQuit(true); // Set the quit flag when player chooses to quit
                 return result;
+            }else if (input.toLowerCase().equals("i")){
+                    Instructions.displayInstructions();
+                    continue;
             }
 
             boolean validSelection = true;
