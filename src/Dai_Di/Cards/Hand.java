@@ -55,7 +55,7 @@ public class Hand {
         return handCopy;
     }
 
-     public void sortByRank() {
+    public void sortByRank() {
         Collections.sort(hand, new Comparator<Card>() {
             @Override
             public int compare(Card c1, Card c2) {

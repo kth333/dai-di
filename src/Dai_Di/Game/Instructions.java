@@ -7,7 +7,8 @@ import java.util.Scanner;
 public class Instructions {
 
     public static void displayInstructions(){
-        String RuleName = "../../../data/Rules.txt";
+        //getAbsolutePath will get the root directory of the program
+        String RuleName = new File("").getAbsolutePath()+"/data/Rules.txt";
         //text file which contains all the instructions
 
         String Current_Line;
