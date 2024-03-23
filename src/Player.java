@@ -12,41 +12,18 @@ public class Player {
     }
     
     // Method for player to play cards
-    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses,Scanner scanner) {
+    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, int round, int turn) {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
+        Scanner scanner = new Scanner(System.in);
         
         while (true) {
-             System.out.print("\nOptions:\n" +
-                 " - Select cards to play (enter indices separated by spaces)\n" +
-                 " - Type 'pass' to pass\n" +
-                 " - Type 'suit' to sort hand by suit\n" +
-                 " - Type 'rank' to sort hand by rank\n" +
-                 " - Type 'quit' to quit the game\n" + 
-                 "Your choice: ");
-                String input = scanner.nextLine();
+            System.out.print("\nSelect cards to play (enter indices separated by spaces) or type p to pass: ");
+            String input = scanner.nextLine();
 
-            Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
-            if (input.toLowerCase().equals("pass")) {
-                if (hasCard(startCard)){
-                    System.out.println("Need to play 3 of Diamonds cannot pass first turn!");
-                    continue;
-                }
+            if (input.toLowerCase().equals("p")) {
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 consecutivePasses++;
                 return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
-            } else if (input.toLowerCase().equals("rank")){ // sort the hand by rank
-                    currentPlayer.getHand().sortByRank();
-                    System.out.println("\nHand sorted by rank: "+ currentPlayer.getHand());
-                    continue;
-            } else if (input.toLowerCase().equals("suit")){// sort the hand by suit
-                    currentPlayer.getHand().sortBySuit();
-                    System.out.println("\nHand sorted by suit: "+ currentPlayer.getHand());
-                    continue;
-            } else if (input.toLowerCase().equals("quit")) {
-                    //System.out.println("Setting quit flag..."); // Debugging statement
-                    PlayResult result = new PlayResult(previousCards, consecutivePasses);
-                    result.setQuit(true); // Set the quit flag when player chooses to quit
-                    return result;
             }
 
             boolean validSelection = true;
@@ -74,10 +51,10 @@ public class Player {
             
             // Create an instance of PlayedCards to store the selected cards
             PlayedCards playedCards = new PlayedCards(currentPlayer, selectedCards);
-            
+          
             // Check if the selected cards win against the previous cards
-            if (hasCard(startCard) && !playedCards.getCards().contains(startCard)) {
-                System.out.println("\nYou must play 3 of Diamonds on the first turn!");
+            if (round == 1 && turn == 1 && !playedCards.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
+                System.out.println("\nYou must include 3 of Diamonds on the first turn!");
                 continue;
             }
             if (!playedCards.isValidSize()) {
@@ -86,7 +63,7 @@ public class Player {
             } else if (playedCards.getType().equals("Invalid")) {
                 System.out.println("\nInvalid selection! Please select a valid combination.");
                 continue;
-            } else if (!playedCards.winsAgainst(previousCards)) {
+            } else if (previousCards != null && !playedCards.winsAgainst(previousCards)) {
                 System.out.println("\nInvalid selection! The selected cards do not beat previous cards.");
                 continue; // Continue to prompt the player for valid input
             }
@@ -166,3 +143,6 @@ public class Player {
         return Comparator.comparingDouble(Player::getPoints).reversed();
     }
 }
+
+
+

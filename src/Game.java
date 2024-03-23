@@ -4,6 +4,7 @@ public class Game {
 
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
+    private static final Scanner scanner = new Scanner(System.in);
 
     public void startGame(String firstPlayerName, Scanner scanner) {
         List<Player> players = getPlayers(firstPlayerName, scanner);
@@ -14,6 +15,7 @@ public class Game {
         System.out.print(players.getLast().getName() + "\n");
 
         // Give 100 points to each player at the start of the game
+        List<Player> players = Arrays.asList(humanPlayer, bot1, bot2, bot3);
         for (Player player : players) {
             player.addPoints(100);
         }
@@ -165,7 +167,6 @@ public class Game {
     }
 
     private static List<Player> playerOrder(List<Player> playerList, int numPlayers) {
-        // Set turn order of players
         Random random = new Random();
         if (playerList == null || numPlayers < 1) {
             return null;
@@ -177,7 +178,7 @@ public class Game {
         for (int i = 0; i < numPlayers; i++) {
             // Get first player
             Player player = playerList.get(i);
-            // Check if has starting Card three of Diamonds
+            // Check if has startCard
             if (player.hasCard(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
                 // If have startCard assign as first player
                 // Assumes that all 52 cards are dealt out properly
@@ -187,7 +188,7 @@ public class Game {
                 boolean turnOrderSet = false;
                 // Set a do loop until turn order is successfully set
                 do {
-                    // random.nextInt(max-1) will generate random number from 0 to max-2
+                    // nextInt(max-min) will generate random number from 0 to max-2
                     // max - min sets max-2 to be highest random int generated
                     // +1 will ensure that it will never be 0
                     int max = numPlayers;
@@ -211,27 +212,20 @@ public class Game {
             String playerName = player.getName();
             System.out.printf("%s -> ", playerName);
         }
-        System.out.printf("%s.", playerOrder.getLast().getName());
     }
 
     private static Player getNextPlayer(Player currentPlayer, List<Player> players) {
         int currentIndex = players.indexOf(currentPlayer);
         int nextIndex = (currentIndex + 1) % players.size(); // Wrap around to the beginning if at the end
-
         return players.get(nextIndex);
     }
 
     private static Player findRoundWinner(List<Player> playerList) {
         for (Player player : playerList) {
-            // search playerList for an empty hand
             if (player.getHand().isEmpty()) {
-                return player;// Player with empty hand is winner
+                return player;
             }
         }
         return null; // No winner found
-    }
-
-    private static void quitGame() {
-        System.out.println("\nBye Bye!");
     }
 }
