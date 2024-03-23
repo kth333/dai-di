@@ -50,8 +50,7 @@ public class Hand {
         return handCopy;
     }
 
-    //sort it by rank by getting the list of hand and compare
-    public void sortByRank() {
+     public void sortByRank() {
         Collections.sort(hand, new Comparator<Card>() {
             @Override
             public int compare(Card c1, Card c2) {
@@ -71,5 +70,19 @@ public class Hand {
                 return suitComparison;
             }
         });
+    }
+
+
+    @Override
+    public String toString() {
+        String result = "[";
+        for (int i = 0; i < hand.size(); i++) {
+            result += i + ". " + hand.get(i);
+            if (i < hand.size() - 1) {
+                result += ", ";
+            }
+        }
+        result += "]";
+        return result;
     }
 }
