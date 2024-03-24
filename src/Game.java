@@ -34,7 +34,7 @@ public class Game {
 
                 if (input.equalsIgnoreCase("n")) {
                     // If the user types 'n', break out of the loop to end the game
-                    quitGame();
+                    System.out.println("Bye Bye!");
                     return;
                 } else if (!input.equalsIgnoreCase("y")) {
                     // If the user doesn't type 'y' or 'n', handle the invalid input accordingly
@@ -70,7 +70,7 @@ public class Game {
                 // quit game if choose q
                 if (playResult.isQuit()) {
                     // System.out.println("Quit flag detected, quitting...");
-                    quitGame();
+                    System.out.println("Bye Bye!");
                     return; // exit the startGame method, ending the game
                 }
 
@@ -272,11 +272,5 @@ public class Game {
             }
         }
         return null; // No winner found
-    }
-      /**
-     * Displays a goodbye message when the game is quit prematurely.
-     */
-    private static void quitGame() {
-        System.out.println("\nBye Bye!");
     }
 }
