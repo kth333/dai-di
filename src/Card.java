@@ -71,8 +71,8 @@ public class Card implements Comparable<Card> {
         Card card = (Card) obj;// cast obj to card
         return suit == card.suit && rank == card.rank;
     }
-    **
-     * Returns a hash code value for the card.
+    
+     /* Returns a hash code value for the card.
      * 
      * @return A hash code value for this card.
      */
