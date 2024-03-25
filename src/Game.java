@@ -125,28 +125,6 @@ public class Game {
         // Display winner of the game after all 5 rounds are completed
         System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
     }
-    /**
-     * Prompts the user to select the number of human players and enters their names.
-     *
-     * @param firstPlayerName the name of the first player
-     * @param scanner         the scanner object for input
-     * @return the list of players in the game
-     */
-    public List<Player> getPlayers(String firstPlayerName, Scanner scanner) {
-        int players = 1;
-        do {
-            System.out.print("Select number of human players: ");
-            try {
-                players = Integer.parseInt(scanner.nextLine());
-                if (players < 1 || players > NUM_PLAYERS) {
-                    System.out.println("Invalid player number! Player number is only 1 to 4.");
-                } else {
-                    break;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter 1, 2, 3 or 4.");
-            }
-        } while (true);
 
     /**
      * Prompts the user to select the number of human players and enters their
