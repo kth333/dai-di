@@ -55,7 +55,6 @@ public class HardBot extends Bot {
         //if any cards is bigger than the minimum strength card, return null
         for (PlayedCards individual : singles){
             if (individual.winsAgainst(weakestSingle)){
-                System.out.println(individual);
                 return null;
             }
         }
@@ -198,7 +197,6 @@ public class HardBot extends Bot {
 
                     //if no valid pairs, just break and no need to check for efficient strategies
                     if (potentialDoubles == null){
-                        System.out.println("got here");
                         break;
                     }
             
