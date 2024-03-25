@@ -9,34 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Bot extends Player {
+public abstract class Bot extends Player {
+    //creates a list of botnames
     private static final String[] botNames = { "Yeow Leong", "Zhi Yuan", "Lay Foo", "Fang Yuan", "Tony", "Lily Kong" };
     private static final Random random = new Random();
     public static List<String> usedNames = new ArrayList<>();
-
-    public Bot(String playerName, List<String> usedNames) {
-        super(generateBotName(playerName, usedNames));
-        usedNames.add(getName());
-    }
 
     public Bot(List<String> playerNames, List<String> usedNames) {
         super(generateBotName(playerNames, usedNames));
         usedNames.add(getName());
     }
 
-    //For only one human player
-    private static String generateBotName(String playerName, List<String> usedNames) {
-        usedNames.add(playerName);
-        String name;
-        do {
-            name = botNames[random.nextInt(botNames.length)];
-        } while (usedNames.contains(name));
-        return name;
-    }
-
-    //Overloaded method for multiple playerNames
     private static String generateBotName(List<String> playerNames, List<String> usedNames) {
-        
         for (String usedname:playerNames){
             usedNames.add(usedname);
         }
@@ -47,50 +31,18 @@ public class Bot extends Player {
         return name;
     }
 
+    public abstract PlayResult play(PlayedCards previousCards, int consecutivePasses);
 
-    public PlayResult play(PlayedCards previousCards, int consecutivePasses) {
-        // Get the bot player's hand
-        List<Card> botHand = getHand().getCardsInHand();
-
-        // Check if the bot player should pass
-
-        // Get all valid combinations in the bot's hand
-        List<PlayedCards> validCombinations = getAllValidCombinations(botHand, previousCards);
-
-        if (validCombinations != null) {
-            // Check each valid combination against the previous cards
-            for (PlayedCards combination : validCombinations) {
-                if (combination.winsAgainst(previousCards)) {
-                    Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
-                    if (hasCard(startCard) && !combination.getCards().contains(startCard)) {
-                        // If bot has 3 of Diamonds and the combination doesn't contain 3 of Diamonds, continue searching
-                        continue;
-                    }
-                    // If the combination wins or there are no previous cards, play it
-                    previousCards = combination; // Update the previous cards
-                    System.out.println("\n" + getName() + " played: " + combination);
-                    botHand.removeAll(combination.getCards()); // Remove the played cards from the bot's hand
-                    if (previousCards != null) {
-                        consecutivePasses = 0;
-                        return new PlayResult(this,previousCards, consecutivePasses);
-                    }
-                }
-            }
-        }
-        System.out.println("\n" + getName() + " passed their turn.");
-        consecutivePasses++;
-        return new PlayResult(this,previousCards, consecutivePasses);
-    }
-
-    private static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
+    public static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
         List<PlayedCards> validCombinations = new ArrayList<>();
 
         if (previousCards == null) {
-            // If previousCards is null, any combination in the hand is valid
+                        // If previousCards is null, any combination in the hand is valid
             validCombinations.addAll(findSingles(hand));
             validCombinations.addAll(findDoubles(hand));
             validCombinations.addAll(findTriples(hand));
             validCombinations.addAll(findFiveCombination(hand));
+            
         } else {
             String previousType = previousCards.getType();
 
@@ -107,8 +59,6 @@ public class Bot extends Player {
                     validCombinations.addAll(findTriples(hand));
                     break;
                 default:
-                    // If previousCards was a combination of 5 cards, generate all possible
-                    // combinations
                     validCombinations.addAll(findFiveCombination(hand));
                     break;
             }
@@ -125,7 +75,7 @@ public class Bot extends Player {
         return winningCombinations;
     }
 
-    private static List<PlayedCards> findSingles(List<Card> hand) {
+    public static List<PlayedCards> findSingles(List<Card> hand) {
         List<PlayedCards> singles = new ArrayList<>();
         for (Card card : hand) {
             List<Card> single = new ArrayList<>();
@@ -135,7 +85,7 @@ public class Bot extends Player {
         return singles;
     }
 
-    private static List<PlayedCards> findDoubles(List<Card> hand) {
+    public static List<PlayedCards> findDoubles(List<Card> hand) {
         List<PlayedCards> doubles = new ArrayList<>();
         for (int i = 0; i < hand.size() - 1; i++) {
             for (int j = i + 1; j < hand.size(); j++) {
@@ -151,7 +101,7 @@ public class Bot extends Player {
         return doubles;
     }
 
-    private static List<PlayedCards> findTriples(List<Card> hand) {
+    public static List<PlayedCards> findTriples(List<Card> hand) {
         List<PlayedCards> triples = new ArrayList<>();
         for (int i = 0; i < hand.size() - 2; i++) {
             for (int j = i + 1; j < hand.size() - 1; j++) {
@@ -170,7 +120,7 @@ public class Bot extends Player {
         return triples;
     }
 
-    private static List<PlayedCards> findFiveCombination(List<Card> hand) {
+    public static List<PlayedCards> findFiveCombination(List<Card> hand) {
         List<PlayedCards> combinations = new ArrayList<>();
 
         // Check if the hand has at least 5 cards

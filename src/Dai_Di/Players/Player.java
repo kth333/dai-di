@@ -29,8 +29,8 @@ public class Player {
                     " - Type 'pass' to pass\n" +
                     " - Type 'suit' to sort hand by suit\n" +
                     " - Type 'rank' to sort hand by rank\n" +
-                    " - Type 'quit' to quit the game\n" +
                     " - Type 'history' to display past plays\n" +
+                    " - Type 'quit' to quit the game\n" +
                     "Your choice: ");
             String input = scanner.nextLine();
 
@@ -42,8 +42,9 @@ public class Player {
                 }
                 System.out.println("\n" + getName() + " passed their turn.");
                 consecutivePasses++;
-                return new PlayResult(this, previousCards, consecutivePasses); // Exit the method if the player chooses to
-                                                                         // pass
+                return new PlayResult(this, previousCards, consecutivePasses); // Exit the method if the player chooses
+                                                                               // to
+                // pass
             } else if (input.toLowerCase().equals("rank")) { // sort the hand by rank
                 getHand().sortByRank();
                 System.out.println("\nHand sorted by rank: " + getHand());
@@ -52,14 +53,14 @@ public class Player {
                 getHand().sortBySuit();
                 System.out.println("\nHand sorted by suit: " + getHand());
                 continue;
+            } else if (input.toLowerCase().equals("history")) {
+                PlayResult.playHistory(playHistory);
+                continue;
             } else if (input.toLowerCase().equals("quit")) {
                 // System.out.println("Setting quit flag..."); // Debugging statement
                 PlayResult result = new PlayResult(this, previousCards, consecutivePasses);
                 result.setQuit(true); // Set the quit flag when player chooses to quit
                 return result;
-            } else if (input.toLowerCase().equals("history")) {
-                PlayResult.playHistory(playHistory);
-                continue;
             }
 
             boolean validSelection = true;

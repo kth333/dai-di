@@ -180,9 +180,30 @@ public class Game {
             } while (true);
         }
 
+        boolean isEasyMode = true;
+        if (players != 4) {
+            while (true) {
+                System.out.print("Select difficulty (easy or hard): ");
+                String input = scanner.nextLine();
+                if (input.equalsIgnoreCase("easy")) {
+                    isEasyMode = true;
+                    break;
+                } else if (input.equalsIgnoreCase("hard")) {
+                    isEasyMode = false;
+                    break;
+                } else {
+                    System.out.println("Invalid input! Please enter 'easy' or 'hard'.");
+                }
+            }
+        }
+
         if (players < NUM_PLAYERS) {
             for (int i = 0; i < 4 - players; i++) {
-                playerList.add(new Bot(playerNames, Bot.usedNames));
+                if (isEasyMode) {
+                    playerList.add(new EasyBot(playerNames, Bot.usedNames));
+                } else {
+                    playerList.add(new HardBot(playerNames, Bot.usedNames));
+                }
             }
         }
 
