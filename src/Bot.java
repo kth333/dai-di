@@ -26,7 +26,7 @@ public abstract class Bot extends Player {
 
     public abstract PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses);
 
-    private static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
+    public static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
         List<PlayedCards> validCombinations = new ArrayList<>();
 
         if (previousCards == null) {
@@ -68,7 +68,7 @@ public abstract class Bot extends Player {
         return winningCombinations;
     }
 
-    private static List<PlayedCards> findSingles(List<Card> hand) {
+    public static List<PlayedCards> findSingles(List<Card> hand) {
         List<PlayedCards> singles = new ArrayList<>();
         for (Card card : hand) {
             List<Card> single = new ArrayList<>();
@@ -78,7 +78,7 @@ public abstract class Bot extends Player {
         return singles;
     }
 
-    private static List<PlayedCards> findDoubles(List<Card> hand) {
+    public static List<PlayedCards> findDoubles(List<Card> hand) {
         List<PlayedCards> doubles = new ArrayList<>();
         for (int i = 0; i < hand.size() - 1; i++) {
             for (int j = i + 1; j < hand.size(); j++) {
@@ -94,7 +94,7 @@ public abstract class Bot extends Player {
         return doubles;
     }
 
-    private static List<PlayedCards> findTriples(List<Card> hand) {
+    public static List<PlayedCards> findTriples(List<Card> hand) {
         List<PlayedCards> triples = new ArrayList<>();
         for (int i = 0; i < hand.size() - 2; i++) {
             for (int j = i + 1; j < hand.size() - 1; j++) {
@@ -113,7 +113,7 @@ public abstract class Bot extends Player {
         return triples;
     }
 
-    private static List<PlayedCards> findFiveCombination(List<Card> hand) {
+    public static List<PlayedCards> findFiveCombination(List<Card> hand) {
         List<PlayedCards> combinations = new ArrayList<>();
 
         // Check if the hand has at least 5 cards

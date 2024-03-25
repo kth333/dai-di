@@ -10,8 +10,6 @@ public class HardBot extends Bot {
 
     @Override
     public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses) {
-        //remember to remove (testing purposes)
-        System.out.println("***HARDBOT PLAYING***");
         
         // Get the bot player's hand
         List<Card> botHand = botPlayer.getHand().getCardsInHand();
@@ -50,14 +48,14 @@ public class HardBot extends Bot {
         PlayedCards weakestSingle = new PlayedCards();
         weakestSingle.addCard(minimumStrength);
 
-        //get the indivisual cards within each card combinations
+        //get the individual cards within each card combinations
         List<Card> card_list = Cards.getCards();
         List<PlayedCards> singles = findSingles(card_list);
 
         //if any cards is bigger than the minimum strength card, return null
-        for (PlayedCards indivisual : singles){
-            if (indivisual.winsAgainst(weakestSingle)){
-                System.out.println(indivisual);
+        for (PlayedCards individual : singles){
+            if (individual.winsAgainst(weakestSingle)){
+                System.out.println(individual);
                 return null;
             }
         }
