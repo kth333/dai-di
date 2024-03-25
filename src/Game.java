@@ -7,8 +7,9 @@ public class Game {
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
 
-     /**
-     * Starts the game with the specified first player name and scanner object for input.
+    /**
+     * Starts the game with the specified first player name and scanner object for
+     * input.
      *
      * @param firstPlayerName the name of the first player
      * @param scanner         the scanner object for input
@@ -76,9 +77,10 @@ public class Game {
 
                 System.out.println("\nRound: " + round + " Turn: " + turn);
                 System.out.println(currentPlayer.getName() + "'s turn!");
-                if (currentPlayer instanceof Bot) {
-                    Bot bot = (Bot) currentPlayer;
-                    playResult = bot.play(currentPlayer, previousCards, consecutivePasses);
+                if (currentPlayer instanceof EasyBot) {
+                    playResult = ((EasyBot) currentPlayer).play(currentPlayer, previousCards, consecutivePasses);
+                } else if (currentPlayer instanceof HardBot) {
+                    playResult = ((HardBot) currentPlayer).play(currentPlayer, previousCards, consecutivePasses);
                 } else {
                     System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
                     playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, scanner);
@@ -123,20 +125,22 @@ public class Game {
         // Display winner of the game after all 5 rounds are completed
         System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
     }
+
     /**
-     * Prompts the user to select the number of human players and enters their names.
+     * Prompts the user to select the number of human players and enters their
+     * names.
      *
      * @param firstPlayerName the name of the first player
      * @param scanner         the scanner object for input
      * @return the list of players in the game
      */
     public List<Player> getPlayers(String firstPlayerName, Scanner scanner) {
-        int players = 1;
+        int numHumanPlayers = 1;
         do {
             System.out.print("Select number of human players: ");
             try {
-                players = Integer.parseInt(scanner.nextLine());
-                if (players < 1 || players > NUM_PLAYERS) {
+                numHumanPlayers = Integer.parseInt(scanner.nextLine());
+                if (numHumanPlayers < 1 || numHumanPlayers > NUM_PLAYERS) {
                     System.out.println("Invalid player number! Player number is only 1 to 4.");
                 } else {
                     break;
@@ -146,10 +150,27 @@ public class Game {
             }
         } while (true);
 
+        boolean isEasyMode = true;
+        if (numHumanPlayers != 4) {
+            while (true) {
+                System.out.print("Select difficulty (easy or hard): ");
+                String input = scanner.nextLine();
+                if (input.equalsIgnoreCase("easy")) {
+                    isEasyMode = true;
+                    break;
+                } else if (input.equalsIgnoreCase("hard")) {
+                    isEasyMode = false;
+                    break;
+                } else {
+                    System.out.println("Invalid input! Please enter 'easy' or 'hard'.");
+                }
+            }
+        }
+
         List<Player> playerList = new ArrayList<Player>(Arrays.asList(new Player(firstPlayerName)));
         List<String> playerNames = new ArrayList<String>(Arrays.asList(firstPlayerName));
         // Create human players
-        for (int i = 2; i <= players; i++) {
+        for (int i = 2; i <= numHumanPlayers; i++) {
             String name = null;
             do {
                 System.out.print("Enter player " + i + " name (up to 16 characters): ");
@@ -170,15 +191,19 @@ public class Game {
             } while (true);
         }
 
-        if (players < NUM_PLAYERS) {
-            for (int i = 0; i < 4 - players; i++) {
-                playerList.add(new Bot(playerNames, Bot.usedNames));
+        if (numHumanPlayers < NUM_PLAYERS) {
+            for (int i = 0; i < 4 - numHumanPlayers; i++) {
+                if (isEasyMode) {
+                    playerList.add(new EasyBot(playerNames, Bot.usedNames));
+                } else {
+                    playerList.add(new HardBot(playerNames, Bot.usedNames));
+                }
             }
         }
-
         return playerList;
     }
-     /**
+
+    /**
      * Determines the order of players for the current round based on their
      * presence of the 3 of diamonds card and randomly assigns turn order for
      * other players.
@@ -225,6 +250,12 @@ public class Game {
         }
         return Arrays.asList(playerOrder);
     }
+    /**
+     * Displays the turn order of players for the current round.
+     * 
+     * @param playerOrder The list of Player objects representing the turn order.
+     */
+
     /**
      * Displays the turn order of players for the current round.
      * 
