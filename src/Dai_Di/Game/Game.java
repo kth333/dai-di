@@ -13,9 +13,12 @@ public class Game {
     private static final int PLAYS_STORED = 8;
     private static final double POINT_RATE = 1;
 
+    private static Player currentPlayer = null;
+
     public void startGame(String firstPlayerName, Scanner scanner) {
         // Create list of players
         List<Player> players = getPlayers(firstPlayerName, scanner);
+        currentPlayer = players.get(0);
 
         // Print out list of players
         System.out.print("\nPlayers: ");
@@ -62,7 +65,7 @@ public class Game {
             displayPlayerOrder(playerOrder);
 
             Player roundWinner = null;
-            Player currentPlayer = playerOrder.get(0);
+            currentPlayer = playerOrder.get(0);
             PlayedCards previousCards = null; // Initialize previous cards
             List<PlayResult> playHistory = new ArrayList<PlayResult>(); // Initalize play history
             int turn = 1;
@@ -95,7 +98,7 @@ public class Game {
                 playHistory.add(playResult);
 
                 previousCards = playResult.getPreviousCards();
-                
+
                 // get number of times passed in round so far
                 consecutivePasses = playResult.getConsecutivePasses();
                 if (consecutivePasses >= 3) {
@@ -133,6 +136,17 @@ public class Game {
         }
         // Display winner of the game after all 5 rounds are completed
         System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
+    }
+
+    public static Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public static Player getHumanPlayer() {
+        if (currentPlayer instanceof Bot) {
+            return null;
+        }
+        return currentPlayer;
     }
 
     public List<Player> getPlayers(String firstPlayerName, Scanner scanner) {

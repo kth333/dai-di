@@ -4,11 +4,11 @@ import java.util.Objects;
 
 public class Card implements Comparable <Card> {
 
-     public enum Suit{
+    public enum Suit{
         DIAMONDS, CLUBS, HEARTS, SPADES
     }
     public enum Rank{
-      THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE, TWO
+        THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE, TWO
     }
 
     
