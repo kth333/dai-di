@@ -1,32 +1,50 @@
+Dai Di Game Instructions and Rules
+
 Objective:
-The aim of Dai Di is to get rid all of all the cards in your hand by constantly one-upping your opponents with cards played singly or in certain poker combinations (2 cards, 3 cards, or 5 cards).
+The aim of Dai Di is to be the first to get rid of all the cards in your hand. This is achieved by outmatching your opponents' cards with higher-value cards played singly or in specific poker combinations. The game allows 2 cards, 3 cards, or 5 cards combinations.
 
-Rules:
-The value of each card or combination comes from the numerical of the card(s) used, as well as their suits. The cards of the smallest value are the 3s, followed by the 4s, and so on and so forth till the picture cards. Then, it’s the Aces, followed by the 2s. The suits ascend in value in the following order: diamonds, clubs, hearts, and spades. Therefore, the weakest card in the game would be the 3 of diamonds, and the strongest is the 2 of spades.
+Card Values:
+- Cards ascend in value from 3s (lowest) to 2s (highest).
+- Suit values ascend from diamonds (lowest), to clubs, hearts, and spades (highest).
+- Therefore, the 3 of diamonds is the weakest card, while the 2 of spades is the strongest.
 
-Starting a game:
-13 cards are drawn by each player. The player with the weakest card (3 of diamonds) starts the round by playing it (either singly or with whatever combination it can make) Said player also determines the number of cards each player must play during that round – if the first player plays with only one card, all other players must play with one card; if the first player plays with a combination, all other players must play with the number of cards in that combination.
+Starting a Game:
+- Each player draws 13 cards.
+- The player with the 3 of diamonds starts the round, setting the precedent for the number of cards (single or combination) to be played.
 
-Playing a turn:
-The other players take turns clock-wise to climb above the value of the previous card(s) that were put down by their opponents. If a player is unable to beat a card or combination, they may pass the turn over to the next player.
-
-If everyone has passed your card/combination:
-Once all players pass, the player who put the unbeatable card or combination starts a new round with whatever they choose.
+Turns:
+- Players play in a clockwise direction, trying to play higher-value cards or combinations.
+- A player may pass if unable to play a higher card or combination.
+- If all players pass, the last player to play starts a new round with a card or combination of their choice.
 
 Combinations:
-Two cards (pair): To play a two-card combination, cards of the same numerical must be paired together (for example, a four of clubs and a four of hearts). To beat such a hand, another pair of a stronger value must be played – this includes a four pair with a stronger suit (four of spades and four of diamonds), or any pair with a higher numerical value.
+1. Two cards (pair): Cards of the same number. Must be outmatched by a higher pair or a higher suit if the number is the same.
+2. Three cards (triplet): Three cards of the same number. Beat with a higher triplet.
+3. Straight: Five consecutive cards, regardless of suit.
+4. Flush: Five cards of the same suit, any numerical order.
+5. Full House: A triplet and a pair combined.
+6. Four of a Kind: Four cards of the same number, plus any other card.
+7. Straight-Flush: Five consecutive cards of the same suit.
 
-Three cards (triplet): To play a three-card combination, you will need three cards of the same numerical to be grouped together. An example is a five of diamonds, five of hearts, and a five of spades. To beat such a hand, another triplet of a higher numerical must be played.
+Combination Strength:
+Straight-Flush > Four of a Kind > Full House > Flush > Straight
 
-Straight: A Straight consists of five cards arranged in consecutive numerical order, whereby the suits do not matter. An example of such a hand would be a seven of clubs, eight of hearts, nine of diamonds, 10 of spades, and a Jack of diamonds.
+General Play Instructions:
+1. Take turns playing cards to beat the previous play.
+2. Sort your hand by rank or suit for better strategy.
+3. Pass if unable to play or beat the previous cards.
+4. Win by being the first to play all your cards.
 
-Flush: A Flush consists of five cards of any numerical, but all with the same suit. An example of such a hand would be a three of hearts, five of hearts, eight of hearts, 10 of hearts, and Queen of hearts.
+How to Play:
+- 'Select cards to play' by entering the indices of the cards separated by spaces.
+- Follow the game rules for valid combinations and sequence.
 
-Full House: A Full House consists of five cards made-up of a triplet and a pair. An example would be three fives and a pair of eights.
+Points System:
+- Each player starts with a 100 points
+- Points deducted based off how many cards a player has left
+- Default rate is 1 point per card left
+- If you are left with 7 or more cards the points deducted will be doubled
+- If you are left with 10 or more cards the points deducted will be tripled
+- First player to reach 0 loses
 
-Four of a Kind: A Four of a Kind consists of five cards made-up of four cards of the same number, plus any other card. An example would be four sixes and a nine.
-
-Straight-Flush: A Straight-Flush constitutes of five cards arranged in consecutive order with the same suit. An example would be a six of clubs, seven of clubs, eight of clubs, nine of clubs, and 10 of clubs.
-
-Among the 5 card combinations, the order of strength is as follows:
-Straight-Flush > Four of a kind > Full House > Flush > Straight 
+Remember, strategy and understanding the value of your cards are key to winning at Dai Di. Good luck!

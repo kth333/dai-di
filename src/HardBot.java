@@ -4,12 +4,12 @@ import java.util.List;
 
 public class HardBot extends Bot {
 
-    public HardBot(String playerName, List<String> usedNames) {
-        super(playerName, usedNames);
+    public HardBot(List<String> playerNames, List<String> usedNames) {
+        super(playerNames, usedNames);
     }
 
     @Override
-    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses, int round, int turn) {
+    public PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses) {
         //remember to remove (testing purposes)
         System.out.println("***HARDBOT PLAYING***");
         
@@ -24,8 +24,9 @@ public class HardBot extends Bot {
             for (PlayedCards combination : validCombinations) {
 
                 if (previousCards == null || combination.winsAgainst(previousCards)) {
-                    if (round == 1 && turn == 1 && !combination.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
-                        // If it's the first turn and the combination doesn't contain 3 of Diamonds, continue searching
+                    Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+                    if (hasCard(startCard) && !combination.getCards().contains(startCard)) {
+                        // If bot has 3 of Diamonds and the combination doesn't contain 3 of Diamonds, continue searching
                         continue;
                     }
                     // If the combination wins or there are no previous cards, play it

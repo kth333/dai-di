@@ -10,20 +10,46 @@ public class Player {
         this.name = name;
         this.hand = new Hand();
     }
-    
+
     // Method for player to play cards
-    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, int round, int turn) {
+    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         List<Card> hand = currentPlayer.getHand().getCardsInHand();
-        Scanner scanner = new Scanner(System.in);
-        
+
         while (true) {
-            System.out.print("\nSelect cards to play (enter indices separated by spaces) or type p to pass: ");
+            System.out.print("\nOptions:\n" +
+                    " - Select cards to play (enter indices separated by spaces)\n" +
+                    " - Type 'pass' to pass\n" +
+                    " - Type 'suit' to sort hand by suit\n" +
+                    " - Type 'rank' to sort hand by rank\n" +
+                    " - Type 'quit' to quit the game\n" +
+                    "Your choice: ");
             String input = scanner.nextLine();
 
-            if (input.toLowerCase().equals("p")) {
+            Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+            if (input.toLowerCase().equals("pass")) {
+                if (hasCard(startCard)) {
+                    System.out.println("Need to play 3 of Diamonds cannot pass first turn!");
+                    continue;
+                }
                 System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 consecutivePasses++;
                 return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
+            } else if (input.toLowerCase().equals("rank")) { // sort the hand by rank
+                currentPlayer.getHand().sortByRank();
+                System.out.println("\nHand sorted by rank: " + currentPlayer.getHand());
+                continue;
+            } else if (input.toLowerCase().equals("suit")) {// sort the hand by suit
+                currentPlayer.getHand().sortBySuit();
+                System.out.println("\nHand sorted by suit: " + currentPlayer.getHand());
+                continue;
+            } else if (input.toLowerCase().equals("quit")) {
+                // System.out.println("Setting quit flag..."); // Debugging statement
+                PlayResult result = new PlayResult(previousCards, consecutivePasses);
+                result.setQuit(true); // Set the quit flag when player chooses to quit
+                return result;
+            }else if (input.toLowerCase().equals("i")){
+                    Instructions.displayInstructions();
+                    continue;
             }
 
             boolean validSelection = true;
@@ -44,17 +70,17 @@ public class Player {
                     break; // Continue to prompt the player for valid input
                 }
             }
-            
+
             if (!validSelection) {
                 continue; // Continue to prompt the player for valid input
             }
-            
+
             // Create an instance of PlayedCards to store the selected cards
             PlayedCards playedCards = new PlayedCards(currentPlayer, selectedCards);
-          
+
             // Check if the selected cards win against the previous cards
-            if (round == 1 && turn == 1 && !playedCards.getCards().contains(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
-                System.out.println("\nYou must include 3 of Diamonds on the first turn!");
+            if (hasCard(startCard) && !playedCards.getCards().contains(startCard)) {
+                System.out.println("\nYou must play 3 of Diamonds on the first turn!");
                 continue;
             }
             if (!playedCards.isValidSize()) {
@@ -63,11 +89,11 @@ public class Player {
             } else if (playedCards.getType().equals("Invalid")) {
                 System.out.println("\nInvalid selection! Please select a valid combination.");
                 continue;
-            } else if (previousCards != null && !playedCards.winsAgainst(previousCards)) {
+            } else if (!playedCards.winsAgainst(previousCards)) {
                 System.out.println("\nInvalid selection! The selected cards do not beat previous cards.");
                 continue; // Continue to prompt the player for valid input
             }
-    
+
             // Display the played cards
             System.out.println("\n" + currentPlayer.getName() + " played: " + playedCards.getCards());
             // Remove the played cards from the player's hand
@@ -75,7 +101,8 @@ public class Player {
             previousCards = playedCards;
             consecutivePasses = 0;
             return new PlayResult(previousCards, consecutivePasses);
-    }
+        }
+
     }
 
     public Hand getHand() {
@@ -91,19 +118,26 @@ public class Player {
     }
 
     public void addPoints(double add) {
-        if (add>0){
+        if (add > 0) {
             points += add;
         }
     }
 
     public void deductPoints(double deduct) {
-        if (deduct>0){
+        if (deduct > 0) {
             points -= deduct;
         }
     }
 
     public double loseGame(double rate) {
-        double deduct = rate * getNumOfCards();
+        // double deduct = rate * getNumOfCards();
+        int numCards=getNumOfCards();
+        double deduct = numCards * rate;
+        if (numCards >= 10) {//If num of Cards greater then rate *3 loss
+            deduct *= 3;
+        } else if (numCards >=7) {//If num of cards equal to rate then *2 loss
+            deduct *= 2;
+        }
         deductPoints(deduct);
         return deduct;
     }
@@ -116,7 +150,7 @@ public class Player {
         return hand.getSize(); // Pass player to getSize()
     }
 
-    public void receiveCard(Card card){//Adds card to hand
+    public void receiveCard(Card card) {// Adds card to hand
         hand.addCard(card);
     }
 
@@ -143,6 +177,3 @@ public class Player {
         return Comparator.comparingDouble(Player::getPoints).reversed();
     }
 }
-
-
-
