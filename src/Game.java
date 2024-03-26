@@ -7,6 +7,8 @@ public class Game {
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
 
+    private static Player currentPlayer = null;
+
     /**
      * Starts the game with the specified first player name and scanner object for
      * input.
@@ -29,6 +31,7 @@ public class Game {
         }
 
         for (int round = 0; round <= 5;) {
+            currentPlayer=null;
             if (round >= 1) {
                 System.out.println("Continue next round? (y/n)");
                 String input = scanner.nextLine();
@@ -60,11 +63,12 @@ public class Game {
             displayPlayerOrder(playerOrder);
 
             Player roundWinner = null;
-            Player currentPlayer = playerOrder.get(0);
+            currentPlayer = playerOrder.get(0);
             PlayedCards previousCards = null; // Initialize previous cards
+            List<PlayResult> playHistory = new ArrayList<PlayResult>(); // Initalize play history
             int turn = 1;
             int consecutivePasses = 0;
-            PlayResult playResult = new PlayResult(previousCards, consecutivePasses);
+            PlayResult playResult = new PlayResult(currentPlayer,previousCards, consecutivePasses,turn);
 
             // Game loop
             while (roundWinner == null) {
@@ -78,12 +82,12 @@ public class Game {
                 System.out.println("\nRound: " + round + " Turn: " + turn);
                 System.out.println(currentPlayer.getName() + "'s turn!");
                 if (currentPlayer instanceof EasyBot) {
-                    playResult = ((EasyBot) currentPlayer).play(currentPlayer, previousCards, consecutivePasses);
+                    playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses,turn);
                 } else if (currentPlayer instanceof HardBot) {
-                    playResult = ((HardBot) currentPlayer).play(currentPlayer, previousCards, consecutivePasses);
+                    playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses,turn);
                 } else {
                     System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
-                    playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, scanner);
+                    playResult = currentPlayer.play(previousCards, consecutivePasses,turn, scanner);
                 }
 
                 previousCards = playResult.getPreviousCards();
@@ -94,6 +98,12 @@ public class Game {
                 }
                 // Next turn
                 turn++;
+
+                //add play to playHistory
+                if (playHistory.size()==8){
+                    playHistory.removeFirst();
+                }
+                playHistory.add(playResult);
 
                 // Look for a winner
                 roundWinner = findRoundWinner(playerOrder);
@@ -124,6 +134,18 @@ public class Game {
         }
         // Display winner of the game after all 5 rounds are completed
         System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
+    }
+
+    /**
+     * gets the player whose turn it is if it is not a bot
+     *
+     * @return the Player instance of current player
+     */
+    public Player getCurrentPlayer(){
+        if (currentPlayer instanceof Bot){
+            return null;
+        }
+        return currentPlayer;
     }
 
     /**

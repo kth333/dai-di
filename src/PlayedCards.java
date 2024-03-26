@@ -6,26 +6,22 @@ import java.util.List;
  */
 
 public class PlayedCards {
-    private Player player;
     private List<Card> cards;
 
      /**
      * Default constructor for PlayedCards.
-     * Initializes the player as null and creates an empty list of cards.
+     * Creates an empty list of cards.
      */
     public PlayedCards() {
-        this.player = null;
         this.cards = new ArrayList<>();
     }
      /**
      * Constructs a PlayedCards object with the given player and list of cards.
      *
-     * @param player the player who played the cards
      * @param cards the list of cards played
      */
 
-    public PlayedCards(Player player, List<Card> cards) {
-        this.player = player;
+    public PlayedCards(List<Card> cards) {
         this.cards = cards;
     }
 
@@ -47,15 +43,7 @@ public class PlayedCards {
         sortByRank();
         return this.cards.get(0);
     }
-    
-    /**
-     * Retrieves the player who played the cards.
-     *
-     * @return the player
-     */
-    public Player getPlayer() {
-        return this.player;
-    }
+
     /**
      * Gets the number of cards in the set of played cards.
      *
