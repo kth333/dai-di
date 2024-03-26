@@ -260,8 +260,7 @@ public class Game {
                     // nextInt(max-min) will generate random number from 0 to max-2
                     // max - min sets max-2 to be highest random int generated
                     // +1 will ensure that it will never be 0
-                    int max = numPlayers;
-                    int position = random.nextInt((max - 1)) + 1;
+                    int position = random.nextInt((numPlayers - 1)) + 1;
                     // Set the player in the position if it is empty
                     if (playerOrder[position] == null) {
                         playerOrder[position] = player;
@@ -272,7 +271,7 @@ public class Game {
         }
         return Arrays.asList(playerOrder);
     }
-    /**
+    /*
      * Displays the turn order of players for the current round.
      * 
      * @param playerOrder The list of Player objects representing the turn order.
