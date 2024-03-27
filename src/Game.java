@@ -1,4 +1,5 @@
 import java.util.*;
+
 /**
  * Represents a game controller for managing the flow of the card game.
  */
@@ -31,7 +32,7 @@ public class Game {
         }
 
         for (int round = 0; round <= 5;) {
-            currentPlayer=null;
+            currentPlayer = null;
             if (round >= 1) {
                 System.out.println("Continue next round? (y/n)");
                 String input = scanner.nextLine();
@@ -46,7 +47,8 @@ public class Game {
                     continue;
                 }
             }
-            // Increment the round counter only when the user chooses to continue (otherwise it increases after an invalid input)
+            // Increment the round counter only when the user chooses to continue (otherwise
+            // it increases after an invalid input)
             round++;
 
             // Create and shuffle deck
@@ -68,7 +70,7 @@ public class Game {
             List<PlayResult> playHistory = new ArrayList<PlayResult>(); // Initalize play history
             int turn = 1;
             int consecutivePasses = 0;
-            PlayResult playResult = new PlayResult(currentPlayer,previousCards, consecutivePasses,turn);
+            PlayResult playResult = new PlayResult(currentPlayer, previousCards, consecutivePasses, turn);
 
             // Game loop
             while (roundWinner == null) {
@@ -82,12 +84,12 @@ public class Game {
                 System.out.println("\nRound: " + round + " Turn: " + turn);
                 System.out.println(currentPlayer.getName() + "'s turn!");
                 if (currentPlayer instanceof EasyBot) {
-                    playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses,turn);
+                    playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses, turn);
                 } else if (currentPlayer instanceof HardBot) {
-                    playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses,turn);
+                    playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses, turn);
                 } else {
                     System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
-                    playResult = currentPlayer.play(previousCards, consecutivePasses,turn, scanner);
+                    playResult = currentPlayer.play(previousCards, consecutivePasses, turn, scanner);
                 }
 
                 previousCards = playResult.getPreviousCards();
@@ -99,8 +101,8 @@ public class Game {
                 // Next turn
                 turn++;
 
-                //add play to playHistory
-                if (playHistory.size()==8){
+                // add play to playHistory
+                if (playHistory.size() == 8) {
                     playHistory.removeFirst();
                 }
                 playHistory.add(playResult);
@@ -141,8 +143,8 @@ public class Game {
      *
      * @return the Player instance of current player
      */
-    public Player getCurrentPlayer(){
-        if (currentPlayer instanceof Bot){
+    public Player getCurrentPlayer() {
+        if (currentPlayer instanceof Bot) {
             return null;
         }
         return currentPlayer;
