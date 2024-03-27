@@ -3,9 +3,8 @@
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![JavaFX](https://img.shields.io/badge/javafx-%23FF0000.svg?style=for-the-badge&logo=javafx&logoColor=white)
 
-![photo1711523922](https://github.com/kth333/dai-di/assets/143651427/16b52206-5d32-4a57-a56f-bf10392658cc)
-
 A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is a fun and popular card game enjoyed in groups of four.
+![photo1711523922](https://github.com/kth333/dai-di/assets/143651427/16b52206-5d32-4a57-a56f-bf10392658cc)
 
 ## Features
 
