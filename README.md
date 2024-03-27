@@ -31,7 +31,6 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 
 ## License
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
-ins any jar files that you use for your application.
 
 ## Credits
 - **Images of all the cards**: https://www.waste.org/~oxymoron/files/cards/
