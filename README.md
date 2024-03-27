@@ -14,7 +14,7 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 - **Difficulty Selection**: Choose between easy or hard mode when playing with bots. 
 - **Scoring System**: Keep track of scores for each player across five rounds. Winner is decided after all five rounds are completed.
 - **Instructions/Rules**: Instructions are available to read before and during a game.
-- **Hand Sorting**: Sort your hand by rank or suit to find  combinations to play.
+- **Hand Sorting**: Sort your hand by rank or suit to easily find combinations to play.
 - **Music**: Includes background music that can be muted anytime.
 
 ## Getting Started
