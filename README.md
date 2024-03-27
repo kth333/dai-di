@@ -19,7 +19,7 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 
 ## Getting Started
 
-- **Java JDK 8 or above**: Install Java JDK 21 here if you do not have it.
+- **Java JDK 8 or above**: Install Java JDK 21 [here](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html) if you do not have it.
 
 - **Compilation**: Run compile.bat to compile the class files, which will be stored in the classes directory once you execute compile.bat
 
