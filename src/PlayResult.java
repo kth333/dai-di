@@ -15,7 +15,7 @@ public class PlayResult {
      * @param previousCards the cards played in the previous turn
      * @param consecutivePasses the number of consecutive passes
      */
-    public PlayResult(Player player,PlayedCards previousCards, int consecutivePasses,int turn) {
+    public PlayResult(Player player, PlayedCards previousCards, int consecutivePasses, int turn) {
         this.player=player;
         this.previousCards = previousCards;
         this.consecutivePasses = consecutivePasses;

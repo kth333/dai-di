@@ -1,8 +1,5 @@
 import java.util.*;
 
-/**
- * Represents a game controller for managing the flow of the card game.
- */
 public class Game {
 
     private static final int NUM_PLAYERS = 4;
@@ -10,154 +7,82 @@ public class Game {
 
     private static Player currentPlayer = null;
 
-    /**
-     * Starts the game with the specified first player name and scanner object for
-     * input.
-     *
-     * @param firstPlayerName the name of the first player
-     * @param scanner         the scanner object for input
-     */
+    private int round;
 
     public void startGame(String firstPlayerName, Scanner scanner) {
         List<Player> players = getPlayers(firstPlayerName, scanner);
-        System.out.print("\nPlayers: ");
-        for (int i = 0; i < NUM_PLAYERS - 1; i++) {
-            System.out.print(players.get(i).getName() + ", ");
-        }
-        System.out.print(players.getLast().getName() + "\n");
-
-        // Give 100 points to each player at the start of the game
         for (Player player : players) {
             player.addPoints(100);
         }
+        playRounds(players, 1, scanner);
+        displayFinalWinner(players);
+    }
 
-        for (int round = 0; round <= 5;) {
-            currentPlayer = null;
-            if (round >= 1) {
-                System.out.println("Continue next round? (y/n)");
-                String input = scanner.nextLine();
+    private void playRounds(List<Player> players, int round, Scanner scanner) {
+        if (round > 5 || (round > 1 && !continueGame(scanner))) {
+            System.out.println("Bye Bye!");
+            return;
+        }
+        this.round = round; // Update the class variable
+        Deck deck = new Deck();
+        deck.shuffle();
+        deck.distributeCards(players, CARDS_PER_PLAYER);
+        List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
+        displayPlayerOrder(playerOrder);
+        playTurns(players, playerOrder, 1, null, 0, round, scanner);
+        displayRanking(players);
+        clearHands(players);
+        playRounds(players, round + 1, scanner);
+    }
 
-                if (input.equalsIgnoreCase("n")) {
-                    // If the user types 'n', break out of the loop to end the game
-                    System.out.println("Bye Bye!");
-                    return;
-                } else if (!input.equalsIgnoreCase("y")) {
-                    // If the user doesn't type 'y' or 'n', handle the invalid input accordingly
-                    System.out.println("Invalid input. Please type 'y' or 'n'.");
-                    continue;
-                }
-            }
-            // Increment the round counter only when the user chooses to continue (otherwise
-            // it increases after an invalid input)
-            round++;
-
-            // Create and shuffle deck
-            Deck deck = new Deck();
-            deck.shuffle();
-
-            // Distribute cards to players
-            deck.distributeCards(players, CARDS_PER_PLAYER);
-
-            // Determine the player with the 3 of diamonds to start the round
-            List<Player> playerOrder = playerOrder(players, NUM_PLAYERS);
-
-            // show order of players
-            displayPlayerOrder(playerOrder);
-
-            Player roundWinner = null;
-            currentPlayer = playerOrder.get(0);
-            PlayedCards previousCards = null; // Initialize previous cards
-            List<PlayResult> playHistory = new ArrayList<PlayResult>(); // Initalize play history
-            int turn = 1;
-            int consecutivePasses = 0;
-            PlayResult playResult = new PlayResult(currentPlayer, previousCards, consecutivePasses, turn);
-
-            // Game loop
-            while (roundWinner == null) {
-                // quit game if choose q
-                if (playResult.isQuit()) {
-                    // System.out.println("Quit flag detected, quitting...");
-                    System.out.println("Bye Bye!");
-                    return; // exit the startGame method, ending the game
-                }
-
-                System.out.println("\nRound: " + round + " Turn: " + turn);
-                System.out.println(currentPlayer.getName() + "'s turn!");
-                if (currentPlayer instanceof EasyBot) {
-                    playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses, turn);
-                } else if (currentPlayer instanceof HardBot) {
-                    playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses, turn);
-                } else {
-                    System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
-                    playResult = currentPlayer.play(previousCards, consecutivePasses, turn, scanner);
-                }
-
-                previousCards = playResult.getPreviousCards();
-                // get number of times passed in round so far
-                consecutivePasses = playResult.getConsecutivePasses();
-                if (consecutivePasses >= 3) {
-                    previousCards = null;
-                }
-                // Next turn
-                turn++;
-
-                // add play to playHistory
-                if (playHistory.size() == 8) {
-                    playHistory.removeFirst();
-                }
-                playHistory.add(playResult);
-
-                // Look for a winner
-                roundWinner = findRoundWinner(playerOrder);
-                // Switch to the next player
-                currentPlayer = getNextPlayer(currentPlayer, playerOrder);
-            }
-
+    private void playTurns(List<Player> players, List<Player> playerOrder, int turn, PlayedCards previousCards, int consecutivePasses, int round, Scanner scanner) {
+        currentPlayer = playerOrder.get((turn - 1) % 4);
+        System.out.println("\nRound: " + round + " Turn: " + turn);
+        System.out.println(currentPlayer.getName() + "'s turn!");
+        
+        PlayResult playResult = new PlayResult(currentPlayer, null, 0, 1);
+        
+        if (currentPlayer instanceof EasyBot) {
+            playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses, turn);
+        } else if (currentPlayer instanceof HardBot) {
+            playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses, turn);
+        } else {
+            System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
+            playResult = currentPlayer.play(previousCards, consecutivePasses,turn, scanner);
+        }
+        
+        if (findRoundWinner(currentPlayer) != null) {
             // Display winner
-            System.out.println("\n" + roundWinner.getName() + " won Round " + round + "!");
+            System.out.println("\n" + currentPlayer.getName() + " won Round " + round + "!");
 
             // Point calculations
-            Player.winGame(playerOrder, roundWinner, 1);
-
-            // Show ranking of players
-            Collections.sort(players, Player.sortByPoints());
-            System.out.println("\nRank\tName\t\tTotal Points\tCards Left");
-
-            for (int i = 0; i < players.size(); i++) {
-                Player player = players.get(i);
-                System.out.printf("%-6d\t%-15s\t%-13.1f\t%-5d\n", (i + 1), player.getName(), player.getPoints(),
-                        player.getNumOfCards());
-            }
-
-            // Clear the hand of each player for the next round
-            for (Player player : players) {
-                player.getHand().clear();
-            }
+            Player.winGame(playerOrder, currentPlayer, 1);
+            return;
         }
-        // Display winner of the game after all 5 rounds are completed
-        System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
+
+        PlayedCards newPreviousCards = playResult.getPreviousCards();
+        
+        int newConsecutivePasses = playResult.getConsecutivePasses();
+        
+        if (newConsecutivePasses >= 3) {
+            newPreviousCards = null;
+        }
+
+        playTurns(players, playerOrder, turn + 1, newPreviousCards, newConsecutivePasses, round, scanner);
+    }
+    
+    private boolean continueGame(Scanner scanner) {
+        System.out.println("Continue next round? (y/n)");
+        String input = scanner.nextLine();
+        if (input.equalsIgnoreCase("n")) {
+            return false;
+        } else if (!input.equalsIgnoreCase("y")) {
+            System.out.println("Invalid input. Please type 'y' or 'n'.");
+            return continueGame(scanner);
+        }
+        return true;
     }
 
-    /**
-     * gets the player whose turn it is if it is not a bot
-     *
-     * @return the Player instance of current player
-     */
-    public Player getCurrentPlayer() {
-        if (currentPlayer instanceof Bot) {
-            return null;
-        }
-        return currentPlayer;
-    }
-
-    /**
-     * Prompts the user to select the number of human players and enters their
-     * names.
-     *
-     * @param firstPlayerName the name of the first player
-     * @param scanner         the scanner object for input
-     * @return the list of players in the game
-     */
     public List<Player> getPlayers(String firstPlayerName, Scanner scanner) {
         int numHumanPlayers = 1;
         do {
@@ -227,17 +152,7 @@ public class Game {
         return playerList;
     }
 
-    /**
-     * Determines the order of players for the current round based on their
-     * presence of the 3 of diamonds card and randomly assigns turn order for
-     * other players.
-     * 
-     * @param playerList The list of players.
-     * @param numPlayers The number of players in the game.
-     * @return A list of Player objects representing the turn order for the
-     *         current round.
-     */
-    private static List<Player> playerOrder(List<Player> playerList, int numPlayers) {
+    private List<Player> playerOrder(List<Player> playerList, int numPlayers) {
         Random random = new Random();
         if (playerList == null || numPlayers < 1) {
             return null;
@@ -273,19 +188,8 @@ public class Game {
         }
         return Arrays.asList(playerOrder);
     }
-    /*
-     * Displays the turn order of players for the current round.
-     * 
-     * @param playerOrder The list of Player objects representing the turn order.
-     */
 
-    /**
-     * Displays the turn order of players for the current round.
-     * 
-     * @param playerOrder The list of Player objects representing the turn order.
-     */
-
-    private static void displayPlayerOrder(List<Player> playerOrder) {
+    private void displayPlayerOrder(List<Player> playerOrder) {
         // to display player order again
         System.out.println("\nTurn order is:");
         for (int i = 0; i < playerOrder.size() - 1; i++) {
@@ -293,37 +197,36 @@ public class Game {
             String playerName = player.getName();
             System.out.printf("%s -> ", playerName);
         }
+
         System.out.printf("%s.", playerOrder.getLast().getName());
-
     }
 
-    /**
-     * Retrieves the next player in the turn order after the current player.
-     * 
-     * @param currentPlayer The current player.
-     * @param players       The list of Player objects representing the turn order.
-     * @return The next player in the turn order.
-     */
-
-    private static Player getNextPlayer(Player currentPlayer, List<Player> players) {
-        int currentIndex = players.indexOf(currentPlayer);
-        int nextIndex = (currentIndex + 1) % players.size(); // Wrap around to the beginning if at the end
-        return players.get(nextIndex);
+    private void displayFinalWinner(List<Player> players) {
+        // System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
+        Collections.sort(players, Player.sortByPoints());
+        System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
     }
 
-    /**
-     * Finds the winner of the current round based on the empty hands of players.
-     * 
-     * @param playerList The list of players.
-     * @return The Player object representing the winner of the round, or null if
-     *         no winner is found.
-     */
+    private void displayRanking(List<Player> players) {
+        Collections.sort(players, Player.sortByPoints());
+        System.out.println("\nRank\tName\t\tTotal Points\tCards Left");
 
-    private static Player findRoundWinner(List<Player> playerList) {
-        for (Player player : playerList) {
-            if (player.getHand().isEmpty()) {
-                return player;
-            }
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            System.out.printf("%-6d\t%-15s\t%-13.1f\t%-5d\n", (i + 1), player.getName(), player.getPoints(),
+                    player.getNumOfCards());
+        }
+    }
+
+    private void clearHands(List<Player> players) {
+        for (Player player : players) {
+            player.getHand().clear();
+        }
+    }
+
+    private Player findRoundWinner(Player currentPlayer) {
+        if (currentPlayer.getHand().isEmpty()) {
+            return currentPlayer;
         }
         return null; // No winner found
     }
