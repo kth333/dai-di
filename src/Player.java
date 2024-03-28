@@ -12,8 +12,8 @@ public class Player {
     }
 
     // Method for player to play cards
-    public PlayResult play(PlayedCards previousCards, int consecutivePasses, int turn, Scanner scanner) {
-        List<Card> hand = getHand().getCardsInHand();
+    public PlayResult play(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
+        List<Card> hand = currentPlayer.getHand().getCardsInHand();
 
         while (true) {
             System.out.print("\nOptions:\n" +
@@ -31,20 +31,20 @@ public class Player {
                     System.out.println("Need to play 3 of Diamonds cannot pass first turn!");
                     continue;
                 }
-                System.out.println("\n" + getName() + " passed their turn.");
+                System.out.println("\n" + currentPlayer.getName() + " passed their turn.");
                 consecutivePasses++;
-                return new PlayResult(this,previousCards, consecutivePasses,turn); // Exit the method if the player chooses to pass
+                return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
             } else if (input.toLowerCase().equals("rank")) { // sort the hand by rank
-                getHand().sortByRank();
-                System.out.println("\nHand sorted by rank: " + getHand());
+                currentPlayer.getHand().sortByRank();
+                System.out.println("\nHand sorted by rank: " + currentPlayer.getHand());
                 continue;
             } else if (input.toLowerCase().equals("suit")) {// sort the hand by suit
-                getHand().sortBySuit();
-                System.out.println("\nHand sorted by suit: " + getHand());
+                currentPlayer.getHand().sortBySuit();
+                System.out.println("\nHand sorted by suit: " + currentPlayer.getHand());
                 continue;
             } else if (input.toLowerCase().equals("quit")) {
                 // System.out.println("Setting quit flag..."); // Debugging statement
-                PlayResult result = new PlayResult(this,previousCards, consecutivePasses,turn);
+                PlayResult result = new PlayResult(previousCards, consecutivePasses);
                 result.setQuit(true); // Set the quit flag when player chooses to quit
                 return result;
             }else if (input.toLowerCase().equals("i")){
@@ -95,12 +95,12 @@ public class Player {
             }
 
             // Display the played cards
-            System.out.println("\n" + getName() + " played: " + playedCards.getCards());
+            System.out.println("\n" + currentPlayer.getName() + " played: " + playedCards.getCards());
             // Remove the played cards from the player's hand
             hand.removeAll(playedCards.getCards());
             previousCards = playedCards;
             consecutivePasses = 0;
-            return new PlayResult(this,previousCards, consecutivePasses,turn);
+            return new PlayResult(previousCards, consecutivePasses);
         }
 
     }
@@ -162,7 +162,7 @@ public class Player {
         return hand.getCardsInHand().contains(card);
     }
 
-    public static void winGame(List<Player> playerList, Player winner, double rate) {
+    public static void winRound(List<Player> playerList, Player winner, double rate) {
         double winnings = 0;
         for (int i = 0; i < playerList.size(); i++) {
             if (!playerList.get(i).equals(winner)) {
