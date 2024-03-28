@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:src/Dai_Di/Game/Game.java
 package Dai_Di.Game;
 
 import Dai_Di.Players.*;
@@ -6,6 +7,14 @@ import Dai_Di.Cards.*;
 import java.util.*;
 
 public class Game {
+=======
+package src;
+import java.util.*;
+/**
+ * Represents a game controller for managing the flow of the card game.
+ */
+public class Game{
+>>>>>>> Stashed changes:src/Game.java
 
     private static final int NUM_PLAYERS = 4;
     private static final int NUM_ROUNDS = 5;
@@ -32,7 +41,12 @@ public class Game {
             player.addPoints(100);
         }
 
+<<<<<<< Updated upstream:src/Dai_Di/Game/Game.java
         for (int round = 0; round < NUM_ROUNDS;) {
+=======
+        for (int round = 0; round <= 5;) {
+            currentPlayer=null;
+>>>>>>> Stashed changes:src/Game.java
             if (round >= 1) {
                 System.out.println("Continue next round? (y/n)");
                 String input = scanner.nextLine();
@@ -47,8 +61,7 @@ public class Game {
                     continue;
                 }
             }
-            // Increment the round counter only when the user chooses to continue (otherwise
-            // it increases after an invalid input)
+            // Increment the round counter only when the user chooses to continue (otherwise it increases after an invalid input)
             round++;
 
             // Create and shuffle deck
@@ -70,7 +83,11 @@ public class Game {
             List<PlayResult> playHistory = new ArrayList<PlayResult>(); // Initalize play history
             int turn = 1;
             int consecutivePasses = 0;
+<<<<<<< Updated upstream:src/Dai_Di/Game/Game.java
             PlayResult playResult = new PlayResult(currentPlayer, previousCards, consecutivePasses);
+=======
+            PlayResult playResult = new PlayResult(currentPlayer,previousCards, consecutivePasses,turn);
+>>>>>>> Stashed changes:src/Game.java
 
             // Game loop
             while (roundWinner == null) {
@@ -83,6 +100,7 @@ public class Game {
 
                 System.out.println("\nRound: " + round + " Turn: " + turn);
                 System.out.println(currentPlayer.getName() + "'s turn!");
+<<<<<<< Updated upstream:src/Dai_Di/Game/Game.java
                 if (currentPlayer instanceof Bot) {
                     Bot bot = (Bot) currentPlayer;
                     playResult = bot.play(previousCards, consecutivePasses);
@@ -90,6 +108,15 @@ public class Game {
                     System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
                     playResult = currentPlayer.play(previousCards, consecutivePasses, scanner,
                             playHistory);
+=======
+                if (currentPlayer instanceof EasyBot) {
+                    playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses,turn);
+                } else if (currentPlayer instanceof HardBot) {
+                    playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses,turn);
+                } else {
+                    System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
+                    playResult = currentPlayer.play(previousCards, consecutivePasses,turn, scanner);
+>>>>>>> Stashed changes:src/Game.java
                 }
 
                 if (playHistory.size() > PLAYS_STORED) {
@@ -107,6 +134,15 @@ public class Game {
                 // Next turn
                 turn++;
 
+<<<<<<< Updated upstream:src/Dai_Di/Game/Game.java
+=======
+                //add play to playHistory
+                if (playHistory.size()==8){
+                    playHistory.removeFirst();
+                }
+                playHistory.add(playResult);
+
+>>>>>>> Stashed changes:src/Game.java
                 // Look for a winner
                 roundWinner = findRoundWinner(playerOrder);
                 // Switch to the next player
@@ -138,12 +174,22 @@ public class Game {
         System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
     }
 
+<<<<<<< Updated upstream:src/Dai_Di/Game/Game.java
     public static Player getCurrentPlayer() {
         return currentPlayer;
     }
 
     public static Player getHumanPlayer() {
         if (currentPlayer instanceof Bot) {
+=======
+    /**
+     * gets the player whose turn it is if it is not a bot
+     *
+     * @return the Player instance of current player
+     */
+    public Player getCurrentPlayer(){
+        if (currentPlayer instanceof Bot){
+>>>>>>> Stashed changes:src/Game.java
             return null;
         }
         return currentPlayer;

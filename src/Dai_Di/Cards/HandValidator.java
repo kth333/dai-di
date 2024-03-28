@@ -1,7 +1,15 @@
+<<<<<<< Updated upstream:src/Dai_Di/Cards/HandValidator.java
 package Dai_Di.Cards;
 
 import java.util.List;
 
+=======
+package src;
+import java.util.*;
+/**
+ * Utility class for validating combinations of cards in a hand.
+ */
+>>>>>>> Stashed changes:src/HandValidator.java
 public class HandValidator {
 
     public enum CombinationRanking {

@@ -1,9 +1,17 @@
+<<<<<<< Updated upstream:src/Dai_Di/Cards/Hand.java
 package Dai_Di.Cards;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
+=======
+package src;
+import java.util.*;
+/**
+ * Represents a hand of cards for a player.
+ */
+>>>>>>> Stashed changes:src/Hand.java
 
 public class Hand {
     private List<Card> hand;

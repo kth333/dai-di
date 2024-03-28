@@ -1,5 +1,9 @@
+<<<<<<< Updated upstream:src/Dai_Di/Cards/Deck.java
 package Dai_Di.Cards;
 
+=======
+package src;
+>>>>>>> Stashed changes:src/Deck.java
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

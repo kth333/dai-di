@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:src/Dai_Di/Players/Player.java
 package Dai_Di.Players;
 
 import Dai_Di.Cards.PlayResult;
@@ -5,6 +6,9 @@ import Dai_Di.Cards.PlayedCards;
 import Dai_Di.Cards.Hand;
 import Dai_Di.Cards.Card;
 
+=======
+package src;
+>>>>>>> Stashed changes:src/Player.java
 import java.util.*;
 
 public class Player {

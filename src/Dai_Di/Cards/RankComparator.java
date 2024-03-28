@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream:src/Dai_Di/Cards/RankComparator.java
 package Dai_Di.Cards;
+=======
+package src;
+>>>>>>> Stashed changes:src/RankComparator.java
 import java.util.Comparator;
 
 public class RankComparator implements Comparator<Card> {

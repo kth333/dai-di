@@ -1,9 +1,13 @@
+<<<<<<< Updated upstream:src/Dai_Di/Players/Bot.java
 package Dai_Di.Players;
 
 import Dai_Di.Cards.PlayResult;
 import Dai_Di.Cards.PlayedCards;
 import Dai_Di.Cards.Card;
 import Dai_Di.Cards.HandValidator;
+=======
+package src;
+>>>>>>> Stashed changes:src/Bot.java
 
 import java.util.ArrayList;
 import java.util.List;
