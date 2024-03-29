@@ -1,3 +1,5 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +26,7 @@ public abstract class Bot extends Player {
         return name;
     }
 
-    public abstract PlayResult play(Player botPlayer, PlayedCards previousCards, int consecutivePasses);
+    public abstract PlayResult play(PlayedCards previousCards, int consecutivePasses,int turn);
 
     public static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
         List<PlayedCards> validCombinations = new ArrayList<>();
