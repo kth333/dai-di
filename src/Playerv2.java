@@ -1,5 +1,3 @@
-package src;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -124,9 +122,10 @@ public class Player {
 
     private boolean validatePlayedCards(PlayedCards playedCards, PlayedCards previousCards){
         if(previousCards == null || previousCards.getCards().isEmpty()){
-            if(!playedCards.getCards().contains(START_CARD)){
-                System.out.println("You must play 3 of diamonds on the first turn!");
-                return false;
+            // Ensure "3 of Diamonds" is part of the played cards if it has not been played yet.
+            if (hasCard(START_CARD) && !playedCards.contains(START_CARD)) {
+                System.out.println("You must play the 3 of Diamonds on the first turn!");
+                return false;// Block the play as invalid since "3 of Diamonds" is not included.
             }
         }
         if(!playedCards.isValidSize()){
