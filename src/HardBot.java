@@ -10,7 +10,7 @@ public class HardBot extends Bot {
     }
 
     @Override
-    public PlayResult play(PlayedCards previousCards, int consecutivePasses,int turn) {
+    public PlayResult play(PlayedCards previousCards, int consecutivePasses) {
         
         // Get the bot player's hand
         List<Card> botHand = getHand().getCardsInHand();
@@ -34,14 +34,14 @@ public class HardBot extends Bot {
                     botHand.removeAll(combination.getCards()); // Remove the played cards from the bot's hand
                     if (previousCards != null) {
                         consecutivePasses = 0;
-                        return new PlayResult(this,previousCards, consecutivePasses,turn);
+                        return new PlayResult(previousCards, consecutivePasses);
                     }
                 }
             }
         }
         System.out.println("\n" + getName() + " passed their turn.");
         consecutivePasses++;
-        return new PlayResult(this,previousCards, consecutivePasses,turn);
+        return new PlayResult(previousCards, consecutivePasses);    
     }
 
     //this method checks if a set of cards contains any high cards

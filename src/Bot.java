@@ -26,7 +26,7 @@ public abstract class Bot extends Player {
         return name;
     }
 
-    public abstract PlayResult play(PlayedCards previousCards, int consecutivePasses,int turn);
+    public abstract PlayResult play(PlayedCards previousCards, int consecutivePasses);
 
     public static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
         List<PlayedCards> validCombinations = new ArrayList<>();

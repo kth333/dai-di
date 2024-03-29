@@ -13,7 +13,7 @@ public class Player {
     }
 
     // Method for player to play cards
-    public PlayResult play(PlayedCards previousCards, int consecutivePasses, int turn, Scanner scanner) {
+    public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         List<Card> hand = getHand().getCardsInHand();
 
         while (true) {
@@ -34,7 +34,7 @@ public class Player {
                 }
                 System.out.println("\n" + getName() + " passed their turn.");
                 consecutivePasses++;
-                return new PlayResult(this,previousCards, consecutivePasses,turn); // Exit the method if the player chooses to pass
+                return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
             } else if (input.toLowerCase().equals("rank")) { // sort the hand by rank
                 getHand().sortByRank();
                 System.out.println("\nHand sorted by rank: " + getHand());
@@ -45,7 +45,7 @@ public class Player {
                 continue;
             } else if (input.toLowerCase().equals("quit")) {
                 // System.out.println("Setting quit flag..."); // Debugging statement
-                PlayResult result = new PlayResult(this,previousCards, consecutivePasses,turn);
+                PlayResult result = new PlayResult(previousCards, consecutivePasses);
                 result.setQuit(true); // Set the quit flag when player chooses to quit
                 return result;
             }else if (input.toLowerCase().equals("i")){
@@ -101,7 +101,7 @@ public class Player {
             hand.removeAll(playedCards.getCards());
             previousCards = playedCards;
             consecutivePasses = 0;
-            return new PlayResult(this,previousCards, consecutivePasses,turn);
+            return new PlayResult(previousCards, consecutivePasses);
         }
 
     }
@@ -163,7 +163,7 @@ public class Player {
         return hand.getCardsInHand().contains(card);
     }
 
-    public static void winGame(List<Player> playerList, Player winner, double rate) {
+    public static void winRound(List<Player> playerList, Player winner, double rate) {
         double winnings = 0;
         for (int i = 0; i < playerList.size(); i++) {
             if (!playerList.get(i).equals(winner)) {
