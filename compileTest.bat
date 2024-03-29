@@ -1,1 +1,0 @@
-javac -d classes -cp lib/*;src/*;test/* test/StraightCardTest.java
