@@ -5,7 +5,6 @@ public class PlayResult {
     private Player player;//the player who performed the turn
     private PlayedCards previousCards; // The cards played in the previous turn
     private int consecutivePasses; // The number of consecutive passes, if >0 means player passes turn
-    private int turn;//tracks the turn the play was made
     private boolean quit; // Indicates whether the player chose to quit the game
 
     /**
@@ -15,8 +14,7 @@ public class PlayResult {
      * @param previousCards the cards played in the previous turn
      * @param consecutivePasses the number of consecutive passes
      */
-    public PlayResult(Player player,PlayedCards previousCards, int consecutivePasses,int turn) {
-        this.turn = turn;
+    public PlayResult(Player player,PlayedCards previousCards, int consecutivePasses) {
         this.player=player;
         this.previousCards = previousCards;
         this.consecutivePasses = consecutivePasses;
@@ -66,14 +64,5 @@ public class PlayResult {
      */
     public Player getPlayer() {
         return this.player;
-    }
-
-    /**
-     * Retrieves the turn the play was made
-     *
-     * @return the turn
-     */
-    public int getTurn(){
-        return turn;
     }
 }

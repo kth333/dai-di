@@ -20,13 +20,13 @@ public class Player {
         this.hand = new Hand();
     }
 
-    public PlayResult play(PlayedCards previousCards, int consecutivePasses, int turn, Scanner scanner) {
+    public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
             displayOptions();
             String input = scanner.nextLine().toLowerCase();
             switch (input) {
                 case PASS_COMMAND:
-                    PlayResult passResult = handlePass(previousCards, consecutivePasses, turn);
+                    PlayResult passResult = handlePass(previousCards, consecutivePasses);
                     if (passResult != null) return passResult;
                     break; // If passing is not allowed, it will break and prompt again.
                 case RANK_COMMAND:
@@ -36,12 +36,12 @@ public class Player {
                     sortHandBySuit();
                     break;
                 case QUIT_COMMAND:
-                    return handleQuit(previousCards, consecutivePasses, turn);
+                    return handleQuit(previousCards, consecutivePasses);
                 case INSTRUCTIONS_COMMAND:
                     Instructions.displayInstructions();
                     break;
                 default:
-                    PlayResult selectionResult = handleCardSelection(input, previousCards, consecutivePasses, turn);
+                    PlayResult selectionResult = handleCardSelection(input, previousCards, consecutivePasses);
                     if (selectionResult != null) return selectionResult;
                     // If handleCardSelection returns null, indicating invalid selection, print an error message
                     // and continue in the loop to prompt again.
@@ -61,13 +61,13 @@ public class Player {
                 "Your choice: ");
     }
 
-    private PlayResult handlePass(PlayedCards previousCards, int consecutivePasses, int turn) {
+    private PlayResult handlePass(PlayedCards previousCards, int consecutivePasses) {
         if (hasCard(START_CARD)) {
             System.out.println("Need to play 3 of Diamonds. Cannot pass first turn!");
             return null;
         }
         System.out.println("\n" + getName() + " passed their turn.");
-        return new PlayResult(this, previousCards, ++consecutivePasses, turn);
+        return new PlayResult(this, previousCards, ++consecutivePasses);
     }
 
     private void sortHandByRank() {
@@ -80,13 +80,13 @@ public class Player {
         System.out.println("\nHand sorted by suit: " + getHand());
     }
 
-    private PlayResult handleQuit(PlayedCards previousCards, int consecutivePasses, int turn) {
-        PlayResult result = new PlayResult(this, previousCards, consecutivePasses, turn);
+    private PlayResult handleQuit(PlayedCards previousCards, int consecutivePasses) {
+        PlayResult result = new PlayResult(this, previousCards, consecutivePasses);
         result.setQuit(true);
         return result;
     }
 
-    private PlayResult handleCardSelection(String input, PlayedCards previousCards, int consecutivePasses, int turn) {
+    private PlayResult handleCardSelection(String input, PlayedCards previousCards, int consecutivePasses) {
         List<Card> selectedCards = parseSelectedCards(input);
         if (selectedCards == null) {
             return null; // Invalid selection, continue prompting
@@ -96,7 +96,7 @@ public class Player {
         if (validatePlayedCards(playedCards, previousCards)) {
             System.out.println("\n" + getName() + " played: " + playedCards);
             getHand().removeAllCards(playedCards.getCards());
-            return new PlayResult(this, playedCards, 0, turn);
+            return new PlayResult(this, playedCards, 0);
         }
         return null;
     }
