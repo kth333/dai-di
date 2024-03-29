@@ -1,4 +1,3 @@
-package src;
 /**
  * Represents the result of a play in a game.
  */
@@ -17,6 +16,7 @@ public class PlayResult {
      * @param consecutivePasses the number of consecutive passes
      */
     public PlayResult(Player player,PlayedCards previousCards, int consecutivePasses,int turn) {
+        this.turn = turn;
         this.player=player;
         this.previousCards = previousCards;
         this.consecutivePasses = consecutivePasses;
@@ -66,5 +66,14 @@ public class PlayResult {
      */
     public Player getPlayer() {
         return this.player;
+    }
+
+    /**
+     * Retrieves the turn the play was made
+     *
+     * @return the turn
+     */
+    public int getTurn(){
+        return turn;
     }
 }

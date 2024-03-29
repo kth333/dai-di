@@ -1,9 +1,8 @@
-package src;
 import java.util.*;
 /**
  * Represents a game controller for managing the flow of the card game.
  */
-public class Game{
+public class Game {
 
     private static final int NUM_PLAYERS = 4;
     private static final int CARDS_PER_PLAYER = 13;
@@ -32,6 +31,7 @@ public class Game{
         }
 
         for (int round = 0; round <= 5;) {
+            
             currentPlayer=null;
             if (round >= 1) {
                 System.out.println("Continue next round? (y/n)");
@@ -66,7 +66,6 @@ public class Game{
             Player roundWinner = null;
             currentPlayer = playerOrder.get(0);
             PlayedCards previousCards = null; // Initialize previous cards
-            List<PlayResult> playHistory = new ArrayList<PlayResult>(); // Initalize play history
             int turn = 1;
             int consecutivePasses = 0;
             PlayResult playResult = new PlayResult(currentPlayer,previousCards, consecutivePasses,turn);
@@ -99,12 +98,6 @@ public class Game{
                 }
                 // Next turn
                 turn++;
-
-                //add play to playHistory
-                if (playHistory.size()==8){
-                    playHistory.removeFirst();
-                }
-                playHistory.add(playResult);
 
                 // Look for a winner
                 roundWinner = findRoundWinner(playerOrder);

@@ -1,4 +1,3 @@
-package src;
 import java.util.*;
 /**
  * Represents a hand of cards for a player.
@@ -32,6 +31,12 @@ public class Hand {
         if (playedCards != null) {
             hand.removeAll(playedCards.getCards());
         }
+    }
+
+    public void removeAllCards(List<Card> cardsToRemove) {
+       if(cardsToRemove != null){
+        hand.removeAll(cardsToRemove);
+       }
     }
 
     /**

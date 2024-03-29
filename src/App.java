@@ -1,22 +1,20 @@
-package src;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
-class App {
+import Music.MusicPlayer;
+
+public class App {
     private static final Scanner scanner = new Scanner(System.in);
-    private final Game game;
-    private final MusicPlayer musicPlayer;
 
-    public App(Game game, MusicPlayer musicPlayer) {
-        this.game = game;
-        this.musicPlayer = musicPlayer;
-    }
-
-    public void run() {
+    public static void main(String[] args) {
+        // Give the user a warm welcome :)
         System.out.println("Welcome to Dai Di!");
 
+        // Play background music
+        MusicPlayer musicPlayer = new MusicPlayer();
         musicPlayer.playMusic("Music/music.wav");
 
+        // Prompt the user to enter their name (up to 16 characters)
         String playerName;
         do {
             System.out.print("Enter your name (up to 16 characters): ");
@@ -36,26 +34,27 @@ class App {
 
             try {
                 int choice = scanner.nextInt();
-                scanner.nextLine();
+                scanner.nextLine(); // Consume newline
                 switch (choice) {
                     case 1:
+                        Game game = new Game();
                         game.startGame(playerName, scanner);
-                        return;
+                        return; // Exit the loop and terminate the program
                     case 2:
                         System.out.println("\nInstructions:");
                         Instructions.displayInstructions();
-                        break;
+                        break; // Continue showing menu
                     case 3:
                         System.out.println("Bye Bye!");
                         musicPlayer.stopMusic();
-                        return;
+                        return; // Exit the program
                     default:
                         System.out.println("Invalid choice! Please enter 1, 2, or 3.");
                         break;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input! Please enter a number.");
-                scanner.nextLine();
+                scanner.nextLine(); // Clear the invalid input from the scanner
             }
         }
     }

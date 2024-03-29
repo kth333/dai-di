@@ -1,4 +1,3 @@
-package src;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +69,15 @@ public class PlayedCards {
     public boolean isValidSize() {
         int size = this.cards.size();
         return size == 1 || size == 2 || size == 3 || size == 5;
+    }
+
+    public boolean contains(Card card) {
+        for (Card containedCard : cards) {
+            if (containedCard.equals(card)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
