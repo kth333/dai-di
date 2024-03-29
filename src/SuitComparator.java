@@ -1,3 +1,4 @@
+package src;
 import java.util.Comparator;
 
 public class SuitComparator implements Comparator<Card> {

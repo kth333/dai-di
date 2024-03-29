@@ -1,13 +1,15 @@
-package Music;
+package src;
+
+import java.io.File;
 
 import javax.sound.sampled.*;
 
-public class MusicPlayer {
+public class MusicPlayer{
     private Clip clip;
 
     public void playMusic(String filePath) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("music.wav"));
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY); // Loops the music

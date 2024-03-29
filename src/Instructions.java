@@ -1,3 +1,4 @@
+package src;
 import java.util.*;
 import java.io.*;
 
@@ -12,7 +13,7 @@ public class Instructions {
      */
 
     public static void displayInstructions(){
-        String RuleName = "Rules.txt";
+        String RuleName = "src/Rules.txt";
         //text file which contains all the instructions
 
         String Current_Line;

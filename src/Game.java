@@ -1,3 +1,4 @@
+package src;
 import java.util.*;
 
 /**
@@ -54,12 +55,12 @@ public class Game {
         PlayResult playResult = new PlayResult(null, 0);
         
         if (currentPlayer instanceof EasyBot) {
-            playResult = ((EasyBot) currentPlayer).play(currentPlayer, previousCards, consecutivePasses);
+            playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses);
         } else if (currentPlayer instanceof HardBot) {
-            playResult = ((HardBot) currentPlayer).play(currentPlayer, previousCards, consecutivePasses);
+            playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses);
         } else {
             System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
-            playResult = currentPlayer.play(currentPlayer, previousCards, consecutivePasses, scanner);
+            playResult = currentPlayer.play(previousCards, consecutivePasses, scanner);
         }
         
         if (findRoundWinner(currentPlayer) != null) {

@@ -1,3 +1,4 @@
+package src;
 /**
  * Represents the result of a play in a game.
  */
