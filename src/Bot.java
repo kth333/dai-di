@@ -73,7 +73,7 @@ public abstract class Bot extends Player {
         for (Card card : hand) {
             List<Card> single = new ArrayList<>();
             single.add(card);
-            singles.add(new PlayedCards(null, single));
+            singles.add(new PlayedCards(single));
         }
         return singles;
     }
@@ -85,7 +85,7 @@ public abstract class Bot extends Player {
                 List<Card> doubleCards = new ArrayList<>();
                 doubleCards.add(hand.get(i));
                 doubleCards.add(hand.get(j));
-                PlayedCards doubleCombination = new PlayedCards(null, doubleCards);
+                PlayedCards doubleCombination = new PlayedCards(doubleCards);
                 if (HandValidator.isDouble(doubleCombination)) {
                     doubles.add(doubleCombination);
                 }
@@ -103,7 +103,7 @@ public abstract class Bot extends Player {
                     tripleCards.add(hand.get(i));
                     tripleCards.add(hand.get(j));
                     tripleCards.add(hand.get(k));
-                    PlayedCards tripleCombination = new PlayedCards(null, tripleCards);
+                    PlayedCards tripleCombination = new PlayedCards(tripleCards);
                     if (HandValidator.isTriple(tripleCombination)) {
                         triples.add(tripleCombination);
                     }
@@ -133,7 +133,7 @@ public abstract class Bot extends Player {
                             combinationCards.add(hand.get(k));
                             combinationCards.add(hand.get(l));
                             combinationCards.add(hand.get(m));
-                            PlayedCards combination = new PlayedCards(null, combinationCards);
+                            PlayedCards combination = new PlayedCards(combinationCards);
                             if (HandValidator.isStraightFlush(combination) ||
                                     HandValidator.isFourOfAKind(combination) ||
                                     HandValidator.isFullHouse(combination) ||

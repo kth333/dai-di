@@ -76,7 +76,7 @@ public class Player {
             }
 
             // Create an instance of PlayedCards to store the selected cards
-            PlayedCards playedCards = new PlayedCards(currentPlayer, selectedCards);
+            PlayedCards playedCards = new PlayedCards(selectedCards);
 
             // Check if the selected cards win against the previous cards
             if (hasCard(startCard) && !playedCards.getCards().contains(startCard)) {
@@ -162,7 +162,7 @@ public class Player {
         return hand.getCardsInHand().contains(card);
     }
 
-    public static void winGame(List<Player> playerList, Player winner, double rate) {
+    public static void winRound(List<Player> playerList, Player winner, double rate) {
         double winnings = 0;
         for (int i = 0; i < playerList.size(); i++) {
             if (!playerList.get(i).equals(winner)) {

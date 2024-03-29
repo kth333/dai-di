@@ -1,32 +1,38 @@
 # Dai Di Project
-<p align="center">
-    <img src="https://i.kym-cdn.com/photos/images/newsfeed/000/931/227/eac.gif" alt="gif" />
-</p>
 
-### compile.bat and run.bat batch files
-The compile.bat file compiles all your Java source files and automatically stores them in the classes directory.
-The run.bat runs your application.
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![JavaFX](https://img.shields.io/badge/javafx-%23FF0000.svg?style=for-the-badge&logo=javafx&logoColor=white)
 
-### src  
-This directory contains all your Java source files. 
+A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is a fun and popular card game enjoyed in groups of four.
+![photo1711523922](https://github.com/kth333/dai-di/assets/143651427/16b52206-5d32-4a57-a56f-bf10392658cc)
 
-### classes
-This directory should be left empty during submission. After compile.bat runs, the class files will be stored here automatically.
+## Features
 
-### images
-This directory contains any image files used by your application. It will be empty if you build a console application.
+- **GUI Interface**: Play Dai Di through an intuitive graphical user interface.
+- **Single Player**: Play against bots with adjustable difficulty levels.
+- **Local Multiplayer**: Play with up to 4 players on the same device. Bots will join the game if there are less than 4 players.
+- **Difficulty Selection**: Choose between easy or hard mode when playing with bots. 
+- **Scoring System**: Keep track of scores for each player across five rounds. Winner is decided after all five rounds are completed.
+- **Instructions/Rules**: Instructions are available to read before and during a game.
+- **Hand Sorting**: Sort your hand by rank or suit to easily find combinations to play.
+- **Music**: Includes background music that can be muted anytime.
 
-### lib (if using any external libraries)
-This directory contains any jar files that you use for your application.
+## Getting Started
 
-<p align="center">
-    <img src="https://i.kym-cdn.com/photos/images/newsfeed/000/930/668/432.gif" alt="gif" />
-</p>
+1. **Java JDK 8 or above**: Install Java JDK 21 [here](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html) if you do not have it.
 
-Good luck and have fun! :)
+2. **Compilation**: Run compile.bat to compile the class files, which will be stored in the classes directory once you execute compile.bat
 
-# References
-Images of all the cards: https://www.waste.org/~oxymoron/files/cards/
+3. **Launching the Game**: Run run.bat to start playing!
 
-A list of commonly used classes in Card games (Card, Deck, Hand, Rank, Suit).
-https://github.com/BigRedS/java/tree/master/CardGame/src
+## Gameplay
+
+- **Starting a Game**: Select "Start Game" to begin playing.
+
+## License
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
+## Credits
+- **Images of all the cards**: https://www.waste.org/~oxymoron/files/cards/
+
+- The background music used in this project is created by Migfus20 and obtained from [freesound.org](https://freesound.org/s/561394/) Attribution: "Fantasy Background Music (Loop)" by Migfus20 is licensed under [Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
