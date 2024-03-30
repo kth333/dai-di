@@ -24,26 +24,27 @@ public class Game {
      */
     public void startGame(String firstPlayerName, Scanner scanner) {
         List<Player> players = getPlayers(firstPlayerName, scanner); // Get the list of players for the game
-        displayPlayerNames(players);     // Display the names of all players participating in the game
-        giveInitialPoints(players);     // Give 100 points to each player before starting the game
+        displayPlayerNames(players); // Display the names of all players participating in the game
+        giveInitialPoints(players); // Give 100 points to each player before starting the game
         startRound(players, round, scanner); // Start round 1 of the game
         displayFinalWinner(players); // Display final winner after all 5 rounds are completed
     }
 
     /**
-    * Starts the round and calls itself recursively to start the next round
-    * after the current round is completed.
-    *
-    * @param players The list of player objects playing the game.
-    * @param round Integer representing the current round.
-    * @param scanner scanner object for input.
-    */
+     * Starts the round and calls itself recursively to start the next round
+     * after the current round is completed.
+     *
+     * @param players The list of player objects playing the game.
+     * @param round   Integer representing the current round.
+     * @param scanner scanner object for input.
+     */
     private void startRound(List<Player> players, int round, Scanner scanner) {
         this.round = round; // Updates round variable to the current round number
 
-        // Ends the game if current round is greater than 5 or if player chose to stop playing
+        // Ends the game if current round is greater than 5 or if player chose to stop
+        // playing
         if (round > NUM_ROUNDS || quitGame || !continueNextRound(round, scanner)) {
-            System.out.println("Thank you for playing!"); 
+            System.out.println("Thank you for playing!");
             return;
         }
 
@@ -53,12 +54,12 @@ public class Game {
         List<Player> playerOrder = determinePlayerOrder(players, NUM_PLAYERS); // Determines order of the players
         displayPlayerOrder(playerOrder); // Displays order of the players
         startTurn(playerOrder, 1, null, 0, scanner); // Starts round from turn 1 until round is completed
-        
+
         displayRanking(players); // Displays ranking of the players after round is completed
         clearHands(players); // Clears the hand of each player for the next round
         startRound(players, round + 1, scanner); // Starts the next round, round number is incremented by 1
     }
-    
+
     /**
      * Prompts the user to select the number of human players and enters their
      * names.
@@ -68,64 +69,99 @@ public class Game {
      * @return the list of Player objects in the game.
      */
     public List<Player> getPlayers(String firstPlayerName, Scanner scanner) {
+        int numHumanPlayers = promptNumHumanPlayers(scanner);
+
+        boolean isEasyMode = numHumanPlayers != 4 ? selectDifficultyLevel(scanner) : true;
+
+        List<Player> playerList = createPlayers(firstPlayerName, numHumanPlayers, scanner, isEasyMode);
+
+        return playerList;
+    }
+
+    /**
+     * Prompts the user to select the number of human players for the game.
+     * 
+     * @param scanner the scanner object for input.
+     * @return the number of human players selected by the user.
+     */
+    private int promptNumHumanPlayers(Scanner scanner) {
+        // Initialize the number of human players with a default value
         int numHumanPlayers = 1;
+
+        // Prompt the user until a valid input is provided
         do {
             System.out.print("Select number of human players: ");
             try {
+                // Read the user input as an integer
                 numHumanPlayers = Integer.parseInt(scanner.nextLine());
+
+                // Validate the input range
                 if (numHumanPlayers < 1 || numHumanPlayers > NUM_PLAYERS) {
                     System.out.println("Invalid player number! Player number is only 1 to 4.");
                 } else {
-                    break;
+                    break; // Exit the loop if the input is valid
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter 1, 2, 3 or 4.");
+                System.out.println("Invalid input! Please enter 1, 2, 3, or 4.");
             }
         } while (true);
 
-        boolean isEasyMode = true;
-        if (numHumanPlayers != 4) {
-            while (true) {
-                System.out.print("Select difficulty (easy or hard): ");
-                String input = scanner.nextLine();
-                if (input.equalsIgnoreCase("easy")) {
-                    isEasyMode = true;
-                    break;
-                } else if (input.equalsIgnoreCase("hard")) {
-                    isEasyMode = false;
-                    break;
-                } else {
-                    System.out.println("Invalid input! Please enter 'easy' or 'hard'.");
-                }
+        return numHumanPlayers;
+    }
+
+    /**
+     * Prompts the user to select the difficulty level for the game.
+     * 
+     * @param scanner the scanner object for input.
+     * @return a boolean indicating whether the game is in easy mode (true) or hard
+     *         mode (false).
+     */
+    private boolean selectDifficultyLevel(Scanner scanner) {
+        // Prompt the user until a valid input is provided
+        while (true) {
+            System.out.print("Select difficulty (easy or hard): ");
+            String input = scanner.nextLine();
+
+            // Check the user input and return the corresponding difficulty level
+            if (input.equalsIgnoreCase("easy")) {
+                return true; // Easy mode
+            } else if (input.equalsIgnoreCase("hard")) {
+                return false; // Hard mode
+            } else {
+                System.out.println("Invalid input! Please enter 'easy' or 'hard'.");
             }
         }
+    }
 
-        List<Player> playerList = new ArrayList<Player>(Arrays.asList(new Player(firstPlayerName)));
-        List<String> playerNames = new ArrayList<String>(Arrays.asList(firstPlayerName));
-        // Create human players
+    /**
+     * Creates a list of players for the game, including human players and AI bots.
+     * 
+     * @param firstPlayerName the name of the first player.
+     * @param numHumanPlayers the number of human players to create.
+     * @param scanner         the scanner object for input.
+     * @param isEasyMode      a boolean indicating whether the game is in easy mode.
+     * @return a list of Player objects representing the players in the game.
+     */
+    private List<Player> createPlayers(String firstPlayerName, int numHumanPlayers, Scanner scanner,
+            boolean isEasyMode) {
+        // Initialize lists to store player objects and their names
+        List<Player> playerList = new ArrayList<>();
+        List<String> playerNames = new ArrayList<>(Arrays.asList(firstPlayerName));
+
+        // Add the first human player
+        playerList.add(new Player(firstPlayerName));
+
+        // Add additional human players based on user input
         for (int i = 2; i <= numHumanPlayers; i++) {
-            String name = null;
-            do {
-                System.out.print("Enter player " + i + " name (up to 16 characters): ");
-                name = scanner.nextLine();
-
-                if (name.length() > 16) {
-                    System.out.println("Enter a shorter name!");
-                    continue; // Prompt again
-                }
-
-                if (name != null && name.length() > 0 && !playerNames.contains(name)) {
-                    playerNames.add(name);
-                    playerList.add(new Player(name));
-                    break;
-                } else {
-                    System.out.println("Invalid name try again!");
-                }
-            } while (true);
+            String name = enterPlayerName(scanner, playerNames, i);
+            playerNames.add(name);
+            playerList.add(new Player(name));
         }
 
+        // Add bots if the total number of players is less than the maximum allowed
         if (numHumanPlayers < NUM_PLAYERS) {
             for (int i = 0; i < 4 - numHumanPlayers; i++) {
+                // Create either EasyBot or HardBot based on the game mode
                 if (isEasyMode) {
                     playerList.add(new EasyBot(playerNames, Bot.usedNames));
                 } else {
@@ -133,57 +169,94 @@ public class Game {
                 }
             }
         }
+
         return playerList;
     }
 
     /**
-    * Starts the turn and calls itself recursively to start the next turn
-    * after the current turn is completed.
-    *
-    * @param playerOrder The list of player objects sorted according to their order in the current round.
-    * @param previousCards The PlayedCards object representing the cards played in the previous turn
-    * @param consecutivePasses Integer representing the number of consecutive passes made in the previous turns.
-    * @param scanner scanner object for input.
-    */
+     * Prompts the user to enter the name for a player.
+     * 
+     * @param scanner     the scanner object for input.
+     * @param playerNames the list of existing player names to check for uniqueness.
+     * @param playerIndex the index of the player being entered.
+     * @return the name entered by the user for the player.
+     */
+    private String enterPlayerName(Scanner scanner, List<String> playerNames, int playerIndex) {
+        String name = null;
+        do {
+            System.out.print("Enter player " + playerIndex + " name (up to 16 characters): ");
+            name = scanner.nextLine();
+
+            // Check if the entered name exceeds the maximum length
+            if (name.length() > 16) {
+                System.out.println("Enter a shorter name!");
+                continue; // Prompt again
+            }
+
+            // Check if the entered name is valid and unique
+            if (name != null && name.length() > 0 && !playerNames.contains(name)) {
+                return name;
+            } else {
+                System.out.println("Invalid name, please try again!");
+            }
+        } while (true);
+    }
+
+    /**
+     * Starts the turn and calls itself recursively to start the next turn
+     * after the current turn is completed.
+     *
+     * @param playerOrder       The list of player objects sorted according to their
+     *                          order in the current round.
+     * @param previousCards     The PlayedCards object representing the cards played
+     *                          in the previous turn
+     * @param consecutivePasses Integer representing the number of consecutive
+     *                          passes made in the previous turns.
+     * @param scanner           scanner object for input.
+     */
     private void startTurn(List<Player> playerOrder, int turn, PlayedCards previousCards, int consecutivePasses,
             Scanner scanner) {
         currentPlayer = playerOrder.get((turn - 1) % NUM_PLAYERS); // Find current player according to the player order
         System.out.println("\nRound: " + round + " Turn: " + turn); // Print the current round and turn number
-        System.out.println(currentPlayer.getName() + "'s turn!"); // Print the current player's name to show whose turn it is
+        System.out.println(currentPlayer.getName() + "'s turn!"); // Print the current player's name to show whose turn
+                                                                  // it is
 
         // Player makes their move and playResult is determined accordingly
-        PlayResult playResult = determinePlayerAction(currentPlayer, previousCards, consecutivePasses, scanner); 
+        PlayResult playResult = determinePlayerAction(currentPlayer, previousCards, consecutivePasses, scanner);
 
         // Set quitGame flag to true and return if the player chose to quit the game
         if (playResult.isQuit()) {
             quitGame = true;
             return;
         }
-        
+
         // Check if current player has won the round after making their play
         if (findRoundWinner(currentPlayer) != null) {
             // Display winner's name and congratulate the winner
             System.out.println("\n" + currentPlayer.getName() + " won Round " + round + "!");
-            
-            // Point calculations according to the number of cards left in each player's hand
+
+            // Point calculations according to the number of cards left in each player's
+            // hand
             Player.winRound(playerOrder, currentPlayer, 1);
             return;
         }
 
-        // newPreviousCards and newConsecutivePasses determined from the play result of the current turn
+        // newPreviousCards and newConsecutivePasses determined from the play result of
+        // the current turn
         PlayedCards newPreviousCards = playResult.getPreviousCards();
         int newConsecutivePasses = playResult.getConsecutivePasses();
-        
+
         // Set newPreviousCards to null if 3 or more players passed consecutively
         // so that next player can play any valid combination
         if (newConsecutivePasses >= 3) {
             newPreviousCards = null;
         }
-        
-        // Starts the next turn passing in the new previous cards and consecutive passes, and incrementing turn number by 1
+
+        // Starts the next turn passing in the new previous cards and consecutive
+        // passes, and incrementing turn number by 1
         startTurn(playerOrder, turn + 1, newPreviousCards, newConsecutivePasses, scanner);
     }
-    
+
     /**
      * Prints the names of the players playing the game.
      * 
@@ -196,7 +269,7 @@ public class Game {
         }
         System.out.print(players.getLast().getName() + "\n");
     }
-    
+
     /**
      * Gives 100 points to each player at the start of a game.
      * 
@@ -207,9 +280,10 @@ public class Game {
             player.addPoints(100);
         }
     }
-    
+
     /**
-     * After all 5 rounds are completed, displays the final winner of the game (player with highest points)
+     * After all 5 rounds are completed, displays the final winner of the game
+     * (player with highest points)
      * 
      * @param players List of Player objects playing the game.
      */
@@ -219,12 +293,13 @@ public class Game {
             System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
         }
     }
-    
+
     /**
-     * From round 2 onwards, prompts the user if they wish to continue to the next round
+     * From round 2 onwards, prompts the user if they wish to continue to the next
+     * round
      * or to stop playing after a round is completed.
      * 
-     * @param round Integer representing the round that was just completed.
+     * @param round   Integer representing the round that was just completed.
      * @param scanner the scanner object for input.
      * @return False if player inputs 'n', True if player inputs 'y'.
      */
@@ -288,12 +363,12 @@ public class Game {
         }
         return Arrays.asList(playerOrder);
     }
-    
+
     /**
-    * Displays the turn order of players for the current round.
-    * 
-    * @param playerOrder The list of Player objects representing the turn order.
-    */
+     * Displays the turn order of players for the current round.
+     * 
+     * @param playerOrder The list of Player objects representing the turn order.
+     */
     private static void displayPlayerOrder(List<Player> playerOrder) {
         // to display player order again
         System.out.println("\nTurn order is:");
@@ -303,14 +378,15 @@ public class Game {
             System.out.printf("%s -> ", playerName);
         }
         System.out.printf("%s.", playerOrder.getLast().getName());
-        
+
     }
-    
+
     /**
-    * Displays the ranking of players and their number of remaining cards after a round is completed.
-    * 
-    * @param players The list of Player objects playing the game.
-    */
+     * Displays the ranking of players and their number of remaining cards after a
+     * round is completed.
+     * 
+     * @param players The list of Player objects playing the game.
+     */
     private void displayRanking(List<Player> players) {
         Collections.sort(players, Player.sortByPoints());
         System.out.println("\nRank\tName\t\tTotal Points\tCards Left");
@@ -318,29 +394,34 @@ public class Game {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
             System.out.printf("%-6d\t%-15s\t%-13.1f\t%-5d\n", (i + 1), player.getName(), player.getPoints(),
-            player.getNumOfCards());
+                    player.getNumOfCards());
         }
     }
-    
+
     /**
-    * Clears the hand of each player after a round is completed, to prepare for the next round.
-    * 
-    * @param players The list of Player objects playing the game.
-    */
+     * Clears the hand of each player after a round is completed, to prepare for the
+     * next round.
+     * 
+     * @param players The list of Player objects playing the game.
+     */
     private void clearHands(List<Player> players) {
         for (Player player : players) {
             player.getHand().clear();
         }
     }
-    
+
     /**
-    * Checks if the current player is an easy bot, hard bot or human player, then calls their play method.
-    * 
-    * @param currentPlayer The player who makes their play in the current turn.
-    * @param previousCards The PlayedCards object representing cards played in the previous turn.
-    * @param consecutivePasses An integer representing the number of consecutive passes made in the previous turns.
-    * @return The PlayResult object representing the result of the play made by the current player.
-    */
+     * Checks if the current player is an easy bot, hard bot or human player, then
+     * calls their play method.
+     * 
+     * @param currentPlayer     The player who makes their play in the current turn.
+     * @param previousCards     The PlayedCards object representing cards played in
+     *                          the previous turn.
+     * @param consecutivePasses An integer representing the number of consecutive
+     *                          passes made in the previous turns.
+     * @return The PlayResult object representing the result of the play made by the
+     *         current player.
+     */
     private PlayResult determinePlayerAction(Player currentPlayer, PlayedCards previousCards, int consecutivePasses,
             Scanner scanner) {
         PlayResult playResult;
@@ -358,13 +439,15 @@ public class Game {
     }
 
     /**
-    * Finds the winner of the current round based on 
-    * whether the current player's hand is empty after playing their cards.
-    * 
-    * @param currentPlayer The Player object who made their play in the current turn.
-    * @return The same Player object representing the winner of the round, or null if
-    *         no winner is found.
-    */
+     * Finds the winner of the current round based on
+     * whether the current player's hand is empty after playing their cards.
+     * 
+     * @param currentPlayer The Player object who made their play in the current
+     *                      turn.
+     * @return The same Player object representing the winner of the round, or null
+     *         if
+     *         no winner is found.
+     */
     private Player findRoundWinner(Player currentPlayer) {
         if (currentPlayer.getHand().isEmpty()) {
             return currentPlayer;
