@@ -26,13 +26,27 @@ public abstract class Bot extends Player {
         return name;
     }
 
+    /** 
+     * This method lets the bot chooses which valid combination to play (the strategy of the bot)
+     * This method is abstract and must be implemented by all bots to define the difficulty level of the bot
+     * 
+     * @param previousCards The previously played cards.
+     * @param consecutivePasses The number of consecutive passes made by players in the game.
+     * @return A PlayResult object representing the result of the play.
+     */
     public abstract PlayResult play(PlayedCards previousCards, int consecutivePasses);
 
+    /** 
+     * Gets all valid combinations that can be played from the given hand, considering the previous cards played.
+     * 
+     * @param hand The list of cards available in the player's hand.
+     * @param previousCards The previously played cards, or null if no cards have been played yet.
+     * @return A list of PlayedCards objects representing valid combinations that can be played.
+     */
     public static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
         List<PlayedCards> validCombinations = new ArrayList<>();
 
         if (previousCards == null) {
-                        // If previousCards is null, any combination in the hand is valid
             validCombinations.addAll(findSingles(hand));
             validCombinations.addAll(findDoubles(hand));
             validCombinations.addAll(findTriples(hand));
@@ -70,6 +84,12 @@ public abstract class Bot extends Player {
         return winningCombinations;
     }
 
+    /** 
+     * Finds all combinations of singles from the given hand.
+     * 
+     * @param hand The list of cards to generate singles from.
+     * @return A list of PlayedCards objects representing valid singles.
+     */
     public static List<PlayedCards> findSingles(List<Card> hand) {
         List<PlayedCards> singles = new ArrayList<>();
         for (Card card : hand) {
@@ -80,6 +100,12 @@ public abstract class Bot extends Player {
         return singles;
     }
 
+    /** 
+     * Finds all combinations of pairs from the given hand.
+     * 
+     * @param hand The list of cards to generate pairs from.
+     * @return A list of PlayedCards objects representing valid pairs.
+     */
     public static List<PlayedCards> findDoubles(List<Card> hand) {
         List<PlayedCards> doubles = new ArrayList<>();
         for (int i = 0; i < hand.size() - 1; i++) {
@@ -96,58 +122,80 @@ public abstract class Bot extends Player {
         return doubles;
     }
 
+
+    /** 
+     * Finds all combinations of triples from the given hand.
+     * 
+     * @param hand The list of cards to generate triples from.
+     * @return A list of PlayedCards objects representing valid triples.
+     */
     public static List<PlayedCards> findTriples(List<Card> hand) {
         List<PlayedCards> triples = new ArrayList<>();
-        for (int i = 0; i < hand.size() - 2; i++) {
-            for (int j = i + 1; j < hand.size() - 1; j++) {
-                for (int k = j + 1; k < hand.size(); k++) {
-                    List<Card> tripleCards = new ArrayList<>();
-                    tripleCards.add(hand.get(i));
-                    tripleCards.add(hand.get(j));
-                    tripleCards.add(hand.get(k));
-                    PlayedCards tripleCombination = new PlayedCards(tripleCards);
-                    if (HandValidator.isTriple(tripleCombination)) {
-                        triples.add(tripleCombination);
-                    }
-                }
-            }
-        }
+        findTriples(hand, 0, new ArrayList<Card>(), triples);
         return triples;
     }
 
+    /**
+     * Recursively finds combinations of triples from the given hand, starting from the specified index.
+     * 
+     * @param hand The list of cards to generate triples from.
+     * @param start The index to start generating triples from.
+     * @param currentCombination The current combination being built.
+     * @param triples The list to store valid triples.
+     */
+    private static void findTriples(List<Card> hand, int start, List<Card> currentCombination, List<PlayedCards> triples) {
+        if (currentCombination.size() == 3) {
+            PlayedCards tripleCombination = new PlayedCards(new ArrayList<>(currentCombination));
+            if (HandValidator.isTriple(tripleCombination)) {
+                triples.add(tripleCombination);
+            }
+            return;
+        }
+
+        for (int i = start; i < hand.size(); i++) {
+            currentCombination.add(hand.get(i));
+            findTriples(hand, i + 1, currentCombination, triples);
+            currentCombination.remove(currentCombination.size() - 1);
+        }
+    }
+
+    /** 
+     * Finds all combinations of 5 cards from the given hand that form valid poker hands.
+     * 
+     * @param hand The list of cards to generate combinations from.
+     * @return A list of PlayedCards objects representing valid combinations.
+     */
     public static List<PlayedCards> findFiveCombination(List<Card> hand) {
         List<PlayedCards> combinations = new ArrayList<>();
-
-        // Check if the hand has at least 5 cards
-        if (hand.size() < 5) {
-            return combinations; // Return an empty list if the hand doesn't have enough cards
-        }
-
-        // Generate all combinations of 5 cards
-        for (int i = 0; i < hand.size() - 4; i++) {
-            for (int j = i + 1; j < hand.size() - 3; j++) {
-                for (int k = j + 1; k < hand.size() - 2; k++) {
-                    for (int l = k + 1; l < hand.size() - 1; l++) {
-                        for (int m = l + 1; m < hand.size(); m++) {
-                            List<Card> combinationCards = new ArrayList<>();
-                            combinationCards.add(hand.get(i));
-                            combinationCards.add(hand.get(j));
-                            combinationCards.add(hand.get(k));
-                            combinationCards.add(hand.get(l));
-                            combinationCards.add(hand.get(m));
-                            PlayedCards combination = new PlayedCards(combinationCards);
-                            if (HandValidator.isStraightFlush(combination) ||
-                                    HandValidator.isFourOfAKind(combination) ||
-                                    HandValidator.isFullHouse(combination) ||
-                                    HandValidator.isFlush(combination) ||
-                                    HandValidator.isStraight(combination)) {
-                                combinations.add(combination);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        findCombinations(hand, 0, new ArrayList<Card>(), combinations);
         return combinations;
+    }
+
+    /**
+     * Recursively finds combinations of cards from the given hand, starting from the specified index.
+     * 
+     * @param hand The list of cards to generate combinations from.
+     * @param start The index to start generating combinations from.
+     * @param currentCombination The current combination being built.
+     * @param combinations The list to store valid combinations.
+     */
+    private static void findCombinations(List<Card> hand, int start, List<Card> currentCombination, List<PlayedCards> combinations) {
+        if (currentCombination.size() == 5) {
+            PlayedCards combination = new PlayedCards(new ArrayList<>(currentCombination));
+            if (HandValidator.isStraightFlush(combination) ||
+                    HandValidator.isFourOfAKind(combination) ||
+                    HandValidator.isFullHouse(combination) ||
+                    HandValidator.isFlush(combination) ||
+                    HandValidator.isStraight(combination)) {
+                combinations.add(combination);
+            }
+            return;
+        }
+    
+        for (int i = start; i < hand.size(); i++) {
+            currentCombination.add(hand.get(i));
+            findCombinations(hand, i + 1, currentCombination, combinations);
+            currentCombination.remove(currentCombination.size() - 1);
+        }
     }
 }
