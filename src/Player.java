@@ -6,22 +6,45 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Player {
-    private static final String PASS_COMMAND = "pass";
-    private static final String QUIT_COMMAND = "quit";
-    private static final String RANK_COMMAND = "rank";
-    private static final String SUIT_COMMAND = "suit";
-    private static final String INSTRUCTIONS_COMMAND = "i";
-    private static final Card START_CARD = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+    private static final String PASS_COMMAND = "pass"; // Sets the pass command
+    private static final String QUIT_COMMAND = "quit"; // Sets the quit game command
+    private static final String RANK_COMMAND = "rank"; // Sets the sort hand by rank command
+    private static final String SUIT_COMMAND = "suit"; // Sets the sort hand by suit command
+    private static final String INSTRUCTIONS_COMMAND = "i"; // Sets the command to display instructions
+    private static final String MUSIC_COMMAND = "m"; // Sets the command to play or mute music
+    private static final Card START_CARD = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE); // Sets the starting card
 
     private String name;
     private Hand hand;
     private double points;
 
+    /**
+     * Constructor that creates a Player object
+     *
+     * @param name String representing the name of the player
+     */
     public Player(String name) {
         this.name = name;
         this.hand = new Hand();
     }
 
+    /**
+     * Prompts player for their command
+     * accepts PASS_COMMAND to return playResult that player pass turn increasing
+     * consecutivePasses by 1
+     * accepts QUIT_COMMAND to return a PlayResult that player is quitting with
+     * isQuit=true
+     * accepts RANK_COMMAND and SUIT_COMMAND to sort player hand by rank or suit
+     * accepts INSTRUCTIONS_COMMAND to display the instructions
+     * accepts cards to play cards according to the hand list index from left to
+     * right
+     * 
+     * @param previousCards     The last played cards, is null at start or after 3
+     *                          consecuetivePasses
+     * @param consecutivePasses The number of times the previous players have passed
+     * @param scanner           the scanner object for input
+     * @return the PlayResult created that would store if player
+     */
     public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
             displayOptions();
@@ -29,7 +52,8 @@ public class Player {
             switch (input) {
                 case PASS_COMMAND:
                     PlayResult passResult = handlePass(previousCards, consecutivePasses);
-                    if (passResult != null) return passResult;
+                    if (passResult != null)
+                        return passResult;
                     break; // If passing is not allowed, it will break and prompt again.
                 case RANK_COMMAND:
                     sortHandByRank();
@@ -42,10 +66,15 @@ public class Player {
                 case INSTRUCTIONS_COMMAND:
                     Instructions.displayInstructions();
                     break;
+                case MUSIC_COMMAND:
+                    MusicPlayer.playOrStopMusic(); 
+                    break;
                 default:
                     PlayResult selectionResult = handleCardSelection(input, previousCards, consecutivePasses);
-                    if (selectionResult != null) return selectionResult;
-                    // If handleCardSelection returns null, indicating invalid selection, print an error message
+                    if (selectionResult != null)
+                        return selectionResult;
+                    // If handleCardSelection returns null, indicating invalid selection, print an
+                    // error message
                     // and continue in the loop to prompt again.
                     System.out.println("Invalid selection, please try again.");
                     break;
@@ -53,17 +82,35 @@ public class Player {
         }
     }
 
+    /**
+     * Displays the commands the player can enter
+     *
+     */
     private void displayOptions() {
         System.out.print("\nOptions:\n" +
                 " - Select cards to play (enter indices separated by spaces)\n" +
-                " - Type 'pass' to pass\n" +
-                " - Type 'suit' to sort hand by suit\n" +
-                " - Type 'rank' to sort hand by rank\n" +
-                " - Type 'i' to display instructions\n" +
-                " - Type 'quit' to quit the game\n" +
+                " - Type '" + PASS_COMMAND + "' to pass\n" +
+                " - Type '" + SUIT_COMMAND + "' to sort hand by suit\n" +
+                " - Type '" + RANK_COMMAND + "' to sort hand by rank\n" +
+                " - Type '" + INSTRUCTIONS_COMMAND + "' to display instructions\n" +
+                " - Type 'm' to play or stop the music\n" +
+                " - Type '" + QUIT_COMMAND + "' to quit the game\n" +
                 "Your choice: ");
     }
 
+    /**
+     * Validates the player passing turn, player cannot pass turn if has Starting
+     * card
+     * If player has start card notify player and return null
+     * If player does not have start card player can pass, so playResult will be
+     * created with incremented
+     * consecuetivePasses and the previousCards
+     * 
+     * @param previousCards
+     * @param consecutivePasses
+     * @return playResult containing the previousCards and an incremented
+     *         consecutivePasses or null
+     */
     private PlayResult handlePass(PlayedCards previousCards, int consecutivePasses) {
         if (hasCard(START_CARD)) {
             System.out.println("Need to play 3 of Diamonds. Cannot pass first turn!");
@@ -73,22 +120,49 @@ public class Player {
         return new PlayResult(previousCards, ++consecutivePasses);
     }
 
+    /**
+     * Sorts and displays the Player's hand by rank
+     * 
+     */
     private void sortHandByRank() {
         getHand().sortByRank();
         System.out.println("\nHand sorted by rank: " + getHand());
     }
 
+    /**
+     * Sorts and displays the Player's hand by suit
+     * 
+     */
     private void sortHandBySuit() {
         getHand().sortBySuit();
         System.out.println("\nHand sorted by suit: " + getHand());
     }
 
+    /**
+     * Creates PlayResult with quit set to true to allow player to quit game
+     * 
+     * @param previousCards
+     * @param consecutivePasses
+     * @return PlayResult with quit set to true
+     */
     private PlayResult handleQuit(PlayedCards previousCards, int consecutivePasses) {
         PlayResult result = new PlayResult(previousCards, consecutivePasses);
         result.setQuit(true);
         return result;
     }
 
+    /**
+     * Validates if player input can be used to play the cards, If not return null
+     * If it is able and the card selection is valid return Playresult with the
+     * valid card selection
+     * 
+     * @param input             What the player has input into the console in String
+     * @param previousCards     The cards the last player who played put
+     * @param consecutivePasses The number of passes since the last play
+     * @return PlayResult null if invalid selection or Playresult containing the
+     *         validated played cards
+     *         and with consecutivePasses set to 0
+     */
     private PlayResult handleCardSelection(String input, PlayedCards previousCards, int consecutivePasses) {
         List<Card> selectedCards = parseSelectedCards(input);
         if (selectedCards == null) {
@@ -104,18 +178,28 @@ public class Player {
         return null;
     }
 
-    private List<Card> parseSelectedCards(String input){
+    /**
+     * Parses the player console input into the cards in hand using the assumption
+     * that the cards
+     * are played using their indexes in order from left to right
+     * If the input is not an integer or index found is out of range of hand return
+     * null
+     * 
+     * @param input What the player has input into the console in String
+     * @return List of cards selected or null if selection is invalid
+     */
+    private List<Card> parseSelectedCards(String input) {
         List<Card> selectedCards = new ArrayList<>();
         String[] indices = input.split("\\s+");
-        for(String idxStr: indices){
-            try{
+        for (String idxStr : indices) {
+            try {
                 int idx = Integer.parseInt(idxStr.trim());
-                if(idx < 0 || idx >= getHand().getCardsInHand().size()){
+                if (idx < 0 || idx >= getHand().getCardsInHand().size()) {
                     System.out.println("\nInvalid index! Please select indices within range of your hand.");
                     return null;
                 }
                 selectedCards.add(getHand().getCardsInHand().get(idx));
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("\nInvalid input! Please enter indices seperately.");
                 return null;
             }
@@ -123,14 +207,27 @@ public class Player {
         return selectedCards;
     }
 
-    private boolean validatePlayedCards(PlayedCards playedCards, PlayedCards previousCards){
-        if(previousCards == null || previousCards.getCards().isEmpty()){
-            if(!playedCards.getCards().contains(START_CARD)){
+    /**
+     * Checks if the cards being played are valid,
+     * if previousCards is null check if player has start card and played start card
+     * was played
+     * Start card must be played if player has it on the first turn
+     * If number of cards is invalid fail validation
+     * If selected cards are not an allowed combination fail validation
+     * If cards selected doesnt win against last played cards fail validation
+     * 
+     * @param playedCards   The cards the player has selected using the console
+     * @param previousCards The last cards played
+     * @return false if playedCards fails validation or true if playedCards passes
+     */
+    private boolean validatePlayedCards(PlayedCards playedCards, PlayedCards previousCards) {
+        if (previousCards == null || previousCards.getCards().isEmpty()) {
+            if (hasCard(START_CARD) && !playedCards.getCards().contains(START_CARD)) {
                 System.out.println("You must play 3 of diamonds on the first turn!");
                 return false;
             }
         }
-        if(!playedCards.isValidSize()){
+        if (!playedCards.isValidSize()) {
             System.out.println("\nInvalid Selection! Please select one, two, three or five cards.");
             return false;
         }
@@ -138,66 +235,117 @@ public class Player {
             System.out.println("\nInvalid selection! Please select a valid combination.");
             return false;
         }
-    
+
         // Check if the played cards beat the previous cards (if any).
         if (previousCards != null && !playedCards.getCards().isEmpty() && !playedCards.winsAgainst(previousCards)) {
             System.out.println("\nInvalid selection! The selected cards do not beat the previously played cards.");
             return false;
         }
-    
+
         return true;
     }
 
-
-
+    /**
+     * Getter method for Player Hand object
+     * 
+     * @return Player's Hand object
+     */
     public Hand getHand() {
         return hand;
     }
 
+    /**
+     * Getter method for Player name
+     * 
+     * @return Player's name
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Getter method for Player's points
+     * 
+     * @return number of points player has as a double
+     */
     public double getPoints() {
         return this.points;
     }
 
+    /**
+     * setter method for Player's points
+     * Adds points to the player
+     * 
+     * @param add how many points to increase player points by, positive value
+     */
     public void addPoints(double add) {
         if (add > 0) {
             points += add;
         }
     }
 
-    public void deductPoints(double deduct) {
+    /**
+     * setter method for Player's points
+     * deducts points from the player
+     * 
+     * @param deduct how many points to decrease player points by, positive value
+     */
+    private void deductPoints(double deduct) {
         if (deduct > 0) {
             points -= deduct;
         }
     }
 
-    public double loseGame(double rate) {
+    /**
+     * Called when player loses a game to decide how many points to deduct
+     * default is number of cards player has left times the rate
+     * if number of cards left >= 10 multiply the deduction by 3
+     * else if number of cards left >=7 and <10 multiply the deduction by 2
+     * else keep the default deduction rate
+     * deduct the points calcluated from the player
+     * 
+     * @param rate multiplier to decide how many points to deduct
+     * @return points dedcucted from player as a double
+     */
+    private double loseGame(double rate) {
         // double deduct = rate * getNumOfCards();
-        int numCards=getNumOfCards();
+        int numCards = getNumOfCards();
         double deduct = numCards * rate;
-        if (numCards >= 10) {//If num of Cards greater then rate *3 loss
+        if (numCards >= 10) {// If num of Cards greater then rate *3 loss
             deduct *= 3;
-        } else if (numCards >=7) {//If num of cards equal to rate then *2 loss
+        } else if (numCards >= 7) {// If num of cards equal to rate then *2 loss
             deduct *= 2;
         }
         deductPoints(deduct);
         return deduct;
     }
 
-    
-
+    /**
+     * Getter method to return cards in a Player's hand
+     * 
+     * @return number of cards in player's hand
+     */
     public int getNumOfCards() {
         return hand.getSize(); // Pass player to getSize()
     }
 
+    /**
+     * Setter method to add a card to player's hand
+     * 
+     * @param card Card to add to hand
+     */
     public void receiveCard(Card card) {// Adds card to hand
         hand.addCard(card);
     }
 
-    public boolean hasCard(Card card) {
+    /**
+     * validator method to check if player's hand contains a card
+     * 
+     * @param card Card to check for
+     * @return returns false if card is null or card not in hand
+     *         returns true if card is in hand
+     */
+    protected boolean hasCard(Card card) {
         if (card == null) {
             return false;
         }
@@ -205,6 +353,17 @@ public class Player {
         return hand.getCardsInHand().contains(card);
     }
 
+    /**
+     * Static method to deduct points from players who didn't win and award it to
+     * the winning
+     * player
+     * 
+     * @param playerList List of all players
+     * @param winner     the winner who will be given the points deducted from the
+     *                   losers
+     * @param rate       the default multiplier that the points will be deducted
+     *                   using
+     */
     public static void winRound(List<Player> playerList, Player winner, double rate) {
         double winnings = 0;
         for (int i = 0; i < playerList.size(); i++) {
@@ -216,6 +375,10 @@ public class Player {
         winner.addPoints(winnings);
     }
 
+    /**
+     * Comparator method to sort Players by points in descending order
+     * 
+     */
     public static Comparator<Player> sortByPoints() {
         return Comparator.comparingDouble(Player::getPoints).reversed();
     }

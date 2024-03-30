@@ -5,19 +5,15 @@ import java.util.InputMismatchException;
 class App {
     private static final Scanner scanner = new Scanner(System.in);
     private final Game game;
-    private final MusicPlayer musicPlayer;
 
-    private static final String MUSIC_PATH="Music/music.wav";
-
-    public App(Game game, MusicPlayer musicPlayer) {
+    public App(Game game) {
         this.game = game;
-        this.musicPlayer = musicPlayer;
     }
 
     public void run() {
         System.out.println("Welcome to Dai Di!");
 
-        musicPlayer.playMusic(MUSIC_PATH);
+        MusicPlayer.playMusic();
 
         String playerName;
         do {
@@ -49,7 +45,7 @@ class App {
                         break;
                     case 3:
                         System.out.println("Bye Bye!");
-                        musicPlayer.stopMusic();
+                        MusicPlayer.stopMusic();
                         return;
                     default:
                         System.out.println("Invalid choice! Please enter 1, 2, or 3.");

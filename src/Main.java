@@ -7,8 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         Game game = new Game();
-        MusicPlayer musicPlayer = new MusicPlayer();
-        App app = new App(game, musicPlayer);
+        App app = new App(game);
         app.run();
     }
 }
