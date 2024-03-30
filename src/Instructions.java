@@ -24,8 +24,6 @@ public class Instructions {
                 Current_Line = document.nextLine();
                 System.out.println(Current_Line);
             }
-
-        //can log exceptions instead (?)
         } catch(FileNotFoundException e) {
             System.out.println("Rules not found");
         }
