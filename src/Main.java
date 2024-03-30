@@ -1,6 +1,5 @@
 package src;
 import java.util.Scanner;
-import java.util.InputMismatchException;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);

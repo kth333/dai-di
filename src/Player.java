@@ -2,17 +2,20 @@ package src;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Player {
-    private static final String PASS_COMMAND = "pass"; // Sets the pass command
-    private static final String QUIT_COMMAND = "quit"; // Sets the quit game command
-    private static final String RANK_COMMAND = "rank"; // Sets the sort hand by rank command
-    private static final String SUIT_COMMAND = "suit"; // Sets the sort hand by suit command
-    private static final String INSTRUCTIONS_COMMAND = "i"; // Sets the command to display instructions
-    private static final String MUSIC_COMMAND = "m"; // Sets the command to play or mute music
-    private static final Card START_CARD = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE); // Sets the starting card
+    private static final int PLAY_COMMAND = 0;// Sets the play command
+    private static final int PASS_COMMAND = 1;// Sets the pass command
+    private static final int QUIT_COMMAND = 6;// Sets the quit game command
+    private static final int RANK_COMMAND = 3;// Sets the sort hand by rank command
+    private static final int SUIT_COMMAND = 2;// Sets the sort hand by suit command
+    private static final int INSTRUCTIONS_COMMAND = 4;// Sets the command to display instructions
+    private static final int MUSIC_COMMAND = 5; // Sets the command to play or mute music
+    private static final String BACK_COMMAND = "back";
+    private static final Card START_CARD = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);// Sets the starting card
 
     private String name;
     private Hand hand;
@@ -30,6 +33,7 @@ public class Player {
 
     /**
      * Prompts player for their command
+     * accepts PLAY_COMMAND to play a hand
      * accepts PASS_COMMAND to return playResult that player pass turn increasing
      * consecutivePasses by 1
      * accepts QUIT_COMMAND to return a PlayResult that player is quitting with
@@ -48,36 +52,61 @@ public class Player {
     public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
             displayOptions();
+            try {
+                int input = scanner.nextInt();
+                scanner.nextLine();
+                switch (input) {
+                    case PLAY_COMMAND:
+                        System.out.println("Your Hand: " + getHand());
+                        PlayResult result = playHand(previousCards, consecutivePasses, scanner);
+                        if (result != null) {
+                            return result;
+                        }
+                        break;//break and prompt again if
+                    case PASS_COMMAND:
+                        PlayResult passResult = handlePass(previousCards, consecutivePasses);
+                        if (passResult != null)
+                            return passResult;
+                        break; // If passing is not allowed, it will break and prompt again.
+                    case RANK_COMMAND:
+                        sortHandByRank();
+                        break;
+                    case SUIT_COMMAND:
+                        sortHandBySuit();
+                        break;
+                    case QUIT_COMMAND:
+                        return handleQuit(previousCards, consecutivePasses);
+                    case INSTRUCTIONS_COMMAND:
+                        Instructions.displayInstructions();
+                        break;
+                    case MUSIC_COMMAND:
+                        MusicPlayer.playOrStopMusic();
+                        break;
+                    default:
+                        System.out.println("Invalid selection, please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a number");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    
+    private PlayResult playHand(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
+        while (true) {
+            System.out.println("Select cards to play or enter '" + BACK_COMMAND
+                    + "' to return to main menu (enter indices separated by spaces):");
             String input = scanner.nextLine().toLowerCase();
-            switch (input) {
-                case PASS_COMMAND:
-                    PlayResult passResult = handlePass(previousCards, consecutivePasses);
-                    if (passResult != null)
-                        return passResult;
-                    break; // If passing is not allowed, it will break and prompt again.
-                case RANK_COMMAND:
-                    sortHandByRank();
-                    break;
-                case SUIT_COMMAND:
-                    sortHandBySuit();
-                    break;
-                case QUIT_COMMAND:
-                    return handleQuit(previousCards, consecutivePasses);
-                case INSTRUCTIONS_COMMAND:
-                    Instructions.displayInstructions();
-                    break;
-                case MUSIC_COMMAND:
-                    MusicPlayer.playOrStopMusic(); 
-                    break;
-                default:
-                    PlayResult selectionResult = handleCardSelection(input, previousCards, consecutivePasses);
-                    if (selectionResult != null)
-                        return selectionResult;
-                    // If handleCardSelection returns null, indicating invalid selection, print an
-                    // error message
-                    // and continue in the loop to prompt again.
-                    System.out.println("Invalid selection, please try again.");
-                    break;
+            if (input.equals(BACK_COMMAND)) {
+                return null;
+            }
+            PlayResult selectionResult = handleCardSelection(input, previousCards, consecutivePasses);
+            if (selectionResult != null) {
+                return selectionResult;
+            } else {
+                System.out.println("Invalid selection, please try again.");
             }
         }
     }
@@ -88,12 +117,12 @@ public class Player {
      */
     private void displayOptions() {
         System.out.print("\nOptions:\n" +
-                " - Select cards to play (enter indices separated by spaces)\n" +
+                " - Type '" + PLAY_COMMAND + "' to play a hand\n" +
                 " - Type '" + PASS_COMMAND + "' to pass\n" +
                 " - Type '" + SUIT_COMMAND + "' to sort hand by suit\n" +
                 " - Type '" + RANK_COMMAND + "' to sort hand by rank\n" +
                 " - Type '" + INSTRUCTIONS_COMMAND + "' to display instructions\n" +
-                " - Type 'm' to play or stop the music\n" +
+                " - Type '" + MUSIC_COMMAND + "' to play or stop the music\n" +
                 " - Type '" + QUIT_COMMAND + "' to quit the game\n" +
                 "Your choice: ");
     }
