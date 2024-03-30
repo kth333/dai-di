@@ -29,6 +29,5 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 - **Starting a Game**: Select "Start Game" to begin playing.
 
 ## Credits
-- **Images of all the cards**: https://www.waste.org/~oxymoron/files/cards/
 
 - The background music used in this project is created by Migfus20 and obtained from [freesound.org](https://freesound.org/s/561394/) Attribution: "Fantasy Background Music (Loop)" by Migfus20 is licensed under [Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
