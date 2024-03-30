@@ -11,38 +11,40 @@ public class HardBot extends Bot {
 
     @Override
     public PlayResult play(PlayedCards previousCards, int consecutivePasses) {
+        pause();
         
-        // Get the bot player's hand
         List<Card> botHand = getHand().getCardsInHand();
-
-        // Get all valid combinations in the bot's hand
         List<PlayedCards> validCombinations = getAllValidCombinations(botHand, previousCards);
-
+    
         if (validCombinations != null) {
-            // Check each valid combination against the previous cards
             for (PlayedCards combination : validCombinations) {
-
-                if (previousCards == null || combination.winsAgainst(previousCards)) {
-                    Card startCard=new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
-                    if (hasCard(startCard) && !combination.getCards().contains(startCard)) {
-                        // If bot has 3 of Diamonds and the combination doesn't contain 3 of Diamonds, continue searching
-                        continue;
-                    }
-                    // If the combination wins or there are no previous cards, play it
-                    previousCards = combination; // Update the previous cards
-                    System.out.println("\n" + getName() + " played: " + combination);
-                    botHand.removeAll(combination.getCards()); // Remove the played cards from the bot's hand
-                    if (previousCards != null) {
-                        consecutivePasses = 0;
-                        return new PlayResult(previousCards, consecutivePasses);
-                    }
+                if (canPlayCombination(previousCards, combination)) {
+                    previousCards = playCombination(botHand, combination);
+                    consecutivePasses = 0;
+                    return new PlayResult(previousCards, consecutivePasses);
                 }
             }
         }
+    
         System.out.println("\n" + getName() + " passed their turn.");
         consecutivePasses++;
-        return new PlayResult(previousCards, consecutivePasses);    
+        return new PlayResult(previousCards, consecutivePasses);
     }
+    
+    private boolean canPlayCombination(PlayedCards previousCards, PlayedCards combination) {
+        if (previousCards == null || combination.winsAgainst(previousCards)) {
+            Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+            return !hasCard(startCard) || combination.getCards().contains(startCard);
+        }
+        return false;
+    }
+    
+    private PlayedCards playCombination(List<Card> botHand, PlayedCards combination) {
+        System.out.println("\n" + getName() + " played: " + combination);
+        botHand.removeAll(combination.getCards());
+        return combination;
+    }
+    
 
     //this method checks if a set of cards contains any high cards
     public static PlayedCards botStrategy(PlayedCards Cards, Card minimumStrength){
@@ -66,215 +68,42 @@ public class HardBot extends Bot {
 
     }   
 
+    /**
+     * Generates all valid combinations of cards that can be played based on the given hand and the previously played cards.
+     * 
+     * If the previously played cards are null, it generates all possible combinations from the hand. 
+     * Otherwise, it checks the type of the previously played cards (single, pair, three of a kind, etc.) and generates valid combinations accordingly.
+     * 
+     * After generating the valid combinations, it filters out the combinations that win against the previously played cards.
+     * 
+     * @param hand The current hand of the player.
+     * @param previousCards The cards that were played in the previous turn.
+     * @return A list of all valid combinations of cards that can be played, filtered to only include winning combinations.
+     */
     public static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
         List<PlayedCards> validCombinations = new ArrayList<>();
-
+    
         if (previousCards == null) {
-            // If previous card is null, the bot can play whatever he wants
-
-            //get all the five card combis
-            List<PlayedCards> potentialFiveCombinations = findFiveCombination(hand);
-            for (PlayedCards p : potentialFiveCombinations){
-
-                //if the 5 card combi doesnt use any ACES, play it
-                PlayedCards worth_playing = botStrategy(p, new Card(Card.Suit.DIAMONDS, Card.Rank.ACE));
-                if (worth_playing != null){
-                    validCombinations.add(worth_playing);
-                }
-            }
-
-            //if we go into here, it means that there was no 5 card combination that was worth playing
-            //if bots hand has any 3 of a kind, he should play it
-            if (validCombinations.size() == 0){
-
-                //get all the five card combis
-                List<PlayedCards> potentialThreeCombinations = findTriples(hand);
-
-                //if the three card combination doesnt use any ACES, play it
-                for (PlayedCards p : potentialThreeCombinations){
-                    PlayedCards worth_playing = botStrategy(p, new Card(Card.Suit.DIAMONDS, Card.Rank.ACE));
-                    if (worth_playing != null){
-                        validCombinations.add(worth_playing);
-                    }
-                }
-            }
-
-            //if we go into here, it means that there is no good 5 card combis or 3 card combis
-            //bot will try to play a pair
-            if (validCombinations.size() == 0){
-
-                //get all two card combinations
-                List<PlayedCards> potentialTwoCombinations = findDoubles(hand);
-
-                //if the pair doesnt use any TWO's, play it
-                for (PlayedCards p : potentialTwoCombinations){
-                    PlayedCards worth_playing = botStrategy(p, new Card(Card.Suit.DIAMONDS, Card.Rank.TWO));
-                    if (worth_playing != null){
-                        validCombinations.add(worth_playing);
-                    }
-                }
-            }
-
-            //if we get here, it means it can only play singles
-            validCombinations.addAll(findSingles(hand));
-
+            validCombinations = getValidCombinations(hand);
         } else {
             String previousType = previousCards.getType();
-
-            // Check if previousCards was a single, double, triple, or combination of 5
-            // cards
+    
             switch (previousType) {
                 case "Single":
-                    //make bot prefer to play singles that doesnt break their 5 card, 3 card, pairs
-                    //if dont have, just find any random single
-
-                    List<PlayedCards> potentialFiveCombinations = findFiveCombination(hand);
-                    List<PlayedCards> potentialThreeCombinations = findTriples(hand);
-                    List<PlayedCards> potentialTwoCombinations = findDoubles(hand);
-
-                    //create hashmap to find unique cards within each combination
-                    HashMap<Card, String> uniqueCards = new HashMap<Card, String>();
-
-                    //find cards that are used for potential 5 card combis
-                    for (PlayedCards p : potentialFiveCombinations){
-                        List<Card> cardsWithin = p.getCards();
-                        for (Card c : cardsWithin){
-                            if ( uniqueCards.containsKey(c) ){
-                                uniqueCards.put(c, "");
-                            }
-                        }
-                    }
-
-                    //find cards that are used for potential 3 card combis
-                    for (PlayedCards p : potentialThreeCombinations){
-                        List<Card> cardsWithin = p.getCards();
-                        for (Card c : cardsWithin){
-                            if ( uniqueCards.containsKey(c) ){
-                                uniqueCards.put(c, "");
-                            }
-                        }
-                    }
-
-                    //find cards that are used for potential 2 card combis
-                    for (PlayedCards p : potentialTwoCombinations){
-                        List<Card> cardsWithin = p.getCards();
-                        for (Card c : cardsWithin){
-                            if ( uniqueCards.containsKey(c) ){
-                                uniqueCards.put(c, "");
-                            }
-                        }
-                    }
-
-                    List<PlayedCards> potentialSingles = findSingles(hand);
-                    List<PlayedCards> efficientSingles = new ArrayList<>();
-
-                    for (PlayedCards p : potentialSingles){
-                        boolean worth_playing = true;
-                        List<Card> cardsWithin = p.getCards();
-                        for (Card c : cardsWithin){
-                            if ( uniqueCards.containsKey(c)){
-                                worth_playing = false;
-                            }
-                        }
-
-                        if (worth_playing){
-                            efficientSingles.add(p);
-                        }
-                    }
-
-                    //if couldnt find any efficient singles, just put any.
-                    if (efficientSingles.size() == 0){
-                        validCombinations.addAll(potentialSingles);
-
-                    //play an efficient single card
-                    } else {
-                        validCombinations.addAll(efficientSingles);
-                    }
+                    validCombinations.addAll(findEfficientCombinations(hand, 1, false));
                     break;
-
                 case "Pair":
-                    //get all possible combinations of pairs
-                    List<PlayedCards> potentialDoubles = findDoubles(hand);
-
-                    //if no valid pairs, just break and no need to check for efficient strategies
-                    if (potentialDoubles == null){
-                        break;
-                    }
-            
-                    List<PlayedCards> efficientDoubles = new ArrayList<>();
-
-                    potentialFiveCombinations = findFiveCombination(hand);
-                    potentialThreeCombinations = findTriples(hand);
-
-                    //create hashmap to find unique cards within each combination
-                    uniqueCards = new HashMap<Card, String>();
-
-                    //find cards that are used for potential 5 card combis
-                    for (PlayedCards p : potentialFiveCombinations){
-                        List<Card> cardsWithin = p.getCards();
-                        for (Card c : cardsWithin){
-                            if ( uniqueCards.containsKey(c) ){
-                                uniqueCards.put(c, "");
-                            }
-                        }
-                    }
-
-                    //find cards that are used for potential 3 card combis
-                    for (PlayedCards p : potentialThreeCombinations){
-                        List<Card> cardsWithin = p.getCards();
-                        for (Card c : cardsWithin){
-                            if ( uniqueCards.containsKey(c) ){
-                                uniqueCards.put(c, "");
-                            }
-                        }
-                    }
-
-                    //add 2's to hashmap its bad strategy to use 2's as a pair
-                    uniqueCards.put(new Card(Card.Suit.DIAMONDS, Card.Rank.TWO), "");
-                    uniqueCards.put(new Card(Card.Suit.CLUBS, Card.Rank.TWO), "");
-                    uniqueCards.put(new Card(Card.Suit.HEARTS, Card.Rank.TWO), "");
-                    uniqueCards.put(new Card(Card.Suit.SPADES, Card.Rank.TWO), "");
-
-                    //if potential pairs use any valuable cards (2's or part of combo's) , dont
-                    //add it to potential pairs
-                    for (PlayedCards p : potentialDoubles){
-                        boolean worth_playing = true;
-                        List<Card> cardsWithin = p.getCards();
-                        for (Card c : cardsWithin){
-                            if ( uniqueCards.containsKey(c)){
-                                worth_playing = false;
-                            }
-                        }
-
-                        if (worth_playing){
-                            efficientDoubles.add(p);
-                        }
-                    }
-
-                    //if couldnt find any efficient pairs, just put any. EXCEPT 2's as
-                    //it is generally a bad strategy
-                    if (efficientDoubles.size() == 0){
-                        for (PlayedCards p : potentialDoubles){
-                            PlayedCards worth_playing = botStrategy(p, new Card(Card.Suit.DIAMONDS, Card.Rank.TWO));
-                            if (worth_playing != null){
-                                validCombinations.add(worth_playing);
-                            }
-                        }
-                    } else {
-                        validCombinations.addAll(efficientDoubles);
-                    }
+                    validCombinations.addAll(findEfficientCombinations(hand, 2, true));
                     break;
                 case "Three of a Kind":
                     validCombinations.addAll(findTriples(hand));
                     break;
                 default:
-                    // If previousCards was a combination of 5 cards, generate all possible
-                    // combinations
                     validCombinations.addAll(findFiveCombination(hand));
                     break;
             }
         }
-
+    
         // Filter valid combinations that win against previousCards
         List<PlayedCards> winningCombinations = new ArrayList<>();
         for (PlayedCards combination : validCombinations) {
@@ -282,7 +111,193 @@ public class HardBot extends Bot {
                 winningCombinations.add(combination);
             }
         }
-
+    
         return winningCombinations;
+    }
+    
+
+    /**
+     * Generates all valid combinations of cards that can be played based on the given hand.
+     * 
+     * It first tries to find valid five card combinations. If none are found, it tries to find valid three card combinations.
+     * If still none are found, it tries to find valid two card combinations. If no two card combinations are found, it adds all single card combinations.
+     * 
+     * @param hand The current hand of the player.
+     * @return A list of all valid combinations of cards that can be played.
+     */
+    private static List<PlayedCards> getValidCombinations(List<Card> hand) {
+        List<PlayedCards> validCombinations = new ArrayList<>();
+    
+        validCombinations.addAll(findValidCombinations(hand, 5, Card.Rank.ACE));
+    
+        if (validCombinations.isEmpty()) {
+            validCombinations.addAll(findValidCombinations(hand, 3, Card.Rank.ACE));
+        }
+    
+        if (validCombinations.isEmpty()) {
+            validCombinations.addAll(findValidCombinations(hand, 2, Card.Rank.TWO));
+        }
+    
+        if (validCombinations.isEmpty()) {
+            validCombinations.addAll(findSingles(hand));
+        }
+    
+        return validCombinations;
+    }
+    
+
+
+    /**
+     * Finds valid combinations of cards from a given hand based on the combination size and a rank to avoid.
+     * 
+     * It first determines the potential combinations based on the combination size. Then, it checks each potential combination to see if it's worth playing,
+     * considering the rank to avoid. If a combination is worth playing, it's added to the list of valid combinations.
+     * 
+     * @param hand The current hand of the player.
+     * @param combinationSize The size of the card combination to find (e.g., 2 for a pair, 3 for three of a kind, etc.).
+     * @param rankToAvoid The rank of the card to avoid when finding combinations.
+     * @return A list of all valid combinations of cards that can be played.
+     */
+    private static List<PlayedCards> findValidCombinations(List<Card> hand, int combinationSize, Card.Rank rankToAvoid) {
+        List<PlayedCards> validCombinations = new ArrayList<>();
+        List<PlayedCards> potentialCombinations;
+    
+        switch (combinationSize) {
+            case 5:
+                potentialCombinations = findFiveCombination(hand);
+                break;
+            case 3:
+                potentialCombinations = findTriples(hand);
+                break;
+            case 2:
+                potentialCombinations = findDoubles(hand);
+                break;
+            default:
+                return validCombinations;
+        }
+    
+        for (PlayedCards p : potentialCombinations) {
+            PlayedCards worthPlaying = botStrategy(p, new Card(Card.Suit.DIAMONDS, rankToAvoid));
+            if (worthPlaying != null) {
+                validCombinations.add(worthPlaying);
+            }
+        }
+    
+        return validCombinations;
+    }
+    
+    /**
+     * Finds efficient combinations of cards from a given hand based on the combination size and whether to avoid twos.
+     * It first determines the potential combinations based on the combination size. Then, it checks each potential combination to see if it's worth playing,
+     * considering whether to avoid twos. If a combination is worth playing, it's added to the list of efficient combinations.
+     * If no efficient combinations are found, it tries to find any combination that doesn't use a two.
+     * 
+     * @param hand The current hand of the player.
+     * @param combinationSize The size of the card combination to find (e.g., 1 for a single, 2 for a pair, etc.).
+     * @param avoidTwos A boolean indicating whether to avoid twos when finding combinations.
+     * @return A list of all efficient combinations of cards that can be played.
+     */
+    private static List<PlayedCards> findEfficientCombinations(List<Card> hand, int combinationSize, boolean avoidTwos) {
+        List<PlayedCards> efficientCombinations = new ArrayList<>();
+        List<PlayedCards> potentialCombinations;
+    
+        switch (combinationSize) {
+            case 1:
+                potentialCombinations = findSingles(hand);
+                break;
+            case 2:
+                potentialCombinations = findDoubles(hand);
+                break;
+            default:
+                return efficientCombinations;
+        }
+    
+        HashMap<Card, String> uniqueCards = getUniqueCards(hand, avoidTwos);
+    
+        for (PlayedCards p : potentialCombinations) {
+            if (isWorthPlaying(p, uniqueCards)) {
+                efficientCombinations.add(p);
+            }
+        }
+    
+        if (efficientCombinations.isEmpty()) {
+            for (PlayedCards p : potentialCombinations) {
+                PlayedCards worthPlaying = botStrategy(p, new Card(Card.Suit.DIAMONDS, Card.Rank.TWO));
+                if (worthPlaying != null) {
+                    efficientCombinations.add(worthPlaying);
+                }
+            }
+        }
+    
+        return efficientCombinations;
+    }
+    
+    /**
+     * Generates a map of unique cards from a given hand, with an option to avoid twos.
+     * 
+     * It first finds potential five card and three card combinations from the hand. Then, it adds the cards from these combinations to the map of unique cards.
+     * If the avoidTwos parameter is true, it also adds all twos to the map of unique cards.
+     * 
+     * @param hand The current hand of the player.
+     * @param avoidTwos A boolean indicating whether to avoid twos when generating the map of unique cards.
+     * @return A map of unique cards from the hand.
+     */
+    private static HashMap<Card, String> getUniqueCards(List<Card> hand, boolean avoidTwos) {
+        HashMap<Card, String> uniqueCards = new HashMap<>();
+    
+        List<PlayedCards> potentialFiveCombinations = findFiveCombination(hand);
+        List<PlayedCards> potentialThreeCombinations = findTriples(hand);
+    
+        addCardsToUniqueCards(potentialFiveCombinations, uniqueCards);
+        addCardsToUniqueCards(potentialThreeCombinations, uniqueCards);
+    
+        if (avoidTwos) {
+            uniqueCards.put(new Card(Card.Suit.DIAMONDS, Card.Rank.TWO), "");
+            uniqueCards.put(new Card(Card.Suit.CLUBS, Card.Rank.TWO), "");
+            uniqueCards.put(new Card(Card.Suit.HEARTS, Card.Rank.TWO), "");
+            uniqueCards.put(new Card(Card.Suit.SPADES, Card.Rank.TWO), "");
+        }
+    
+        return uniqueCards;
+    }
+    
+    /**
+     * Adds cards from potential combinations to a map of unique cards.
+     * 
+     * It iterates over each potential combination, and for each combination, it iterates over each card within that combination.
+     * If the card is not already in the map of unique cards, it adds the card to the map.
+     * 
+     * @param potentialCombinations A list of potential combinations of cards.
+     * @param uniqueCards A map of unique cards.
+     */
+    private static void addCardsToUniqueCards(List<PlayedCards> potentialCombinations, HashMap<Card, String> uniqueCards) {
+        for (PlayedCards p : potentialCombinations) {
+            List<Card> cardsWithin = p.getCards();
+            for (Card c : cardsWithin) {
+                if (uniqueCards.containsKey(c)) {
+                    uniqueCards.put(c, "");
+                }
+            }
+        }
+    }
+    
+    /**
+     * Determines if a given combination of cards is worth playing based on a map of unique cards.
+     * 
+     * It iterates over each card within the combination. If any card is in the map of unique cards, it returns false, indicating that the combination is not worth playing.
+     * If none of the cards in the combination are in the map of unique cards, it returns true, indicating that the combination is worth playing.
+     * 
+     * @param p The combination of cards to check.
+     * @param uniqueCards A map of unique cards.
+     * @return A boolean indicating whether the combination is worth playing.
+     */
+    private static boolean isWorthPlaying(PlayedCards p, HashMap<Card, String> uniqueCards) {
+        List<Card> cardsWithin = p.getCards();
+        for (Card c : cardsWithin) {
+            if (uniqueCards.containsKey(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
