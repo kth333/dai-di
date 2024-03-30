@@ -62,7 +62,7 @@ public class Player {
                         if (result != null) {
                             return result;
                         }
-                        break;//break and prompt again if
+                        break;//break and prompt again if back
                     case PASS_COMMAND:
                         PlayResult passResult = handlePass(previousCards, consecutivePasses);
                         if (passResult != null)
