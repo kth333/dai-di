@@ -126,7 +126,7 @@ public class Player {
             if (selectionResult != null) {
                 return selectionResult;
             } else {
-                System.out.println("Invalid selection, please try again.");
+                System.out.println("Please try again.");
             }
         }
     }
