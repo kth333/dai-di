@@ -8,7 +8,7 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 
 ## Features
 
-- **GUI Interface**: Play Dai Di through an intuitive graphical user interface.
+- **Console Interface**: Play Dai Di through an intuitive graphical user interface.
 - **Single Player**: Play against bots with adjustable difficulty levels.
 - **Local Multiplayer**: Play with up to 4 players on the same device. Bots will join the game if there are less than 4 players.
 - **Difficulty Selection**: Choose between easy or hard mode when playing with bots. 

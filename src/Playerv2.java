@@ -59,6 +59,7 @@ public class Player {
                 " - Type 'pass' to pass\n" +
                 " - Type 'suit' to sort hand by suit\n" +
                 " - Type 'rank' to sort hand by rank\n" +
+                " - Type 'i' to display instructions\n" +
                 " - Type 'quit' to quit the game\n" +
                 "Your choice: ");
     }

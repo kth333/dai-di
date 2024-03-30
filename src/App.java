@@ -7,6 +7,8 @@ class App {
     private final Game game;
     private final MusicPlayer musicPlayer;
 
+    private static final String MUSIC_PATH="Music/music.wav";
+
     public App(Game game, MusicPlayer musicPlayer) {
         this.game = game;
         this.musicPlayer = musicPlayer;
@@ -15,7 +17,7 @@ class App {
     public void run() {
         System.out.println("Welcome to Dai Di!");
 
-        musicPlayer.playMusic("Music/music.wav");
+        musicPlayer.playMusic(MUSIC_PATH);
 
         String playerName;
         do {

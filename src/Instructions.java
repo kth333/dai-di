@@ -12,12 +12,12 @@ public class Instructions {
      * If the file is not found, a message indicating that the rules were not found is printed.
      */
 
+    private static final String RULE_PATH = "Rules/Rules.txt";
+
     public static void displayInstructions(){
-        String RuleName = "src/Rules.txt";
-        //text file which contains all the instructions
 
         String Current_Line;
-        File file = new File(RuleName);
+        File file = new File(RULE_PATH);
         try(Scanner document = new Scanner(file)){
             while (document.hasNextLine()){
                 //print each line in the text file until theres no more lines
