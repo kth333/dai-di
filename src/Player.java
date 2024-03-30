@@ -40,14 +40,14 @@ public class Player {
      * isQuit=true
      * accepts RANK_COMMAND and SUIT_COMMAND to sort player hand by rank or suit
      * accepts INSTRUCTIONS_COMMAND to display the instructions
-     * accepts cards to play cards according to the hand list index from left to
-     * right
+     * accepts MUSIC_COMMAND to stop or start the music
      * 
      * @param previousCards     The last played cards, is null at start or after 3
      *                          consecuetivePasses
      * @param consecutivePasses The number of times the previous players have passed
      * @param scanner           the scanner object for input
-     * @return the PlayResult created that would store if player
+     * @return the PlayResult created that would store if player passes the command
+     *         successfully
      */
     public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
@@ -57,12 +57,15 @@ public class Player {
                 scanner.nextLine();
                 switch (input) {
                     case PLAY_COMMAND:
-                        System.out.println("Your Hand: " + getHand());
+                        if (previousCards != null) {
+                            System.out.println("\nLast Played: " + previousCards.toString());
+                        }
+                        System.out.println("\nYour Hand: " + getHand());
                         PlayResult result = playHand(previousCards, consecutivePasses, scanner);
                         if (result != null) {
                             return result;
                         }
-                        break;//break and prompt again if back
+                        break;// break and prompt again if
                     case PASS_COMMAND:
                         PlayResult passResult = handlePass(previousCards, consecutivePasses);
                         if (passResult != null)
@@ -93,12 +96,24 @@ public class Player {
         }
     }
 
-    
+    /**
+     * Prompts player for their selected cards
+     * accepts the cards according to the hand list index from left to right
+     * 
+     * @param previousCards     The last played cards, is null at start or after 3
+     *                          consecuetivePasses
+     * @param consecutivePasses The number of times the previous players have passed
+     * @param scanner           the scanner object for input
+     * @return the PlayResult that would be created if the selection is validated or
+     *         null if BACK_COMMAND is
+     *         entered
+     */
     private PlayResult playHand(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
-            System.out.println("Select cards to play or enter '" + BACK_COMMAND
+            System.out.println("\nSelect cards to play or enter '" + BACK_COMMAND
                     + "' to return to main menu (enter indices separated by spaces):");
             String input = scanner.nextLine().toLowerCase();
+
             if (input.equals(BACK_COMMAND)) {
                 return null;
             }
@@ -112,7 +127,7 @@ public class Player {
     }
 
     /**
-     * Displays the commands the player can enter
+     * Displays the commands the player can enter at main menu
      *
      */
     private void displayOptions() {
