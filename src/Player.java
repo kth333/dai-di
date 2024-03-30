@@ -9,11 +9,11 @@ import java.util.Scanner;
 public class Player {
     private static final int PLAY_COMMAND = 0;// Sets the play command
     private static final int PASS_COMMAND = 1;// Sets the pass command
-    private static final int QUIT_COMMAND = 6;// Sets the quit game command
-    private static final int RANK_COMMAND = 3;// Sets the sort hand by rank command
     private static final int SUIT_COMMAND = 2;// Sets the sort hand by suit command
+    private static final int RANK_COMMAND = 3;// Sets the sort hand by rank command
     private static final int INSTRUCTIONS_COMMAND = 4;// Sets the command to display instructions
     private static final int MUSIC_COMMAND = 5; // Sets the command to play or mute music
+    private static final int QUIT_COMMAND = 6;// Sets the quit game command
     private static final String BACK_COMMAND = "back";
     private static final Card START_CARD = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);// Sets the starting card
 
@@ -46,8 +46,7 @@ public class Player {
      *                          consecuetivePasses
      * @param consecutivePasses The number of times the previous players have passed
      * @param scanner           the scanner object for input
-     * @return the PlayResult created that would store if player passes the command
-     *         successfully
+     * @return the PlayResult created that would store if player passes the command successfully
      */
     public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
@@ -57,19 +56,22 @@ public class Player {
                 scanner.nextLine();
                 switch (input) {
                     case PLAY_COMMAND:
-                        if (previousCards != null) {
-                            System.out.println("\nLast Played: " + previousCards.toString());
+                        if (previousCards == null){
+                            System.out.println("Last Played: 3 skips, free to play anything!");
+                        } else {
+                            System.out.println("Last Played: " + previousCards.toString());
                         }
-                        System.out.println("\nYour Hand: " + getHand());
+                        System.out.println("Your Hand: " + getHand());
                         PlayResult result = playHand(previousCards, consecutivePasses, scanner);
                         if (result != null) {
                             return result;
                         }
-                        break;// break and prompt again if
+                        break;//break and prompt again if
                     case PASS_COMMAND:
                         PlayResult passResult = handlePass(previousCards, consecutivePasses);
-                        if (passResult != null)
+                        if (passResult != null) {
                             return passResult;
+                        }
                         break; // If passing is not allowed, it will break and prompt again.
                     case RANK_COMMAND:
                         sortHandByRank();
@@ -104,13 +106,12 @@ public class Player {
      *                          consecuetivePasses
      * @param consecutivePasses The number of times the previous players have passed
      * @param scanner           the scanner object for input
-     * @return the PlayResult that would be created if the selection is validated or
-     *         null if BACK_COMMAND is
-     *         entered
+     * @return the PlayResult that would be created if the selection is validated or null if BACK_COMMAND is
+     * entered
      */
     private PlayResult playHand(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
-            System.out.println("\nSelect cards to play or enter '" + BACK_COMMAND
+            System.out.println("Select cards to play or enter '" + BACK_COMMAND
                     + "' to return to main menu (enter indices separated by spaces):");
             String input = scanner.nextLine().toLowerCase();
 
