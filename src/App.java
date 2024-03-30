@@ -9,7 +9,7 @@ import java.util.InputMismatchException;
 class App {
     private static final Scanner scanner = new Scanner(System.in);
     private final Game game;
-    public static final int MAX_NAME_LENGTH = 16;
+    public static final int MAX_NAME_LENGTH = 16; // Not private so that it can be used in Game class
 
     /**
      * Constructs an instance of the App class with a specified Game object.
