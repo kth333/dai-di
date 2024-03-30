@@ -282,15 +282,61 @@ public class Game {
     }
 
     /**
-     * After all 5 rounds are completed, displays the final winner of the game
-     * (player with highest points)
+     * After all 5 rounds are completed, displays the final winner(s) of the game
+     * (player(s) with the highest points)
      * 
      * @param players List of Player objects playing the game.
      */
     private void displayFinalWinner(List<Player> players) {
         if (!quitGame) {
+            // Sort players by points
             Collections.sort(players, Player.sortByPoints());
-            System.out.println("\n" + players.get(0).getName() + " won the game! Good job!");
+
+            // Find tied winners
+            List<Player> winners = findTiedWinners(players);
+
+            // Display the winners
+            displayWinners(winners);
+        }
+    }
+
+    /**
+     * Finds tied winners among the players.
+     * 
+     * @param players List of Player objects playing the game.
+     * @return List of tied winners.
+     */
+    private List<Player> findTiedWinners(List<Player> players) {
+        double highestPoints = players.get(0).getPoints();
+        List<Player> tiedWinners = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getPoints() == highestPoints) {
+                tiedWinners.add(player);
+            } else {
+                // Since the list is sorted, break when points start decreasing
+                break;
+            }
+        }
+
+        return tiedWinners;
+    }
+
+    /**
+     * Displays the final winners of the game.
+     * 
+     * @param winners List of tied winners.
+     */
+    private void displayWinners(List<Player> winners) {
+        if (winners.size() > 1) {
+            System.out.println("\nTied winners: ");
+            for (Player winner : winners) {
+                System.out.println(winner.getName());
+            }
+            System.out.println("\nCongratulations to the winners!");
+        } else if (!winners.isEmpty()) {
+            // Display the single winner
+            System.out.println("\n" + winners.get(0).getName() + " won the game! Good job!");
         }
     }
 

@@ -57,16 +57,20 @@ public class Player {
                 switch (input) {
                     case PLAY_COMMAND:
                         if (previousCards == null){
-                            System.out.println("Last Played: 3 skips, free to play anything!");
+                            if (hasCard(START_CARD)) {
+                                System.out.println("\nLast Played: None. It's the first turn!"); // When it's the first turn
+                            } else {
+                                System.out.println("\nLast Played: 3 skips, free to play anything!"); // When 3 consecutive passes 
+                            }
                         } else {
-                            System.out.println("Last Played: " + previousCards.toString());
+                            System.out.println("\nLast Played: " + previousCards.toString()); // Show player previously played cards
                         }
-                        System.out.println("Your Hand: " + getHand());
+                        System.out.println("\nYour Hand: " + getHand()); // Show player their hand again
                         PlayResult result = playHand(previousCards, consecutivePasses, scanner);
                         if (result != null) {
                             return result;
                         }
-                        break;//break and prompt again if
+                        break; //break and prompt again if player chose 'back'
                     case PASS_COMMAND:
                         PlayResult passResult = handlePass(previousCards, consecutivePasses);
                         if (passResult != null) {
@@ -111,11 +115,11 @@ public class Player {
      */
     private PlayResult playHand(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
-            System.out.println("Select cards to play or enter '" + BACK_COMMAND
+            System.out.println("\nSelect cards to play or enter '" + BACK_COMMAND
                     + "' to return to main menu (enter indices separated by spaces):");
             String input = scanner.nextLine().toLowerCase();
 
-            if (input.equals(BACK_COMMAND)) {
+            if (input.equalsIgnoreCase(BACK_COMMAND)) {
                 return null;
             }
             PlayResult selectionResult = handleCardSelection(input, previousCards, consecutivePasses);
