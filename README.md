@@ -4,11 +4,10 @@
 ![JavaFX](https://img.shields.io/badge/javafx-%23FF0000.svg?style=for-the-badge&logo=javafx&logoColor=white)
 
 A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is a fun and popular card game enjoyed in groups of four.
-![photo1711523922](https://github.com/kth333/dai-di/assets/143651427/16b52206-5d32-4a57-a56f-bf10392658cc)
 
 ## Features
 
-- **Console Interface**: Play Dai Di through an intuitive graphical user interface.
+- **Console Interface**: Play Dai Di through an intuitive console interface.
 - **Single Player**: Play against bots with adjustable difficulty levels.
 - **Local Multiplayer**: Play with up to 4 players on the same device. Bots will join the game if there are less than 4 players.
 - **Difficulty Selection**: Choose between easy or hard mode when playing with bots. 
@@ -29,10 +28,6 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 
 - **Starting a Game**: Select "Start Game" to begin playing.
 
-## License
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
-
 ## Credits
-- **Images of all the cards**: https://www.waste.org/~oxymoron/files/cards/
 
 - The background music used in this project is created by Migfus20 and obtained from [freesound.org](https://freesound.org/s/561394/) Attribution: "Fantasy Background Music (Loop)" by Migfus20 is licensed under [Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
