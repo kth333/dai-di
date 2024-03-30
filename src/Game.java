@@ -54,14 +54,8 @@ public class Game {
         
         PlayResult playResult = new PlayResult(null, 0);
         
-        if (currentPlayer instanceof EasyBot) {
-            playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses);
-        } else if (currentPlayer instanceof HardBot) {
-            playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses);
-        } else {
-            System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
-            playResult = currentPlayer.play(previousCards, consecutivePasses, scanner);
-        }
+        PlayResult playResult = determinePlayerAction(currentPlayer, previousCards, consecutivePasses, scanner);
+
         
         if (findRoundWinner(currentPlayer) != null) {
             // Display winner
@@ -131,6 +125,21 @@ public class Game {
             player.addPoints(100);
         }
     }
+
+    private PlayResult determinePlayerAction(Player currentPlayer, PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
+    PlayResult playResult;
+
+    if (currentPlayer instanceof EasyBot) {
+        playResult = ((EasyBot) currentPlayer).play(previousCards, consecutivePasses);
+    } else if (currentPlayer instanceof HardBot) {
+        playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses);
+    } else {
+        System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
+        playResult = currentPlayer.play(previousCards, consecutivePasses, scanner);
+    }
+
+    return playResult;
+}
  
     private void clearHands(List<Player> players) {
         for (Player player : players) {
