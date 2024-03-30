@@ -1,111 +1,154 @@
 package src;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 
 public class Player {
+    private static final String PASS_COMMAND = "pass";
+    private static final String QUIT_COMMAND = "quit";
+    private static final String RANK_COMMAND = "rank";
+    private static final String SUIT_COMMAND = "suit";
+    private static final String INSTRUCTIONS_COMMAND = "i";
+    private static final Card START_CARD = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
+
     private String name;
     private Hand hand;
     private double points;
 
-    // Constructor for player with a custom name
     public Player(String name) {
         this.name = name;
         this.hand = new Hand();
     }
 
-    // Method for player to play cards
     public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
-        List<Card> hand = getHand().getCardsInHand();
-
         while (true) {
-            System.out.print("\nOptions:\n" +
-                    " - Select cards to play (enter indices separated by spaces)\n" +
-                    " - Type 'pass' to pass\n" +
-                    " - Type 'suit' to sort hand by suit\n" +
-                    " - Type 'rank' to sort hand by rank\n" +
-                    " - Type 'i' to display instructions\n" +
-                    " - Type 'quit' to quit the game\n" +
-                    "Your choice: ");
-            String input = scanner.nextLine();
-
-            Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
-            if (input.toLowerCase().equals("pass")) {
-                if (hasCard(startCard)) {
-                    System.out.println("Need to play 3 of Diamonds cannot pass first turn!");
-                    continue;
-                }
-                System.out.println("\n" + getName() + " passed their turn.");
-                consecutivePasses++;
-                return new PlayResult(previousCards, consecutivePasses); // Exit the method if the player chooses to pass
-            } else if (input.toLowerCase().equals("rank")) { // sort the hand by rank
-                getHand().sortByRank();
-                System.out.println("\nHand sorted by rank: " + getHand());
-                continue;
-            } else if (input.toLowerCase().equals("suit")) {// sort the hand by suit
-                getHand().sortBySuit();
-                System.out.println("\nHand sorted by suit: " + getHand());
-                continue;
-            } else if (input.toLowerCase().equals("quit")) {
-                // System.out.println("Setting quit flag..."); // Debugging statement
-                PlayResult result = new PlayResult(previousCards, consecutivePasses);
-                result.setQuit(true); // Set the quit flag when player chooses to quit
-                return result;
-            }else if (input.toLowerCase().equals("i")){
+            displayOptions();
+            String input = scanner.nextLine().toLowerCase();
+            switch (input) {
+                case PASS_COMMAND:
+                    PlayResult passResult = handlePass(previousCards, consecutivePasses);
+                    if (passResult != null) return passResult;
+                    break; // If passing is not allowed, it will break and prompt again.
+                case RANK_COMMAND:
+                    sortHandByRank();
+                    break;
+                case SUIT_COMMAND:
+                    sortHandBySuit();
+                    break;
+                case QUIT_COMMAND:
+                    return handleQuit(previousCards, consecutivePasses);
+                case INSTRUCTIONS_COMMAND:
                     Instructions.displayInstructions();
-                    continue;
+                    break;
+                default:
+                    PlayResult selectionResult = handleCardSelection(input, previousCards, consecutivePasses);
+                    if (selectionResult != null) return selectionResult;
+                    // If handleCardSelection returns null, indicating invalid selection, print an error message
+                    // and continue in the loop to prompt again.
+                    System.out.println("Invalid selection, please try again.");
+                    break;
             }
+        }
+    }
 
-            boolean validSelection = true;
-            List<Card> selectedCards = new ArrayList<>();
-            String[] indices = input.split("\\s+");
-            for (String indexStr : indices) {
-                try {
-                    int index = Integer.parseInt(indexStr);
-                    if (index < 0 || index >= hand.size()) {
-                        System.out.println("\nInvalid index! Please select indices within the range of your hand.");
-                        validSelection = false;
-                        break; // Continue to prompt the player for valid input
-                    }
-                    selectedCards.add(hand.get(index));
-                } catch (NumberFormatException e) {
-                    System.out.println("\nInvalid input! Please enter indices separated by spaces.");
-                    validSelection = false;
-                    break; // Continue to prompt the player for valid input
-                }
-            }
+    private void displayOptions() {
+        System.out.print("\nOptions:\n" +
+                " - Select cards to play (enter indices separated by spaces)\n" +
+                " - Type 'pass' to pass\n" +
+                " - Type 'suit' to sort hand by suit\n" +
+                " - Type 'rank' to sort hand by rank\n" +
+                " - Type 'i' to display instructions\n" +
+                " - Type 'quit' to quit the game\n" +
+                "Your choice: ");
+    }
 
-            if (!validSelection) {
-                continue; // Continue to prompt the player for valid input
-            }
+    private PlayResult handlePass(PlayedCards previousCards, int consecutivePasses) {
+        if (hasCard(START_CARD)) {
+            System.out.println("Need to play 3 of Diamonds. Cannot pass first turn!");
+            return null;
+        }
+        System.out.println("\n" + getName() + " passed their turn.");
+        return new PlayResult(previousCards, ++consecutivePasses);
+    }
 
-            // Create an instance of PlayedCards to store the selected cards
-            PlayedCards playedCards = new PlayedCards(selectedCards);
+    private void sortHandByRank() {
+        getHand().sortByRank();
+        System.out.println("\nHand sorted by rank: " + getHand());
+    }
 
-            // Check if the selected cards win against the previous cards
-            if (hasCard(startCard) && !playedCards.getCards().contains(startCard)) {
-                System.out.println("\nYou must play 3 of Diamonds on the first turn!");
-                continue;
-            }
-            if (!playedCards.isValidSize()) {
-                System.out.println("\nInvalid selection! Please select one, two, three or five cards.");
-                continue;
-            } else if (playedCards.getType().equals("Invalid")) {
-                System.out.println("\nInvalid selection! Please select a valid combination.");
-                continue;
-            } else if (!playedCards.winsAgainst(previousCards)) {
-                System.out.println("\nInvalid selection! The selected cards do not beat previous cards.");
-                continue; // Continue to prompt the player for valid input
-            }
+    private void sortHandBySuit() {
+        getHand().sortBySuit();
+        System.out.println("\nHand sorted by suit: " + getHand());
+    }
 
-            // Display the played cards
-            System.out.println("\n" + getName() + " played: " + playedCards.getCards());
-            // Remove the played cards from the player's hand
-            hand.removeAll(playedCards.getCards());
-            previousCards = playedCards;
-            consecutivePasses = 0;
-            return new PlayResult(previousCards, consecutivePasses);
+    private PlayResult handleQuit(PlayedCards previousCards, int consecutivePasses) {
+        PlayResult result = new PlayResult(previousCards, consecutivePasses);
+        result.setQuit(true);
+        return result;
+    }
+
+    private PlayResult handleCardSelection(String input, PlayedCards previousCards, int consecutivePasses) {
+        List<Card> selectedCards = parseSelectedCards(input);
+        if (selectedCards == null) {
+            return null; // Invalid selection, continue prompting
         }
 
+        PlayedCards playedCards = new PlayedCards(selectedCards);
+        if (validatePlayedCards(playedCards, previousCards)) {
+            System.out.println("\n" + getName() + " played: " + playedCards);
+            getHand().removeCards(playedCards);
+            return new PlayResult(playedCards, 0);
+        }
+        return null;
     }
+
+    private List<Card> parseSelectedCards(String input){
+        List<Card> selectedCards = new ArrayList<>();
+        String[] indices = input.split("\\s+");
+        for(String idxStr: indices){
+            try{
+                int idx = Integer.parseInt(idxStr.trim());
+                if(idx < 0 || idx >= getHand().getCardsInHand().size()){
+                    System.out.println("\nInvalid index! Please select indices within range of your hand.");
+                    return null;
+                }
+                selectedCards.add(getHand().getCardsInHand().get(idx));
+            }catch(NumberFormatException e){
+                System.out.println("\nInvalid input! Please enter indices seperately.");
+                return null;
+            }
+        }
+        return selectedCards;
+    }
+
+    private boolean validatePlayedCards(PlayedCards playedCards, PlayedCards previousCards){
+        if(previousCards == null || previousCards.getCards().isEmpty()){
+            if(!playedCards.getCards().contains(START_CARD)){
+                System.out.println("You must play 3 of diamonds on the first turn!");
+                return false;
+            }
+        }
+        if(!playedCards.isValidSize()){
+            System.out.println("\nInvalid Selection! Please select one, two, three or five cards.");
+            return false;
+        }
+        if (playedCards.getType().equals("Invalid")) {
+            System.out.println("\nInvalid selection! Please select a valid combination.");
+            return false;
+        }
+    
+        // Check if the played cards beat the previous cards (if any).
+        if (previousCards != null && !playedCards.getCards().isEmpty() && !playedCards.winsAgainst(previousCards)) {
+            System.out.println("\nInvalid selection! The selected cards do not beat the previously played cards.");
+            return false;
+        }
+    
+        return true;
+    }
+
+
 
     public Hand getHand() {
         return hand;
@@ -144,9 +187,7 @@ public class Player {
         return deduct;
     }
 
-    public void removeAllCards() {
-        hand.clear(); // Pass player to clear()
-    }
+    
 
     public int getNumOfCards() {
         return hand.getSize(); // Pass player to getSize()
