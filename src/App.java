@@ -8,8 +8,8 @@ import java.util.InputMismatchException;
  */
 class App {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final int MAX_NAME_LENGTH = 16;
     private final Game game;
+    public static final int MAX_NAME_LENGTH = 16;
 
     /**
      * Constructs an instance of the App class with a specified Game object.
