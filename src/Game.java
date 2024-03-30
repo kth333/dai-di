@@ -188,7 +188,7 @@ public class Game {
             name = scanner.nextLine();
 
             // Check if the entered name exceeds the maximum length
-            if (name.length() > MAX_NAME_LENGTH) {
+            if (name.length() > App.MAX_NAME_LENGTH) {
                 System.out.println("Enter a shorter name!");
                 continue; // Prompt again
             }
