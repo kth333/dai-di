@@ -114,9 +114,9 @@ public class Player {
      */
     private PlayResult playHand(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
-            System.out.println("\nSelect cards to play (enter indices separated by spaces) or enter '" + BACK_COMMAND
-                    + "' to return to Options:");
-            String input = scanner.nextLine().toLowerCase();
+            String prompt="\nSelect cards to play (enter indices separated by spaces) or enter '" + BACK_COMMAND
+                    + "' to return to Options:";
+            String input = GameView.getString(prompt, scanner);
 
             if (input.equalsIgnoreCase(BACK_COMMAND)) {
                 return null;

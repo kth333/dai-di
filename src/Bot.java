@@ -10,8 +10,6 @@ public abstract class Bot extends Player {
     private static final Random random = new Random();
     private static final int PAUSE_IN_MS = 2000;// Constant to pause bot for 2 seconds
 
-    public static List<String> usedNames = new ArrayList<>();
-
     /** A list to keep track of used bot names. */
     public static List<String> usedNames = new ArrayList<>();
 
