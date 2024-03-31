@@ -468,7 +468,7 @@ public class Game {
             System.out.println("\n" + currentPlayer.getName() + "'s Hand: ");
             // for (Card card : currentPlayer.getHand().getCards()) {
             //     Art.printAsciiArt(card);
-            // }
+            // }     
             System.out.println(currentPlayer.getHand());
             playResult = currentPlayer.play(previousCards, consecutivePasses, scanner);
         }

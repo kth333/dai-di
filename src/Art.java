@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Art {
-    public static void printArt(){
+    public static void printWelcomeArt(){
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -84,6 +84,7 @@ public class Art {
             System.out.println(formattedLine);
         }
     }
+
 
     /**
      * Replaces the rank placeholder ({0}) with the numeric representation of the rank.

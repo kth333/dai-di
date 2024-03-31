@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         //print ASCII
-        Art.printArt();
+        Art.printWelcomeArt();
         Game game = new Game();
         App app = new App(game);
         app.run();
