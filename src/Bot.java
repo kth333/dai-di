@@ -12,10 +12,27 @@ public abstract class Bot extends Player {
 
     public static List<String> usedNames = new ArrayList<>();
 
+    /** A list to keep track of used bot names. */
+    public static List<String> usedNames = new ArrayList<>();
+
+    /**
+     * Constructs a Bot object with a randomly generated name that is not already used by other players.
+     *
+     * @param playerNames The list of player names in the game.
+     * @param usedNames   The list of names already used by players.
+     */
+
     public Bot(List<String> playerNames, List<String> usedNames) {
         super(generateBotName(playerNames, usedNames));
         usedNames.add(getName());
     }
+       /**
+     * Generates a unique bot name that is not already used by other players.
+     *
+     * @param playerNames The list of player names in the game.
+     * @param usedNames   The list of names already used by players.
+     * @return A unique bot name.
+     */
 
     private static String generateBotName(List<String> playerNames, List<String> usedNames) {
         for (String usedname : playerNames) {
