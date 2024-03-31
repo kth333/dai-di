@@ -119,7 +119,7 @@ public class Game {
                     "\nSelect difficulty" +
                             "\n1. Easy" +
                             "\n2. Hard\n");
-            int choice = GameView.getInt("Enter Difficulty:", scanner);
+            int choice = GameView.getInt("Enter Difficulty: ", scanner);
             switch (choice) {
                 case 1:
                     return true;
@@ -344,7 +344,7 @@ public class Game {
         if (round > 1) {
             // System.out.println("Continue next round? ('y' to continue / 'n' to quit
             // game)");
-            return GameView.yesOrNo("Continue next round? ('y' to continue / 'n' to quit game)", scanner);
+            return GameView.yesOrNo("Continue next round? ('y' to continue / 'n' to quit game): ", scanner);
         }
         return true;
     }
