@@ -110,6 +110,12 @@ public class Hand {
         });
     }
 
+    /**
+     * Returns a string representation of the player's hand.
+     *
+     * @return A string representing the player's hand in the format: [index. card1, index. card2, ..., index. cardN]
+     *         where index is the position of the card in the hand.
+     */
     @Override
     public String toString() {
         String result = "[";
