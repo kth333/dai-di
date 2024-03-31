@@ -22,8 +22,8 @@ public class Card implements Comparable<Card> {
     }
 
 
-    private final Rank rank;
-    private final Suit suit;
+    private final Rank RANK;
+    private final Suit SUIT;
     public static final Card START_CARD = new Card(Rank.THREE, Suit.DIAMONDS); // Start card is always three of diamonds
 
     /**
@@ -33,8 +33,8 @@ public class Card implements Comparable<Card> {
      * @param rank the rank of the card
      */
     public Card(Rank rank, Suit suit) {
-        this.rank = rank;
-        this.suit = suit;
+        this.RANK = rank;
+        this.SUIT = suit;
     }
 
     /**
@@ -43,7 +43,7 @@ public class Card implements Comparable<Card> {
      * @return The suit of the card.
      */
     public Suit getSuit() {
-        return suit;
+        return SUIT;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Card implements Comparable<Card> {
      * @return The rank of the card.
      */
     public Rank getRank() {
-        return rank;
+        return RANK;
     }
 
     /**
@@ -61,7 +61,7 @@ public class Card implements Comparable<Card> {
      * @return A string representing the card.
      */
     public String toString() {
-        return rank + " of " + suit;
+        return RANK + " of " + SUIT;
     }
 
     /**
@@ -76,10 +76,10 @@ public class Card implements Comparable<Card> {
             return true; // check if object is same as this object
         }
         if (obj == null || getClass() != obj.getClass()) {
-            return false;// check if object comparison is null or not instance of card class
+            return false; // check if object comparison is null or not instance of card class
         }
         Card card = (Card) obj;// cast obj to card
-        return suit == card.suit && rank == card.rank;
+        return SUIT == card.SUIT && RANK == card.RANK;
     }
 
     /*
@@ -89,7 +89,7 @@ public class Card implements Comparable<Card> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(suit, rank);
+        return Objects.hash(SUIT, RANK);
     }
 
     /**
@@ -102,10 +102,10 @@ public class Card implements Comparable<Card> {
      */
 
     public int compareTo(Card other) {
-        int rankComparison = this.rank.compareTo(other.rank);
+        int rankComparison = this.RANK.compareTo(other.RANK);
         if (rankComparison != 0) {
             return rankComparison;
         }
-        return this.suit.compareTo(other.suit);
+        return this.SUIT.compareTo(other.SUIT);
     }
 }

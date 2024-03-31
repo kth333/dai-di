@@ -62,7 +62,7 @@ public class Art {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     }
 
-        /**
+    /**
      * Prints ASCII art of the card with placeholders replaced by rank and suit.
      */
     public static void printAsciiArt(Card card) {
