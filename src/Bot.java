@@ -6,8 +6,8 @@ import java.util.Random;
 
 public abstract class Bot extends Player {
     // creates a list of botnames
-    private static final String[] botNames = { "Yeow Leong", "Zhi Yuan", "Lay Foo", "Fang Yuan", "Tony", "Lily Kong" };
-    private static final Random random = new Random();
+    private static final String[] BOTNAMES = { "Yeow Leong", "Zhi Yuan", "Lay Foo", "Fang Yuan", "Tony", "Lily Kong" };
+    private static final Random RANDOM = new Random();
     private static final int PAUSE_IN_MS = 2000;// Constant to pause bot for 2 seconds
 
     /** A list to keep track of used bot names. */
@@ -19,26 +19,25 @@ public abstract class Bot extends Player {
      * @param playerNames The list of player names in the game.
      * @param usedNames   The list of names already used by players.
      */
-
     public Bot(List<String> playerNames, List<String> usedNames) {
         super(generateBotName(playerNames, usedNames));
         usedNames.add(getName());
     }
-       /**
+
+    /**
      * Generates a unique bot name that is not already used by other players.
      *
      * @param playerNames The list of player names in the game.
      * @param usedNames   The list of names already used by players.
      * @return A unique bot name.
      */
-
     private static String generateBotName(List<String> playerNames, List<String> usedNames) {
         for (String usedname : playerNames) {
             usedNames.add(usedname);
         }
         String name;
         do {
-            name = botNames[random.nextInt(botNames.length)];
+            name = BOTNAMES[RANDOM.nextInt(BOTNAMES.length)];
         } while (usedNames.contains(name));
         return name;
     }
@@ -161,9 +160,10 @@ public abstract class Bot extends Player {
      * Pauses the bot for 2 seconds
      * 
      */
-    public static void pause() {
+    public void pause() {
         try {
             // pause execution for 2 seconds
+            System.out.println(getName()+" is thinking...");
             Thread.sleep(PAUSE_IN_MS);
         } catch (InterruptedException e) {
             // handle the exception
