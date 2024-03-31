@@ -25,9 +25,9 @@ public class Deck {
     public ArrayList<Card> buildDeck() {
         ArrayList<Card> deck = new ArrayList<>();
         // Create a deck of 52 cards, one for each combination of suit and rank
-        for (Card.Suit suit : Card.Suit.values()) {
-            for (Card.Rank rank : Card.Rank.values()) {
-                deck.add(new Card(suit, rank));
+        for (Card.Rank rank : Card.Rank.values()) {
+                for (Card.Suit suit : Card.Suit.values()) {
+                deck.add(new Card(rank, suit));
             }
         }
         return deck;

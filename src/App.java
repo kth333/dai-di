@@ -22,7 +22,7 @@ class App {
      * Runs the Dai Di game application.
      */
     public void run() {
-        System.out.println("Welcome to Dai Di!");
+        System.out.println("\nWelcome to Dai Di!");
 
         // Start playing music
         MusicPlayer.playMusic();

@@ -2,44 +2,50 @@ package src;
 
 import java.util.Objects;
 
- /**
+/**
  * The Card class represents a playing card with a suit and a rank.
  */
 public class Card implements Comparable<Card> {
     
+    /**
+     * The Rank enum represents the ranks of cards from three to two and ace.
+     */
+    public enum Rank {
+        THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE, TWO
+    }
+
     /**
      * The Suit enum represents the four suits of a standard deck of cards.
      */
     public enum Suit {
         DIAMONDS, CLUBS, HEARTS, SPADES
     }
-    /**
-     * The Rank enum represents the ranks of cards from three to two and ace.
-     */
 
-    public enum Rank {
-        THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE, TWO
-    }
-    private final Suit suit;
+
     private final Rank rank;
-    /**
-     * Gets the suit of the card.
-     * 
-     * @return The suit of the card.
-     */
-    public Card(Suit suit, Rank rank) {
-        this.suit = suit;
-        this.rank = rank;
-    }
-    /**
-     * Gets the suit of the card.
-     * 
-     * @return The suit of the card.
-     */
+    private final Suit suit;
+    public static final Card START_CARD = new Card(Rank.THREE, Suit.DIAMONDS); // Start card is always three of diamonds
 
+    /**
+     * Constructs a new Card object with the specified suit and rank.
+     *
+     * @param suit the suit of the card
+     * @param rank the rank of the card
+     */
+    public Card(Rank rank, Suit suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
+    /**
+     * Gets the suit of the card.
+     * 
+     * @return The suit of the card.
+     */
     public Suit getSuit() {
         return suit;
     }
+
     /**
      * Gets the rank of the card.
      * 
@@ -48,6 +54,7 @@ public class Card implements Comparable<Card> {
     public Rank getRank() {
         return rank;
     }
+
     /**
      * Returns a string representation of the card, including its rank and suit.
      * 
@@ -56,6 +63,7 @@ public class Card implements Comparable<Card> {
     public String toString() {
         return rank + " of " + suit;
     }
+
     /**
      * Indicates whether some other object is "equal to" this one.
      * 
@@ -73,21 +81,23 @@ public class Card implements Comparable<Card> {
         Card card = (Card) obj;// cast obj to card
         return suit == card.suit && rank == card.rank;
     }
-    
-     /* Returns a hash code value for the card.
+
+    /*
+     * Returns a hash code value for the card.
      * 
      * @return A hash code value for this card.
      */
-
     @Override
     public int hashCode() {
         return Objects.hash(suit, rank);
     }
+
     /**
      * Compares this card with the specified card for order.
      * 
      * @param other The card to be compared.
-     * @return A negative integer, zero, or a positive integer as this card is less than, equal to, or greater than
+     * @return A negative integer, zero, or a positive integer as this card is less
+     *         than, equal to, or greater than
      *         the specified card.
      */
 

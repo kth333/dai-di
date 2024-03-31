@@ -20,7 +20,7 @@ public class EasyBot extends Bot {
         //Pauses to allow player time to read by slowing down how fast the bots play
         pause();
         // Get the bot player's hand
-        List<Card> botHand = getHand().getCardsInHand();
+        List<Card> botHand = getHand().getCards();
 
         // Check if there are any valid combinations
         List<PlayedCards> validCombinations = getAllValidCombinations(botHand, previousCards);
@@ -31,14 +31,13 @@ public class EasyBot extends Bot {
         }
 
         // Check if bot has the start card (3 of Diamonds)
-        Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
-        boolean hasStartCard = hasCard(startCard);
+        boolean hasStartCard = hasCard(Card.START_CARD);
 
         // Iterate through valid combinations
         for (PlayedCards combination : validCombinations) {
             if (combination.winsAgainst(previousCards)) {
                 // If bot has the start card and the combination doesn't contain it, skip
-                if (hasStartCard && !combination.getCards().contains(startCard)) {
+                if (hasStartCard && !combination.getCards().contains(Card.START_CARD)) {
                     continue;
                 }
 

@@ -41,15 +41,6 @@ public class Hand {
         hand.clear();
     }
 
-   /**
-     * Returns the cards in the hand.
-     *
-     * @return the list of cards in the hand
-     */
-    public List<Card> getCardsInHand() {
-        return hand;
-    }
-
     /**
      * Checks if the hand is empty.
      *

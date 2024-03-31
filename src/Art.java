@@ -1,5 +1,8 @@
 package src;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Art {
     public static void printArt(){
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -57,5 +60,63 @@ public class Art {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    }
+
+        /**
+     * Prints ASCII art of the card with placeholders replaced by rank and suit.
+     */
+    public static void printAsciiArt(Card card) {
+        String[] asciiArt = {
+            "┌─────────┐",
+            "│ {0}      │",
+            "│         │",
+            "│         │",
+            "│    {1}    │",
+            "│         │",
+            "│         │",
+            "│       {0}│",
+            "└─────────┘"
+        };
+    
+        for (String line : asciiArt) {
+            String formattedLine = replaceRankPlaceholder(line, card.getRank());
+            formattedLine = replaceSuitPlaceholder(formattedLine, card.getSuit());
+            System.out.println(formattedLine);
+        }
+    }
+
+    /**
+     * Replaces the rank placeholder ({0}) with the numeric representation of the rank.
+     */
+    private static String replaceRankPlaceholder(String line, Card.Rank rank) {
+        Map<Card.Rank, String> rankReplacements = new HashMap<>();
+        rankReplacements.put(Card.Rank.ACE, "A ");
+        rankReplacements.put(Card.Rank.TWO, "2 ");
+        rankReplacements.put(Card.Rank.THREE, "3 ");
+        rankReplacements.put(Card.Rank.FOUR, "4 ");
+        rankReplacements.put(Card.Rank.FIVE, "5 ");
+        rankReplacements.put(Card.Rank.SIX, "6 ");
+        rankReplacements.put(Card.Rank.SEVEN, "7 ");
+        rankReplacements.put(Card.Rank.EIGHT, "8 ");
+        rankReplacements.put(Card.Rank.NINE, "9 ");
+        rankReplacements.put(Card.Rank.TEN, "10");
+        rankReplacements.put(Card.Rank.JACK, "J ");
+        rankReplacements.put(Card.Rank.QUEEN, "Q ");
+        rankReplacements.put(Card.Rank.KING, "K ");
+
+        return line.replace("{0}", rankReplacements.get(rank));
+    }
+
+    /**
+     * Replaces the suit placeholder ({1}) with the symbol of the suit.
+     */
+    private static String replaceSuitPlaceholder(String line, Card.Suit suit) {
+        Map<Card.Suit, String> suitReplacements = new HashMap<>();
+        suitReplacements.put(Card.Suit.DIAMONDS, "♦");
+        suitReplacements.put(Card.Suit.CLUBS, "♣");
+        suitReplacements.put(Card.Suit.HEARTS, "♥");
+        suitReplacements.put(Card.Suit.SPADES, "♠");
+        
+        return line.replace("{1}", suitReplacements.get(suit));
     }
 }

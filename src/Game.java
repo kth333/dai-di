@@ -372,7 +372,7 @@ public class Game {
             // Get first player
             Player player = playerList.get(i);
             // Check if has startCard
-            if (player.hasCard(new Card(Card.Suit.DIAMONDS, Card.Rank.THREE))) {
+            if (player.hasCard(new Card(Card.Rank.THREE, Card.Suit.DIAMONDS))) {
                 // If have startCard assign as first player
                 // Assumes that all 52 cards are dealt out properly
                 playerOrder[0] = player;
@@ -463,7 +463,11 @@ public class Game {
         } else if (currentPlayer instanceof HardBot) {
             playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses);
         } else {
-            System.out.println("\n" + currentPlayer.getName() + "'s Hand: " + currentPlayer.getHand());
+            System.out.println("\n" + currentPlayer.getName() + "'s Hand: ");
+            // for (Card card : currentPlayer.getHand().getCards()) {
+            //     Art.printAsciiArt(card);
+            // }
+            System.out.println(currentPlayer.getHand());
             playResult = currentPlayer.play(previousCards, consecutivePasses, scanner);
         }
 

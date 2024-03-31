@@ -14,7 +14,6 @@ public class Player {
     private static final int MUSIC_COMMAND = 5; // Sets the command to play or mute music
     private static final int QUIT_COMMAND = 6;// Sets the quit game command
     private static final String BACK_COMMAND = "back";
-    private static final Card START_CARD = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);// Sets the starting card
 
     private String name;
     private Hand hand;
@@ -55,7 +54,7 @@ public class Player {
             switch (input) {
                 case PLAY_COMMAND:
                     if (previousCards == null) {
-                        if (hasCard(START_CARD)) {
+                        if (hasCard(Card.START_CARD)) {
                             System.out.println("\nLast Played: None. It's the first turn!"); // When it's the first
                                                                                              // turn
                         } else {
@@ -160,7 +159,7 @@ public class Player {
      *         consecutivePasses or null
      */
     private PlayResult handlePass(PlayedCards previousCards, int consecutivePasses) {
-        if (hasCard(START_CARD)) {
+        if (hasCard(Card.START_CARD)) {
             System.out.println("Need to play 3 of Diamonds. Cannot pass first turn!");
             return null;
         }
@@ -242,11 +241,11 @@ public class Player {
         for (String idxStr : indices) {
             try {
                 int idx = Integer.parseInt(idxStr.trim());
-                if (idx < 0 || idx >= getHand().getCardsInHand().size()) {
+                if (idx < 0 || idx >= getHand().getCards().size()) {
                     System.out.println("\nInvalid index! Please select indices within range of your hand.");
                     return null;
                 }
-                selectedCards.add(getHand().getCardsInHand().get(idx));
+                selectedCards.add(getHand().getCards().get(idx));
             } catch (NumberFormatException e) {
                 System.out.println("\nInvalid input! Please enter indices seperately.");
                 return null;
@@ -270,7 +269,7 @@ public class Player {
      */
     private boolean validatePlayedCards(PlayedCards playedCards, PlayedCards previousCards) {
         if (previousCards == null || previousCards.getCards().isEmpty()) {
-            if (hasCard(START_CARD) && !playedCards.getCards().contains(START_CARD)) {
+            if (hasCard(Card.START_CARD) && !playedCards.getCards().contains(Card.START_CARD)) {
                 System.out.println("You must play 3 of diamonds on the first turn!");
                 return false;
             }
@@ -398,7 +397,7 @@ public class Player {
             return false;
         }
 
-        return hand.getCardsInHand().contains(card);
+        return hand.getCards().contains(card);
     }
 
     /**

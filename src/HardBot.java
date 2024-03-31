@@ -12,8 +12,8 @@ public class HardBot extends Bot {
     @Override
     public PlayResult play(PlayedCards previousCards, int consecutivePasses) {
         pause();
-        
-        List<Card> botHand = getHand().getCardsInHand();
+
+        List<Card> botHand = getHand().getCards();
         List<PlayedCards> validCombinations = getAllValidCombinations(botHand, previousCards);
     
         if (validCombinations != null) {
@@ -26,19 +26,37 @@ public class HardBot extends Bot {
             }
         }
     
+        //if got here, means no validCombinations and bot will just pass
         System.out.println("\n" + getName() + " passed their turn.");
         consecutivePasses++;
         return new PlayResult(previousCards, consecutivePasses);
     }
     
+    /** 
+     * Checks if the bot can play the given combination based on the previous cards played.
+     * 
+     * @param previousCards The previously played cards.
+     * @param combination The combination of cards to check for playability.
+     * @return true if the combination can be played, false otherwise.
+     */
     private boolean canPlayCombination(PlayedCards previousCards, PlayedCards combination) {
+
+        // Check if everyone has passed or if the current combination can win against previous cards
         if (previousCards == null || combination.winsAgainst(previousCards)) {
-            Card startCard = new Card(Card.Suit.DIAMONDS, Card.Rank.THREE);
-            return !hasCard(startCard) || combination.getCards().contains(startCard);
+
+            // If the bot has the 3 of Diamonds and the combination doesn't contain it, return false
+            return !hasCard(Card.START_CARD) || combination.getCards().contains(Card.START_CARD);
         }
-        return false;
+        return false; // If none of the conditions are met, return false
     }
     
+    /**
+     * Plays the given combination from the bot's hand and removes played cards from bots hand
+     * 
+     * @param botHand The bot's current hand of cards.
+     * @param combination The combination of cards to play.
+     * @return The combination of cards that was played.
+     */
     private PlayedCards playCombination(List<Card> botHand, PlayedCards combination) {
         System.out.println("\n" + getName() + " played: " + combination);
         botHand.removeAll(combination.getCards());
@@ -46,7 +64,13 @@ public class HardBot extends Bot {
     }
     
 
-    //this method checks if a set of cards contains any high cards
+    /**
+     * Bot strategy for determining what to play.
+     * 
+     * @param cards The set of cards to evaluate.
+     * @param minimumStrength The minimum strength card.
+     * @return The set of cards to play, or null if none are suitable.
+     */
     public static PlayedCards botStrategy(PlayedCards Cards, Card minimumStrength){
         PlayedCards weakestSingle = new PlayedCards();
         weakestSingle.addCard(minimumStrength);
@@ -69,22 +93,17 @@ public class HardBot extends Bot {
     }   
 
     /**
-     * Generates all valid combinations of cards that can be played based on the given hand and the previously played cards.
+     * Retrieves all valid combinations of cards that can be played.
      * 
-     * If the previously played cards are null, it generates all possible combinations from the hand. 
-     * Otherwise, it checks the type of the previously played cards (single, pair, three of a kind, etc.) and generates valid combinations accordingly.
-     * 
-     * After generating the valid combinations, it filters out the combinations that win against the previously played cards.
-     * 
-     * @param hand The current hand of the player.
-     * @param previousCards The cards that were played in the previous turn.
-     * @return A list of all valid combinations of cards that can be played, filtered to only include winning combinations.
+     * @param hand The bot's current hand of cards.
+     * @param previousCards The previously played cards.
+     * @return A list of valid combinations that can be played.
      */
     public static List<PlayedCards> getAllValidCombinations(List<Card> hand, PlayedCards previousCards) {
         List<PlayedCards> validCombinations = new ArrayList<>();
     
         if (previousCards == null) {
-            validCombinations = getValidCombinations(hand);
+            validCombinations = getValidCombinationsWhenAllPassed(hand);
         } else {
             String previousType = previousCards.getType();
     
@@ -115,29 +134,29 @@ public class HardBot extends Bot {
         return winningCombinations;
     }
     
-
-    /**
-     * Generates all valid combinations of cards that can be played based on the given hand.
+    /** 
+     * Bot logic for what to play when everyone else has passed
      * 
-     * It first tries to find valid five card combinations. If none are found, it tries to find valid three card combinations.
-     * If still none are found, it tries to find valid two card combinations. If no two card combinations are found, it adds all single card combinations.
-     * 
-     * @param hand The current hand of the player.
-     * @return A list of all valid combinations of cards that can be played.
+     * @param hand The cards in the bots hand
+     * @return List of PlayedCards which represents the bot's options on what to play
      */
-    private static List<PlayedCards> getValidCombinations(List<Card> hand) {
+    private static List<PlayedCards> getValidCombinationsWhenAllPassed(List<Card> hand) {
         List<PlayedCards> validCombinations = new ArrayList<>();
     
+        // Try to find valid five card combinations that does not contain an ACE
         validCombinations.addAll(findValidCombinations(hand, 5, Card.Rank.ACE));
     
+        // If no valid five card combinations, try to find valid three card combinations that does not contain an ACE
         if (validCombinations.isEmpty()) {
             validCombinations.addAll(findValidCombinations(hand, 3, Card.Rank.ACE));
         }
     
+        // If no valid three card combinations, try to find valid two card combinations that does not contain TWO's
         if (validCombinations.isEmpty()) {
             validCombinations.addAll(findValidCombinations(hand, 2, Card.Rank.TWO));
         }
     
+        // If no valid two card combinations, add all single card combinations
         if (validCombinations.isEmpty()) {
             validCombinations.addAll(findSingles(hand));
         }
@@ -145,18 +164,13 @@ public class HardBot extends Bot {
         return validCombinations;
     }
     
-
-
     /**
-     * Finds valid combinations of cards from a given hand based on the combination size and a rank to avoid.
+     * Finds valid combinations of cards based on the given parameters.
      * 
-     * It first determines the potential combinations based on the combination size. Then, it checks each potential combination to see if it's worth playing,
-     * considering the rank to avoid. If a combination is worth playing, it's added to the list of valid combinations.
-     * 
-     * @param hand The current hand of the player.
-     * @param combinationSize The size of the card combination to find (e.g., 2 for a pair, 3 for three of a kind, etc.).
-     * @param rankToAvoid The rank of the card to avoid when finding combinations.
-     * @return A list of all valid combinations of cards that can be played.
+     * @param hand The list of cards in the hand.
+     * @param combinationSize The size of combinations to search for.
+     * @param rankToAvoid The rank of cards to avoid.
+     * @return A list of valid combinations.
      */
     private static List<PlayedCards> findValidCombinations(List<Card> hand, int combinationSize, Card.Rank rankToAvoid) {
         List<PlayedCards> validCombinations = new ArrayList<>();
@@ -177,7 +191,7 @@ public class HardBot extends Bot {
         }
     
         for (PlayedCards p : potentialCombinations) {
-            PlayedCards worthPlaying = botStrategy(p, new Card(Card.Suit.DIAMONDS, rankToAvoid));
+            PlayedCards worthPlaying = botStrategy(p, new Card(rankToAvoid, Card.Suit.DIAMONDS));
             if (worthPlaying != null) {
                 validCombinations.add(worthPlaying);
             }
@@ -187,20 +201,18 @@ public class HardBot extends Bot {
     }
     
     /**
-     * Finds efficient combinations of cards from a given hand based on the combination size and whether to avoid twos.
-     * It first determines the potential combinations based on the combination size. Then, it checks each potential combination to see if it's worth playing,
-     * considering whether to avoid twos. If a combination is worth playing, it's added to the list of efficient combinations.
-     * If no efficient combinations are found, it tries to find any combination that doesn't use a two.
+     * Finds efficient combinations of cards based on the given parameters.
      * 
-     * @param hand The current hand of the player.
-     * @param combinationSize The size of the card combination to find (e.g., 1 for a single, 2 for a pair, etc.).
-     * @param avoidTwos A boolean indicating whether to avoid twos when finding combinations.
-     * @return A list of all efficient combinations of cards that can be played.
+     * @param hand The list of cards in the hand.
+     * @param combinationSize The size of combinations to search for.
+     * @param avoidTwos Whether to avoid combinations containing twos.
+     * @return A list of efficient combinations.
      */
     private static List<PlayedCards> findEfficientCombinations(List<Card> hand, int combinationSize, boolean avoidTwos) {
         List<PlayedCards> efficientCombinations = new ArrayList<>();
         List<PlayedCards> potentialCombinations;
     
+        //find potential singles/doubles. If no valid combinations, return empty list
         switch (combinationSize) {
             case 1:
                 potentialCombinations = findSingles(hand);
@@ -212,37 +224,32 @@ public class HardBot extends Bot {
                 return efficientCombinations;
         }
     
-        HashMap<Card, String> uniqueCards = getUniqueCards(hand, avoidTwos);
+        HashMap<Card, String> uniqueCards = getUniqueCardsToAvoid(hand, avoidTwos);
     
+        //if any combinations contains unique cards to avoid, dont add it to efficient combinations
         for (PlayedCards p : potentialCombinations) {
             if (isWorthPlaying(p, uniqueCards)) {
                 efficientCombinations.add(p);
             }
         }
     
+        // If no efficient combinations found, add all potential combinations
         if (efficientCombinations.isEmpty()) {
-            for (PlayedCards p : potentialCombinations) {
-                PlayedCards worthPlaying = botStrategy(p, new Card(Card.Suit.DIAMONDS, Card.Rank.TWO));
-                if (worthPlaying != null) {
-                    efficientCombinations.add(worthPlaying);
-                }
-            }
+
+            efficientCombinations.addAll(potentialCombinations);
         }
     
         return efficientCombinations;
     }
     
     /**
-     * Generates a map of unique cards from a given hand, with an option to avoid twos.
+     * Retrieves unique cards to avoid based on the given parameters.
      * 
-     * It first finds potential five card and three card combinations from the hand. Then, it adds the cards from these combinations to the map of unique cards.
-     * If the avoidTwos parameter is true, it also adds all twos to the map of unique cards.
-     * 
-     * @param hand The current hand of the player.
-     * @param avoidTwos A boolean indicating whether to avoid twos when generating the map of unique cards.
-     * @return A map of unique cards from the hand.
+     * @param hand The list of cards in the hand.
+     * @param avoidTwos Whether to avoid twos.
+     * @return A map of unique cards to avoid.
      */
-    private static HashMap<Card, String> getUniqueCards(List<Card> hand, boolean avoidTwos) {
+    private static HashMap<Card, String> getUniqueCardsToAvoid(List<Card> hand, boolean avoidTwos) {
         HashMap<Card, String> uniqueCards = new HashMap<>();
     
         List<PlayedCards> potentialFiveCombinations = findFiveCombination(hand);
@@ -252,23 +259,20 @@ public class HardBot extends Bot {
         addCardsToUniqueCards(potentialThreeCombinations, uniqueCards);
     
         if (avoidTwos) {
-            uniqueCards.put(new Card(Card.Suit.DIAMONDS, Card.Rank.TWO), "");
-            uniqueCards.put(new Card(Card.Suit.CLUBS, Card.Rank.TWO), "");
-            uniqueCards.put(new Card(Card.Suit.HEARTS, Card.Rank.TWO), "");
-            uniqueCards.put(new Card(Card.Suit.SPADES, Card.Rank.TWO), "");
+            uniqueCards.put(new Card(Card.Rank.TWO, Card.Suit.DIAMONDS), "");
+            uniqueCards.put(new Card(Card.Rank.TWO, Card.Suit.CLUBS), "");
+            uniqueCards.put(new Card(Card.Rank.TWO, Card.Suit.HEARTS), "");
+            uniqueCards.put(new Card(Card.Rank.TWO, Card.Suit.SPADES), "");
         }
     
         return uniqueCards;
     }
     
     /**
-     * Adds cards from potential combinations to a map of unique cards.
+     * Adds cards to the unique cards map.
      * 
-     * It iterates over each potential combination, and for each combination, it iterates over each card within that combination.
-     * If the card is not already in the map of unique cards, it adds the card to the map.
-     * 
-     * @param potentialCombinations A list of potential combinations of cards.
-     * @param uniqueCards A map of unique cards.
+     * @param potentialCombinations The list of potential combinations.
+     * @param uniqueCards The map of unique cards.
      */
     private static void addCardsToUniqueCards(List<PlayedCards> potentialCombinations, HashMap<Card, String> uniqueCards) {
         for (PlayedCards p : potentialCombinations) {
@@ -282,14 +286,11 @@ public class HardBot extends Bot {
     }
     
     /**
-     * Determines if a given combination of cards is worth playing based on a map of unique cards.
+     * Determines if a combination is worth playing based on the unique cards to avoid.
      * 
-     * It iterates over each card within the combination. If any card is in the map of unique cards, it returns false, indicating that the combination is not worth playing.
-     * If none of the cards in the combination are in the map of unique cards, it returns true, indicating that the combination is worth playing.
-     * 
-     * @param p The combination of cards to check.
-     * @param uniqueCards A map of unique cards.
-     * @return A boolean indicating whether the combination is worth playing.
+     * @param p The combination to evaluate.
+     * @param uniqueCards The map of unique cards to avoid.
+     * @return true if the combination is worth playing, false otherwise.
      */
     private static boolean isWorthPlaying(PlayedCards p, HashMap<Card, String> uniqueCards) {
         List<Card> cardsWithin = p.getCards();
