@@ -45,5 +45,6 @@ Points System:
 - Default rate is 1 point per card left
 - If you are left with 7 or more cards the points deducted will be doubled
 - If you are left with 10 or more cards the points deducted will be tripled
+- Player(s) with the highest point win(s)
 
 Remember, strategy and understanding the value of your cards are key to winning at Dai Di. Good luck!
