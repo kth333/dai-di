@@ -23,10 +23,6 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 
 3. **Launching the Game**: Run run.bat to start playing!
 
-## Gameplay
-
-- **Starting a Game**: Select "Start Game" to begin playing.
-
 ## Credits
 
 - The background music used in this project is created by Migfus20 and obtained from [freesound.org](https://freesound.org/s/561394/) Attribution: "Fantasy Background Music (Loop)" by Migfus20 is licensed under [Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).

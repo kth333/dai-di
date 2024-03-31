@@ -1,6 +1,13 @@
-package src;
+package Dai_Di.Game;
 
 import java.util.*;
+
+import Dai_Di.Cards.Card;
+import Dai_Di.Cards.Deck;
+import Dai_Di.Cards.PlayResult;
+import Dai_Di.Cards.PlayedCards;
+import Dai_Di.Players.*;
+import Dai_Di.Art.Art;
 
 /**
  * Represents a game controller for managing the flow of the card game.
@@ -361,7 +368,7 @@ public class Game {
      * @return A list of Player objects representing the turn order for the
      *         current round.
      */
-    private static List<Player> determinePlayerOrder(List<Player> playerList, int numPlayers) {
+    private List<Player> determinePlayerOrder(List<Player> playerList, int numPlayers) {
         Random random = new Random();
         if (playerList == null || numPlayers < 1) {
             return null;
@@ -403,7 +410,7 @@ public class Game {
      * 
      * @param playerOrder The list of Player objects representing the turn order.
      */
-    private static void displayPlayerOrder(List<Player> playerOrder) {
+    private void displayPlayerOrder(List<Player> playerOrder) {
         // to display player order again
         System.out.println("\nTurn order is:");
         for (int i = 0; i < playerOrder.size() - 1; i++) {

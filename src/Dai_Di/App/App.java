@@ -1,11 +1,15 @@
-package src;
+package Dai_Di.App;
 
 import java.util.Scanner;
+import Dai_Di.Game.Game;
+import Dai_Di.Game.GameView;
+import Dai_Di.Music.MusicPlayer;
+import Dai_Di.Instructions.Instructions;
 
 /**
  * The main application class for running the Dai Di game.
  */
-class App {
+public class App {
     private static final Scanner SCANNER = new Scanner(System.in);
     private final Game GAME;
 
@@ -34,8 +38,8 @@ class App {
             System.out.println("\nOptions:");
             System.out.println("1. Start game");
             System.out.println("2. Read instructions");
-            System.out.println("3. Quit game");
-            //System.out.print("\nChoose an option: ");
+            System.out.println("3. Stop or Play music");
+            System.out.println("4. Quit game");
             // Read the user's choice
             int choice = GameView.getInt("\nChoose an option: ",SCANNER);
             switch (choice) {
@@ -49,13 +53,17 @@ class App {
                     Instructions.displayInstructions();
                     break;
                 case 3:
+                    // Stop music if music is playing, play music if music is stopped
+                    MusicPlayer.playOrStopMusic();
+                    break;
+                case 4:
                     // Exit the game
                     System.out.println("Bye Bye!");
                     MusicPlayer.stopMusic();
                     return;
                 default:
                     // Handle invalid input
-                    System.out.println("Invalid choice! Please enter 1, 2, or 3.");
+                    System.out.println("Invalid choice! Please enter 1, 2, 3 or 4.");
                     break;
             }
         }

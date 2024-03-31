@@ -1,9 +1,18 @@
-package src;
+package Dai_Di.Players;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+
+import Dai_Di.Cards.Card;
+import Dai_Di.Cards.Hand;
+import Dai_Di.Cards.PlayResult;
+import Dai_Di.Cards.PlayedCards;
+import Dai_Di.Game.GameView;
+import Dai_Di.Instructions.Instructions;
+import Dai_Di.Music.MusicPlayer;
+import Dai_Di.Art.Art;
 
 public class Player {
     private static final int PLAY_COMMAND = 0;// Sets the play command
@@ -399,7 +408,7 @@ public class Player {
      * @return returns false if card is null or card not in hand
      *         returns true if card is in hand
      */
-    protected boolean hasCard(Card card) {
+    public boolean hasCard(Card card) {
         if (card == null) {
             return false;
         }

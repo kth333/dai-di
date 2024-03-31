@@ -1,4 +1,4 @@
-package src;
+package Dai_Di.Game;
 
 import java.util.Scanner;
 

@@ -1,8 +1,13 @@
-package src;
+package Dai_Di.Players;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import Dai_Di.Cards.Card;
+import Dai_Di.Cards.HandValidator;
+import Dai_Di.Cards.PlayResult;
+import Dai_Di.Cards.PlayedCards;
 
 public abstract class Bot extends Player {
     // creates a list of botnames
@@ -45,7 +50,8 @@ public abstract class Bot extends Player {
     /**
      * This method lets the bot chooses which valid combination to play (the
      * strategy of the bot)
-     * This method is abstract and must be implemented by all bots according to their difficulty
+     * This method is abstract and must be implemented by all bots to define the
+     * difficulty level of the bot
      * 
      * @param previousCards     The previously played cards.
      * @param consecutivePasses The number of consecutive passes made by players in

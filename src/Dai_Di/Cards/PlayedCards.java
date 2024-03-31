@@ -1,7 +1,9 @@
-package src;
+package Dai_Di.Cards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import Dai_Di.Art.Art;
 /**
  * Represents a set of cards played by a player in a game.
  */

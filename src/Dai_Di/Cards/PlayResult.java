@@ -1,4 +1,5 @@
-package src;
+package Dai_Di.Cards;
+
 /**
  * Represents the result of a play in a game.
  */

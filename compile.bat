@@ -1,1 +1,1 @@
-javac -d classes src/Main.java
+javac -d classes -cp src src/Dai_Di/Main.java

@@ -1,8 +1,12 @@
-package src;
+package Dai_Di.Players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import Dai_Di.Cards.Card;
+import Dai_Di.Cards.PlayResult;
+import Dai_Di.Cards.PlayedCards;
 
 public class HardBot extends Bot {
 
