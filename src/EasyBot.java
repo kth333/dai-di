@@ -46,10 +46,9 @@ public class EasyBot extends Bot {
                 System.out.println("\n" + getName() + " played: \n" + combination);
                 
                 // Remove played cards from the bot's hand
-                for (Card card : combination.getCards()) {
-                    botHand.remove(card);
-                }
+                getHand().removeCards(combination);
 
+                System.out.println(getHand());
                 // Reset consecutive passes
                 consecutivePasses = 0;
                 

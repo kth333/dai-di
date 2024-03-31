@@ -45,8 +45,7 @@ public abstract class Bot extends Player {
     /**
      * This method lets the bot chooses which valid combination to play (the
      * strategy of the bot)
-     * This method is abstract and must be implemented by all bots to define the
-     * difficulty level of the bot
+     * This method is abstract and must be implemented by all bots according to their difficulty
      * 
      * @param previousCards     The previously played cards.
      * @param consecutivePasses The number of consecutive passes made by players in
