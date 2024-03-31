@@ -87,7 +87,7 @@ public class HardBot extends Bot {
      * @return The combination of cards that was played.
      */
     private PlayedCards playCombination(List<Card> botHand, PlayedCards combination) {
-        System.out.println("\n" + getName() + " played: " + combination);
+        System.out.println("\n" + getName() + " played: \n" + combination);
         botHand.removeAll(combination.getCards());
         return combination;
     }

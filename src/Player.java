@@ -63,8 +63,8 @@ public class Player {
                                                                                                   // passes
                         }
                     } else {
-                        System.out.println("\nLast Played: " + previousCards.toString()); // Show player previously
-                                                                                          // played cards
+                        System.out.println("\nLast Played: \n" + previousCards.toString()); // Show player previously
+                                                                                            // played cards
                     }
                     System.out.println("\nYour Hand: " + getHand()); // Show player their hand again
                     PlayResult result = playHand(previousCards, consecutivePasses, scanner);
@@ -114,7 +114,7 @@ public class Player {
      */
     private PlayResult playHand(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
-            String prompt="\nSelect cards to play (enter indices separated by spaces) or enter '" + BACK_COMMAND
+            String prompt = "\nSelect cards to play (enter indices separated by spaces) or enter '" + BACK_COMMAND
                     + "' to return to Options:";
             String input = GameView.getString(prompt, scanner);
 
@@ -172,8 +172,12 @@ public class Player {
      * 
      */
     private void sortHandByRank() {
-        getHand().sortByRank();
-        System.out.println("\nHand sorted by rank: " + getHand());
+        Hand hand = getHand();
+        hand.sortByRank();
+        String asciiHand = Art.getAsciiRepresentation(hand.getCards()); // Assuming getCards() returns the List<Card> in
+                                                                        // Hand
+        System.out.println("\nHand sorted by rank: \n" + asciiHand);
+        System.out.println(getHand());
     }
 
     /**
@@ -181,8 +185,11 @@ public class Player {
      * 
      */
     private void sortHandBySuit() {
-        getHand().sortBySuit();
-        System.out.println("\nHand sorted by suit: " + getHand());
+        Hand hand = getHand();
+        hand.sortBySuit();
+        String asciiHand = Art.getAsciiRepresentation(hand.getCards()); // Similarly for sorting by suit
+        System.out.println("\nHand sorted by suit: \n" + asciiHand);
+        System.out.println(getHand());
     }
 
     /**
@@ -218,7 +225,7 @@ public class Player {
 
         PlayedCards playedCards = new PlayedCards(selectedCards);
         if (validatePlayedCards(playedCards, previousCards)) {
-            System.out.println("\n" + getName() + " played: " + playedCards);
+            System.out.println("\n" + getName() + " played: \n" + playedCards);
             getHand().removeCards(playedCards);
             return new PlayResult(playedCards, 0);
         }

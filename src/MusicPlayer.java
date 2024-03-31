@@ -10,7 +10,7 @@ import javax.sound.sampled.*;
  */
 public class MusicPlayer {
     /** The path to the music file. */
-    public static final String MUSIC_PATH = "Music/music.wav";
+    public static final String MUSIC_PATH = "music/music.wav";
     
     /** The audio clip used for playing the music. */
     private static Clip clip;

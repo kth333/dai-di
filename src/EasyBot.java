@@ -43,7 +43,7 @@ public class EasyBot extends Bot {
 
                 // Play the winning combination
                 previousCards = combination; // Update the previous cards
-                System.out.println("\n" + getName() + " played: " + combination);
+                System.out.println("\n" + getName() + " played: \n" + combination);
                 
                 // Remove played cards from the bot's hand
                 for (Card card : combination.getCards()) {

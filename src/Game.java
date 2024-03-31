@@ -423,13 +423,19 @@ public class Game {
      */
     private void displayRanking(List<Player> players) {
         Collections.sort(players, Player.sortByPoints());
-        System.out.println("\nRank\tName\t\tTotal Points\tCards Left");
-
+    
+        // Header
+        System.out.println("\n+-----------------------------------------------------------------+");
+        System.out.printf("| %-4s | %-15s | %-13s | %-10s |\n", "Rank", "Name", "Total Points", "Cards Left");
+        System.out.println("+-----------------------------------------------------------------+");
+    
+        // Data rows
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
-            System.out.printf("%-6d\t%-15s\t%-13.1f\t%-5d\n", (i + 1), player.getName(), player.getPoints(),
-                    player.getNumOfCards());
+            System.out.printf("| %-4d | %-15s | %-13.1f | %-10d |\n",
+                    (i + 1), player.getName(), player.getPoints(), player.getNumOfCards());
         }
+        System.out.println("+-----------------------------------------------------------------+");
     }
 
     /**
@@ -466,9 +472,7 @@ public class Game {
             playResult = ((HardBot) currentPlayer).play(previousCards, consecutivePasses);
         } else {
             System.out.println("\n" + currentPlayer.getName() + "'s Hand: ");
-            // for (Card card : currentPlayer.getHand().getCards()) {
-            //     Art.printAsciiArt(card);
-            // }     
+            System.out.println(Art.getAsciiRepresentation(currentPlayer.getHand().getCards()));
             System.out.println(currentPlayer.getHand());
             playResult = currentPlayer.play(previousCards, consecutivePasses, scanner);
         }

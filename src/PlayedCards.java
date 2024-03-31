@@ -192,14 +192,7 @@ public class PlayedCards {
             return "[]"; // Return empty brackets if the list is empty
         }
 
-        StringBuilder result = new StringBuilder("[");
-        for (int i = 0; i < cards.size(); i++) {
-            result.append(cards.get(i));
-            if (i < cards.size() - 1) {
-                result.append(", ");
-            }
-        }
-        result.append("]");
-        return result.toString();
+        return Art.getAsciiRepresentation(this.cards);
     }
+
 }
