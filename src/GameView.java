@@ -44,7 +44,7 @@ public class GameView {
                 String input = scanner.nextLine();
                 input = input.trim();
                 if (input.length() > 1) {
-                    System.out.println("Invalid input,more characters then expected");
+                    System.out.println("Invalid input, more characters than expected");
                 } else {
                     int choice = Integer.parseInt(input);
                     return choice;
