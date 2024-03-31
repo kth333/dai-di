@@ -5,6 +5,9 @@ import java.util.Scanner;
 
 public class AppView {
 
+    /**
+     * Displays the options menu.
+     */
     private static void displayOptions() {
         System.out.print(
                 "\nOptions:" +
@@ -14,6 +17,13 @@ public class AppView {
                         "\nChoose an option: ");
     }
 
+    /**
+     * Prompts the user to enter their name.
+     *
+     * @param MAX_NAME_LENGTH The maximum length allowed for the player's name.
+     * @param scanner         The Scanner object used for input.
+     * @return The player's name.
+     */
     public static String getName(int MAX_NAME_LENGTH, Scanner scanner) {
         System.out.println("Welcome to Dai Di!");
         String playerName;
@@ -28,6 +38,12 @@ public class AppView {
 
         return playerName;
     }
+    /**
+     * Prompts the user to choose an option.
+     *
+     * @param scanner The Scanner object used for input.
+     * @return The user's choice.
+     */
 
     public static int getChoice(Scanner scanner) {
         displayOptions();

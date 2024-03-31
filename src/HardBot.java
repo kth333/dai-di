@@ -4,10 +4,23 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HardBot extends Bot {
-
+    /**
+     * Constructs a new HardBot instance.
+     * 
+     * @param playerNames A list of names for all players in the game.
+     * @param usedNames A list of names already used by other bots or players.
+     */
     public HardBot(List<String> playerNames, List<String> usedNames) {
         super(playerNames, usedNames);
     }
+     /**
+     * Attempts to play a combination of cards that beats the previous combination played.
+     * If no such combination exists, the bot will pass its turn.
+     * 
+     * @param previousCards The cards played in the previous turn.
+     * @param consecutivePasses The current number of consecutive passes.
+     * @return The result of the bot's play, including the combination played and the updated number of consecutive passes.
+     */
 
     @Override
     public PlayResult play(PlayedCards previousCards, int consecutivePasses) {
@@ -31,6 +44,14 @@ public class HardBot extends Bot {
         consecutivePasses++;
         return new PlayResult(previousCards, consecutivePasses);
     }
+
+    /**
+     * Checks if the bot can play the given combination based on the current game state.
+     * 
+     * @param previousCards The cards played in the previous turn.
+     * @param combination The combination the bot is considering to play.
+     * @return true if the combination can be legally played, false otherwise.
+     */
     
     /** 
      * Checks if the bot can play the given combination based on the previous cards played.
@@ -49,6 +70,13 @@ public class HardBot extends Bot {
         }
         return false; // If none of the conditions are met, return false
     }
+    /**
+     * Removes the played combination from the bot's hand and logs the play.
+     * 
+     * @param botHand The current hand of the bot.
+     * @param combination The combination of cards being played.
+     * @return The played combination.
+     */
     
     /**
      * Plays the given combination from the bot's hand and removes played cards from bots hand
@@ -62,6 +90,14 @@ public class HardBot extends Bot {
         botHand.removeAll(combination.getCards());
         return combination;
     }
+
+    /**
+     * Evaluates the cards to determine if they contain any high-value cards above the specified minimum strength.
+     * 
+     * @param Cards The set of cards to evaluate.
+     * @param minimumStrength The minimum strength card to compare against.
+     * @return The original set of cards if no card exceeds the minimum strength, null otherwise.
+     */
     
 
     /**
