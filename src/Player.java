@@ -2,7 +2,6 @@ package src;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -46,59 +45,59 @@ public class Player {
      *                          consecuetivePasses
      * @param consecutivePasses The number of times the previous players have passed
      * @param scanner           the scanner object for input
-     * @return the PlayResult created that would store if player passes the command successfully
+     * @return the PlayResult created that would store if player passes the command
+     *         successfully
      */
     public PlayResult play(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
             displayOptions();
-            try {
-                int input = scanner.nextInt();
-                scanner.nextLine();
-                switch (input) {
-                    case PLAY_COMMAND:
-                        if (previousCards == null){
-                            if (hasCard(START_CARD)) {
-                                System.out.println("\nLast Played: None. It's the first turn!"); // When it's the first turn
-                            } else {
-                                System.out.println("\nLast Played: 3 skips, free to play anything!"); // When 3 consecutive passes 
-                            }
+            int input = GameView.getInt("Your choice: ", scanner);
+            switch (input) {
+                case PLAY_COMMAND:
+                    if (previousCards == null) {
+                        if (hasCard(START_CARD)) {
+                            System.out.println("\nLast Played: None. It's the first turn!"); // When it's the first
+                                                                                             // turn
                         } else {
-                            System.out.println("\nLast Played: " + previousCards.toString()); // Show player previously played cards
+                            System.out.println("\nLast Played: 3 skips, free to play anything!"); // When 3
+                                                                                                  // consecutive
+                                                                                                  // passes
                         }
-                        System.out.println("\nYour Hand: " + getHand()); // Show player their hand again
-                        PlayResult result = playHand(previousCards, consecutivePasses, scanner);
-                        if (result != null) {
-                            return result;
-                        }
-                        break; //break and prompt again if player chose 'back'
-                    case PASS_COMMAND:
-                        PlayResult passResult = handlePass(previousCards, consecutivePasses);
-                        if (passResult != null) {
-                            return passResult;
-                        }
-                        break; // If passing is not allowed, it will break and prompt again.
-                    case RANK_COMMAND:
-                        sortHandByRank();
-                        break;
-                    case SUIT_COMMAND:
-                        sortHandBySuit();
-                        break;
-                    case QUIT_COMMAND:
-                        return handleQuit(previousCards, consecutivePasses);
-                    case INSTRUCTIONS_COMMAND:
-                        Instructions.displayInstructions();
-                        break;
-                    case MUSIC_COMMAND:
-                        MusicPlayer.playOrStopMusic();
-                        break;
-                    default:
-                        System.out.println("Invalid selection, please try again.");
-                        break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input! Please enter a number");
-                scanner.nextLine();
+                    } else {
+                        System.out.println("\nLast Played: " + previousCards.toString()); // Show player previously
+                                                                                          // played cards
+                    }
+                    System.out.println("\nYour Hand: " + getHand()); // Show player their hand again
+                    PlayResult result = playHand(previousCards, consecutivePasses, scanner);
+                    if (result != null) {
+                        return result;
+                    }
+                    break;
+                case PASS_COMMAND:
+                    PlayResult passResult = handlePass(previousCards, consecutivePasses);
+                    if (passResult != null) {
+                        return passResult;
+                    }
+                    break; // If passing is not allowed, it will break and prompt again.
+                case RANK_COMMAND:
+                    sortHandByRank();
+                    break;
+                case SUIT_COMMAND:
+                    sortHandBySuit();
+                    break;
+                case QUIT_COMMAND:
+                    return handleQuit(previousCards, consecutivePasses);
+                case INSTRUCTIONS_COMMAND:
+                    Instructions.displayInstructions();
+                    break;
+                case MUSIC_COMMAND:
+                    MusicPlayer.playOrStopMusic();
+                    break;
+                default:
+                    System.out.println("Invalid selection, please try again.");
+                    break;
             }
+
         }
     }
 
@@ -110,8 +109,9 @@ public class Player {
      *                          consecuetivePasses
      * @param consecutivePasses The number of times the previous players have passed
      * @param scanner           the scanner object for input
-     * @return the PlayResult that would be created if the selection is validated or null if BACK_COMMAND is
-     * entered
+     * @return the PlayResult that would be created if the selection is validated or
+     *         null if BACK_COMMAND is
+     *         entered
      */
     private PlayResult playHand(PlayedCards previousCards, int consecutivePasses, Scanner scanner) {
         while (true) {
@@ -143,8 +143,7 @@ public class Player {
                 " - Type '" + RANK_COMMAND + "' to sort hand by rank\n" +
                 " - Type '" + INSTRUCTIONS_COMMAND + "' to display instructions\n" +
                 " - Type '" + MUSIC_COMMAND + "' to play or stop the music\n" +
-                " - Type '" + QUIT_COMMAND + "' to quit the game\n" +
-                "Your choice: ");
+                " - Type '" + QUIT_COMMAND + "' to quit the game\n");
     }
 
     /**

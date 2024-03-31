@@ -1,7 +1,6 @@
 package src;
 
 import java.util.Scanner;
-import java.util.InputMismatchException;
 
 /**
  * The main application class for running the Dai Di game.
@@ -9,7 +8,6 @@ import java.util.InputMismatchException;
 class App {
     private static final Scanner scanner = new Scanner(System.in);
     private final Game game;
-    public static final int MAX_NAME_LENGTH = 16; // Not private so that it can be used in Game class
 
     /**
      * Constructs an instance of the App class with a specified Game object.
@@ -29,17 +27,7 @@ class App {
         // Start playing music
         MusicPlayer.playMusic();
 
-        String playerName;
-        do {
-            // Prompt the user to enter their name
-            System.out.print("Enter your name (up to 16 characters): ");
-            playerName = scanner.nextLine();
-
-            // Check if the entered name exceeds the maximum length
-            if (playerName.length() > MAX_NAME_LENGTH) {
-                System.out.println("Enter a shorter name!");
-            }
-        } while (playerName.length() > MAX_NAME_LENGTH);
+        String playerName = GameView.getName("Enter your name (up to 16 characters): ", scanner);
 
         while (true) {
             // Display the main menu options
@@ -47,36 +35,28 @@ class App {
             System.out.println("1. Start game");
             System.out.println("2. Read instructions");
             System.out.println("3. Quit game");
-            System.out.print("\nChoose an option: ");
-
-            try {
-                // Read the user's choice
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-                switch (choice) {
-                    case 1:
-                        // Start the game with the entered player name
-                        game.startGame(playerName, scanner);
-                        return;
-                    case 2:
-                        // Display game instructions
-                        System.out.println("\nInstructions:");
-                        Instructions.displayInstructions();
-                        break;
-                    case 3:
-                        // Exit the game
-                        System.out.println("Bye Bye!");
-                        MusicPlayer.stopMusic();
-                        return;
-                    default:
-                        // Handle invalid input
-                        System.out.println("Invalid choice! Please enter 1, 2, or 3.");
-                        break;
-                }
-            } catch (InputMismatchException e) {
-                // Handle non-integer input
-                System.out.println("Invalid input! Please enter a number.");
-                scanner.nextLine();
+            //System.out.print("\nChoose an option: ");
+            // Read the user's choice
+            int choice = GameView.getInt("\nChoose an option: ",scanner);
+            switch (choice) {
+                case 1:
+                    // Start the game with the entered player name
+                    game.startGame(playerName, scanner);
+                    return;
+                case 2:
+                    // Display game instructions
+                    System.out.println("\nInstructions:");
+                    Instructions.displayInstructions();
+                    break;
+                case 3:
+                    // Exit the game
+                    System.out.println("Bye Bye!");
+                    MusicPlayer.stopMusic();
+                    return;
+                default:
+                    // Handle invalid input
+                    System.out.println("Invalid choice! Please enter 1, 2, or 3.");
+                    break;
             }
         }
     }

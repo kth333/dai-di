@@ -10,6 +10,7 @@ public class Game {
     private static final int NUM_PLAYERS = 4; // Number of players is always 4
     private static final int CARDS_PER_PLAYER = 13; // Number of cards given to each player at the start is always 13
     private static final int NUM_ROUNDS = 5; // Number of rounds in a game is always 5
+    private static final double WINNING_RATE = 1; // default rate of losses at end of round
 
     private static Player currentPlayer = null; // Represents the current player taking their turn in the game
     private int round = 1; // Tracks the current round number in the game
@@ -90,19 +91,14 @@ public class Game {
 
         // Prompt the user until a valid input is provided
         do {
-            System.out.print("Select number of human players: ");
-            try {
-                // Read the user input as an integer
-                numHumanPlayers = Integer.parseInt(scanner.nextLine());
+            // Read the user input as an integer
+            numHumanPlayers = GameView.getInt("Select number of human players: ", scanner);
 
-                // Validate the input range
-                if (numHumanPlayers < 1 || numHumanPlayers > NUM_PLAYERS) {
-                    System.out.println("Invalid player number! Player number is only 1 to 4.");
-                } else {
-                    break; // Exit the loop if the input is valid
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter 1, 2, 3, or 4.");
+            // Validate the input range
+            if (numHumanPlayers < 1 || numHumanPlayers > NUM_PLAYERS) {
+                System.out.println("Invalid player number! Player number is only 1 to 4.");
+            } else {
+                break; // Exit the loop if the input is valid
             }
         } while (true);
 
@@ -119,16 +115,18 @@ public class Game {
     private boolean selectDifficultyLevel(Scanner scanner) {
         // Prompt the user until a valid input is provided
         while (true) {
-            System.out.print("Select difficulty (easy or hard): ");
-            String input = scanner.nextLine();
-
-            // Check the user input and return the corresponding difficulty level
-            if (input.equalsIgnoreCase("easy")) {
-                return true; // Easy mode
-            } else if (input.equalsIgnoreCase("hard")) {
-                return false; // Hard mode
-            } else {
-                System.out.println("Invalid input! Please enter 'easy' or 'hard'.");
+            System.out.print(
+                    "\nSelect difficulty" +
+                            "\n1. Easy" +
+                            "\n2. Hard\n");
+            int choice = GameView.getInt("Enter Difficulty:", scanner);
+            switch (choice) {
+                case 1:
+                    return true;
+                case 2:
+                    return false;
+                default:
+                    System.out.println("Invalid input! Please enter 1 for easy and 2 for hard");
             }
         }
     }
@@ -184,14 +182,7 @@ public class Game {
     private String enterPlayerName(Scanner scanner, List<String> playerNames, int playerIndex) {
         String name = null;
         do {
-            System.out.print("Enter player " + playerIndex + " name (up to 16 characters): ");
-            name = scanner.nextLine();
-
-            // Check if the entered name exceeds the maximum length
-            if (name.length() > App.MAX_NAME_LENGTH) {
-                System.out.println("Enter a shorter name!");
-                continue; // Prompt again
-            }
+            name = GameView.getName("Enter player " + playerIndex + " name (up to 16 characters): ", scanner);
 
             // Check if the entered name is valid and unique
             if (name != null && name.length() > 0 && !playerNames.contains(name)) {
@@ -237,7 +228,7 @@ public class Game {
 
             // Point calculations according to the number of cards left in each player's
             // hand
-            Player.winRound(playerOrder, currentPlayer, 1);
+            Player.winRound(playerOrder, currentPlayer, WINNING_RATE);
             return;
         }
 
@@ -351,14 +342,9 @@ public class Game {
      */
     private boolean continueNextRound(int round, Scanner scanner) {
         if (round > 1) {
-            System.out.println("Continue next round? ('y' to continue / 'n' to quit game)");
-            String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("n")) {
-                return false;
-            } else if (!input.equalsIgnoreCase("y")) {
-                System.out.println("Invalid input. Please type 'y' or 'n'.");
-                return continueNextRound(round, scanner);
-            }
+            // System.out.println("Continue next round? ('y' to continue / 'n' to quit
+            // game)");
+            return GameView.yesOrNo("Continue next round? ('y' to continue / 'n' to quit game)", scanner);
         }
         return true;
     }
