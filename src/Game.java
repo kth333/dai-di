@@ -208,9 +208,11 @@ public class Game {
     private void startTurn(List<Player> playerOrder, int turn, PlayedCards previousCards, int consecutivePasses,
             Scanner scanner) {
         currentPlayer = playerOrder.get((turn - 1) % NUM_PLAYERS); // Find current player according to the player order
-        System.out.println("\nRound: " + round + " Turn: " + turn); // Print the current round and turn number
-        System.out.println(currentPlayer.getName() + "'s turn!"); // Print the current player's name to show whose turn
-                                                                  // it is
+        String turnHeader = String.format("\n=== Round: %d | Turn: %d ===", round, turn);
+        System.out.println(turnHeader); 
+        
+        String currentPlayerTurn = String.format("It's %s's turn!", currentPlayer.getName());
+        System.out.println(currentPlayerTurn); 
 
         // Player makes their move and playResult is determined accordingly
         PlayResult playResult = determinePlayerAction(currentPlayer, previousCards, consecutivePasses, scanner);
