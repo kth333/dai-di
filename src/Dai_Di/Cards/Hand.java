@@ -81,7 +81,7 @@ public class Hand {
     }
 
      /**
-     * Sorts the hand by suit and then by rank.
+     * Sorts the hand by suit.
      */
     public void sortBySuit() {
         Collections.sort(hand, new SuitComparator());
