@@ -77,28 +77,14 @@ public class Hand {
      */
 
     public void sortByRank() {
-        Collections.sort(hand, new Comparator<Card>() {
-            @Override
-            public int compare(Card c1, Card c2) {
-                return c1.getRank().compareTo(c2.getRank());
-            }
-        });
+        Collections.sort(hand, new RankComparator());
     }
 
      /**
      * Sorts the hand by suit and then by rank.
      */
     public void sortBySuit() {
-        Collections.sort(hand, new Comparator<Card>() {
-            @Override
-            public int compare(Card c1, Card c2) {
-                int suitComparison = c1.getSuit().compareTo(c2.getSuit());
-                if (suitComparison == 0) {
-                    return c1.getRank().compareTo(c2.getRank());
-                }
-                return suitComparison;
-            }
-        });
+        Collections.sort(hand, new SuitComparator());
     }
 
     /**
