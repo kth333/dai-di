@@ -38,7 +38,6 @@ public class Art {
         SUIT_SYMBOLS.put(Suit.CLUBS, "♣");
         SUIT_SYMBOLS.put(Suit.SPADES, "♠");
 
-        // Using single-character abbreviations for all ranks, including "T" for "TEN"
         RANK_ABBREVIATIONS.put(Rank.THREE, "3 ");
         RANK_ABBREVIATIONS.put(Rank.FOUR, "4 ");
         RANK_ABBREVIATIONS.put(Rank.FIVE, "5 ");
@@ -46,7 +45,7 @@ public class Art {
         RANK_ABBREVIATIONS.put(Rank.SEVEN, "7 ");
         RANK_ABBREVIATIONS.put(Rank.EIGHT, "8 ");
         RANK_ABBREVIATIONS.put(Rank.NINE, "9 ");
-        RANK_ABBREVIATIONS.put(Rank.TEN, "10"); // TEN as T
+        RANK_ABBREVIATIONS.put(Rank.TEN, "10");
         RANK_ABBREVIATIONS.put(Rank.JACK, "J ");
         RANK_ABBREVIATIONS.put(Rank.QUEEN, "Q ");
         RANK_ABBREVIATIONS.put(Rank.KING, "K ");
