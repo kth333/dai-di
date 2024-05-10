@@ -224,6 +224,9 @@ public class Game {
         // Player makes their move and playResult is determined accordingly
         PlayResult playResult = determinePlayerAction(currentPlayer, previousCards, consecutivePasses, scanner);
 
+        // Display number of cards left after player made their move
+        System.out.println("\n" + currentPlayer.getName() + " has " + currentPlayer.getNumOfCards() + " cards left.");
+
         // Set quitGame flag to true and return if the player chose to quit the game
         if (playResult.isQuit()) {
             quitGame = true;
