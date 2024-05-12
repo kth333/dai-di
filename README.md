@@ -14,6 +14,7 @@ A Java implementation of the Dai Di card game, also known as Big Two. Dai Di is 
 - **Instructions/Rules**: Instructions are available to read before and during a game.
 - **Hand Sorting**: Sort your hand by rank or suit to easily find combinations to play.
 - **Music**: Includes background music that can be muted anytime.
+- **ASCII art**: Features ASCII art of the cards. (Run the game in full screen)
 
 ## Getting Started
 
